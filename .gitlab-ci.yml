@@ -23,6 +23,5 @@ deploy:
     - >-
       dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
       --skip_cleanup
-
   only:
     - main
