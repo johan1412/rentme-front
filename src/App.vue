@@ -1,21 +1,9 @@
 <template>
-    <div id="app">
-        <Header />
-        <Navbar />
-        <router-view />
-    </div>
+  <router-view />
 </template>
-
 <script>
-import Navbar from './components/layouts/Navbar.vue';
-import Header from './components/layouts/Header.vue';
-
 export default {
-  name: "App",
-  components: {
-    Navbar,
-    Header,
-  },
+  name: "App"
 };
 </script>
 
