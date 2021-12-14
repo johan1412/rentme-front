@@ -10,7 +10,7 @@ build:
   artifacts:
     paths:
       - dist/
-   only:
+  only:
     - main
 
 deploy:
