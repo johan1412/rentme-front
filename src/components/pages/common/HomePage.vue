@@ -1,10 +1,12 @@
 <template>
-<div class="container m-auto home">
-  <h1 class="text-center">Home</h1>
+<div class="dqs">
+  <Banner />
 </div>
 </template>
 <script>
+import Banner from '../../layout/Banner.vue';
 export default {
+  components: { Banner },
   name: "Home"
 };
 </script>
