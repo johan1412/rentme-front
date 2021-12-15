@@ -1,6 +1,4 @@
 <template>
-<div>
-  <nav-bar />
   <div class="container m-auto">
     <form>
         <div class="form-group">
@@ -19,16 +17,10 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
-</div>
 </template>
 
 <script>
-import NavBar from '../layouts/NavBar.vue';
 export default {
   name: "Register",
-  components: {
-    NavBar,
-  },
-
 };
 </script>
