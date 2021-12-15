@@ -1,19 +1,14 @@
 <template>
-  <router-view />
+  <base-layout>
+    <router-view />
+  </base-layout>
 </template>
 <script>
+import BaseLayout from "./components/layout/BaseLayout.vue";
 export default {
-  name: "App"
+  components: { BaseLayout },
+  name: "App",
 };
 </script>
 
-<style>
-    body {
-        margin: 0px;
-    }
-    #app {
-        background-color: #F0F0F0;
-        height: 100vh;
-        margin: 0px;
-    }
-</style>
+
