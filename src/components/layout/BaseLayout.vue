@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div class="app">
     <NavBar/>
     <slot></slot>
     <Footer />
   </div>
 </template>
+
 <script>
 import NavBar from "../layout/NavBar.vue";
 import Footer from "../layout/Footer.vue";
@@ -28,3 +29,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.app {
+  background-color: #f0f0f0;
+  font-family: 'Roboto';
+}
+</style>
