@@ -21,7 +21,8 @@
         "vue-fetch": "^1.1.3",
         "vue-router": "^3.5.3",
         "vuemik": "^1.0.5",
-        "vuex": "^3.6.2"
+        "vuex": "^3.6.2",
+        "vuex-persistedstate": "^4.1.0"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~4.5.0",

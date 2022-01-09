@@ -17,14 +17,15 @@ export default {
     Footer
   },
   created() {
-    AuthService.getUser(localStorage.getItem('userId'))
+    if(this.$store.getters.user){
+      AuthService.getUser(localStorage.getItem('userId'))
         .then((response) => {
           this.$store.dispatch('user',response.data)
-          console.log(response.data);
         })
         .catch((e) => {
           console.log(e);
         });
+    }
   },
 };
 </script>
