@@ -122,7 +122,6 @@ export default {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  /*justify-content: space-between;*/
   margin: 50px 0px;
 }
 

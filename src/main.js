@@ -6,6 +6,7 @@ import RegisterPage from './components/pages/common/auth/RegisterPage.vue'
 import CategoryPage from './components/pages/admin/CategoryPage.vue'
 import ProductsPage from './components/pages/admin/ProductsPage.vue'
 import HomePage from './components/pages/common/HomePage'
+import SearchPage from './components/pages/common/SearchPage'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from './vuex'
 
@@ -29,6 +30,7 @@ const routes = [
   { path: '/register', component: RegisterPage },
   { path: '/admin/categories', component: CategoryPage },
   { path: '/admin/products', component: ProductsPage },
+  { path: '/search', component: SearchPage },
 ]
 
 const router = new VueRouter({

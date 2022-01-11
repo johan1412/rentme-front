@@ -1,5 +1,5 @@
 <template>
-<div class="main-menu" v-bind:class="{ 'fixed-top': isFixed }">
+<div class="common-menu" v-bind:class="{ 'fixed-top': isFixed }">
     <ul>
         <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
             <router-link :to="'search/' + category.url">{{ category.title }}</router-link>
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-    name: "MainMenu",
+    name: "CommonMenu",
     data: () => {
         return {
             activeCategory: null,
@@ -102,7 +102,7 @@ export default {
     },
     methods: {
         handleScroll() {
-            if (window.scrollY >= 87) {
+            if (window.scrollY >= 117) {
                 this.isFixed = true
             } else {
                 this.isFixed = false
@@ -119,12 +119,16 @@ export default {
 </script>
 
 <style>
-.main-menu {
-    border-top: 2px solid #000000;
+.fixed-top {
+    margin-top: 0px !important;
+}
+.common-menu {
     background-color: #ffffff;
+	margin: 30px 0px;
+	border-radius: 10px;
 }
 
-.main-menu ul {
+.common-menu ul {
     display: flex;
     justify-content: center;
     list-style: none;
@@ -132,14 +136,14 @@ export default {
     padding: 0px;
 }
 
-.main-menu ul li {
+.common-menu ul li {
     display: block;
     position: relative;
     background-color: #ffffff;
     color: #000000;
 }
 
-.main-menu ul a {
+.common-menu ul a {
     display: block;
     color: #000000;
     text-decoration: none;
@@ -147,12 +151,12 @@ export default {
     font-size: 90%;
 }
 
-.main-menu > ul > li > a {
+.common-menu > ul > li > a {
     padding: 20px 40px;
     font-size: 120%;
 }
 
-.main-menu ul li ul {
+.common-menu ul li ul {
     display: block;
     position: absolute;
     left: 0px;
@@ -163,7 +167,7 @@ export default {
     z-index: 1;
 }
 
-.main-menu ul li ul li:hover {
+.common-menu ul li ul li:hover {
     background-color: #f0f0f0;
 }
 </style>
