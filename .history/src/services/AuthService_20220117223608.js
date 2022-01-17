@@ -11,7 +11,7 @@ const login = async data => {
 };
 
 const register = async data => {
-  return await axios.post("users/create", data);
+  return await axios.post("users/create", data , {headers});
 };
 
 const getUser = async (id) => {
