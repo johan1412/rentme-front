@@ -1,13 +1,25 @@
 <template>
-<div class="common-menu" v-bind:class="{ 'fixed-top': isFixed }">
-    <ul>
-        <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
-            <router-link :to="'search/' + category.url">{{ category.title }}</router-link>
-            <ul v-if="activeCategory == index" @click="activeCategory = null">
-                <li v-for="subCategory in category.categories" :key="subCategory.id"><router-link :to="subCategory.url">{{ subCategory.title }}</router-link></li>
-            </ul>
-        </li>
-    </ul>
+<div>
+    <div class="common-menu">
+        <ul>
+            <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
+                <router-link :to="'/search?category=' + category.title">{{ category.title }}</router-link>
+                <ul v-if="activeCategory == index" @click="activeCategory = null">
+                    <li v-for="subCategory in category.categories" :key="subCategory.id"><router-link :to="subCategory.url">{{ subCategory.title }}</router-link></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="common-menu" v-bind:class="{ 'fixed-top': isFixed, 'd-none': !isFixed }">
+        <ul>
+            <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
+                <router-link :to="'/search?category=' + category.title.toLowerCase()">{{ category.title }}</router-link>
+                <ul v-if="activeCategory == index" @click="activeCategory = null">
+                    <li v-for="subCategory in category.categories" :key="subCategory.id"><router-link :to="subCategory.url">{{ subCategory.title }}</router-link></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </div>
 </template>
 
@@ -22,7 +34,6 @@ export default {
                 {
                     id:1,
                     title:'Bricolage',
-                    url:'#',
                     categories: [
                         {id:11, title:'sub item 111', url:'#'},
                         {id:12, title:'sub item 211', url:'#'},
@@ -34,7 +45,6 @@ export default {
                 {
                     id:2,
                     title:'Jardinage',
-                    url:'#',
                     categories: [
                         {id:21, title:'sub item 122', url:'#'},
                         {id:22, title:'sub item 222', url:'#'},
@@ -46,7 +56,6 @@ export default {
                 {
                     id:3,
                     title:'Véhicule',
-                    url:'#',
                     categories: [
                         {id:31, title:'sub item 133', url:'#'},
                         {id:32, title:'sub item 233', url:'#'},
@@ -58,7 +67,6 @@ export default {
                 {
                     id:4,
                     title:'High-tech',
-                    url:'#',
                     categories: [
                         {id:41, title:'sub item 144', url:'#'},
                         {id:42, title:'sub item 244', url:'#'},
@@ -70,7 +78,6 @@ export default {
                 {
                     id:5,
                     title:'Nettoyage',
-                    url:'#',
                     categories: [
                         {id:51, title:'sub item 155', url:'#'},
                         {id:52, title:'sub item 255', url:'#'},
@@ -82,7 +89,6 @@ export default {
                 {
                     id:6,
                     title:'Vetements',
-                    url:'#',
                     categories: [
                         {id:61, title:'sub item 166', url:'#'},
                         {id:62, title:'sub item 266', url:'#'},
