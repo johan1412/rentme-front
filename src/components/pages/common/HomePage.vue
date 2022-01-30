@@ -8,7 +8,7 @@
       <hr>
       <ul>
         <li v-for="category in categories" :key="category.id">
-          <router-link :to="'/category/' + category.id">
+          <router-link :to="'/category/' + category.title">
             <img :src="category.img" alt="" class="icon-category">
             <p>{{ category.title }}</p>
           </router-link>
@@ -122,7 +122,6 @@ export default {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  /*justify-content: space-between;*/
   margin: 50px 0px;
 }
 
