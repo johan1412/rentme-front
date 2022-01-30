@@ -1,5 +1,5 @@
 <template>
-    <footer class="border-top">
+    <footer>
         <div class="footer-box">
             <ul>
                 <li class="footer-title">Informations pratiques</li>
