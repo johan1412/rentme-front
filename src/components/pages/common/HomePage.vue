@@ -8,7 +8,7 @@
       <hr>
       <ul>
         <li v-for="category in categories" :key="category.id">
-          <router-link :to="'/category/' + category.title">
+          <router-link :to="'/search?category=' + category.title">
             <img :src="category.img" alt="" class="icon-category">
             <p>{{ category.title }}</p>
           </router-link>
