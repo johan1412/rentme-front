@@ -20,10 +20,16 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
+
 export default {
   name: "NavBar",
-  methods:{
+  data() {
+    return {
+      modalShow: false,
+    }
+  },
+  methods: {
     logout(){
       localStorage.removeItem('token')
       localStorage.removeItem('userId')
