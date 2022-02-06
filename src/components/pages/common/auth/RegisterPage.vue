@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 class="text-center">Register</h1>
     <RegisterForm />
   </div>
 </template>

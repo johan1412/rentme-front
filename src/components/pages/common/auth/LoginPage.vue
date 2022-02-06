@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 class="text-center">Login</h1>
     <LoginForm />
   </div>
 </template>

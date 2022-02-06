@@ -1,58 +1,56 @@
 <template>
   <div class="container m-auto">
       <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="firstName">Nom</label>
-          <input
-            type="text"
-            v-model="firstName"
-            class="form-control"
-            id="firstName"
-            aria-describedby="emailHelp"
-            placeholder="Saisez votre nom"
-          />
-        </div>
-        <div class="form-group">
-          <label for="lastName">Prenom</label>
-          <input
-            type="text"
-            v-model="lastName"
-            class="form-control"
-            id="lastName"
-            placeholder="Saisez votre prénom"
-          />
-        </div>
-        <div class="form-group">
-          <label for="lastName">Addresse</label>
-          <input
-            type="text"
-            v-model="address"
-            class="form-control"
-            id="address"
-            placeholder="Saisez votre addresse"
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input
-            type="email"
-            v-model="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            placeholder="Enter email"
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            v-model="password"
-            class="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-          />
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+         <b-card class="form-frame mx-auto">
+          <b-card-text class="form-top text-center">
+            <b-icon icon="person-circle" aria-hidden="true"></b-icon>
+            <p>INSCRIVEZ-VOUS</p>
+          </b-card-text>
+          <b-card-text class="form-data">
+            <div class="form-group">
+              <input
+                type="text"
+                v-model="firstName"
+                id="firstName"
+                aria-describedby="emailHelp"
+                placeholder="Saisissez votre nom"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                v-model="lastName"
+                id="lastName"
+                placeholder="Saisissez votre prénom"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                v-model="address"
+                id="address"
+                placeholder="Saisissez votre addresse"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="email"
+                v-model="email"
+                id="exampleInputEmail1"
+                placeholder="Email"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="password"
+                v-model="password"
+                id="exampleInputPassword1"
+                placeholder="Nouveau mot de passe"
+              />
+            </div>
+          </b-card-text>
+          <button type="submit" class="btn btn-submit mb-3">Submit</button>
+        </b-card>
       </form>
     </div>
 </template>
@@ -82,3 +80,51 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.form-frame {
+  width: 450px;
+  background-color: rgba(255, 255, 255, 1);
+  border-top: 4px solid rgba(61,153,112, 1);
+  margin: 100px 0px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.form-top .b-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.form-top p {
+  margin-top: 20px;
+  letter-spacing: 2px;
+}
+
+.form-frame .form-data {
+  margin: 40px 0px;
+}
+
+.form-frame input {
+  border: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #cccccc;
+  outline: 0px !important;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 10px;
+  width: 100%;
+}
+
+.form-frame .btn-submit,
+.form-frame .btn-submit:hover,
+.form-frame .btn-submit:active,
+.form-frame .btn-submit:focus {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px 0px;
+  background-color: rgb(61,153,112);
+  border: none;
+  -webkit-appearance: none;
+  outline: none;
+  color: whitesmoke;
+}
+</style>
