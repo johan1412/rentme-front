@@ -112,15 +112,7 @@
 		</div>
 		<div class="col-md-1"></div>
 		<div class="products-list col-md-8">
-			<div class="searchbar-products">
-				<form id="searchInputForm" action="https://vuejs.org/" method="get" >
-					<b-form inline>
-						<label for="inline-form-input">Rechercher : </label>
-						<b-form-input id="inline-form-input" v-model="searchInput" name="words"></b-form-input>
-						<b-button type="submit" variant="transparent"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
-					</b-form>
-				</form>
-			</div>
+			<SearchBar />
 			<div class="orderby-box row">
 				<div v-if="paramWords != ''">
 					<h2>{{ nbResults }} résultat{{ nbResults > 1 ? "s " : "" }} pour "{{ paramWords }}"</h2>
@@ -191,10 +183,12 @@
 
 <script>
 import Menu from '../../layout/CommonMenu.vue';
+import SearchBar from '../../layout/CommonSearchBar.vue';
 
 export default {
   components: {
     Menu,
+	SearchBar,
   },
   name: "Home",
   data() {
@@ -404,6 +398,7 @@ export default {
 	},
     onPageChanged(page) {
       this.paginate(this.perPage, page - 1);
+      window.scrollTo(0, 0);
     },
 	getCategories() {
 		return [
@@ -531,7 +526,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .main-frame {
 	width: 95%;
 	max-width: 1800px;
@@ -681,7 +676,7 @@ export default {
 }
 
 .card-deck a {
-	text-decoration: none;
+	text-decoration: none !important;
 }
 
 .card-deck-custom-grid .card:hover {

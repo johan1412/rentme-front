@@ -30,6 +30,7 @@ export default {
   justify-content: center;
   text-align: left;
   padding: 30px 0px 50px 0px;
+  margin-top: 50px;
 }
 
 .footer-box ul {
