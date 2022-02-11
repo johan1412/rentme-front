@@ -8,7 +8,7 @@
       <hr>
       <ul>
         <li v-for="category in categories" :key="category.id">
-          <router-link :to="'/category/' + category.title">
+          <router-link :to="'/search?category=' + category.title">
             <img :src="category.img" alt="" class="icon-category">
             <p>{{ category.title }}</p>
           </router-link>
@@ -24,10 +24,10 @@
             <b-col cols="12">
               <carousel :perPage="4">
                 <slide v-for="post in posts" :key="post.id" class="p-2">
-                  <router-link :to="'/posts/' + post.id" class="card-link">
-                    <b-card :img-src="post.img" img-alt="Image" img-top tag="article">
+                  <router-link :to="'/products/' + post.id" class="card-link">
+                    <b-card :img-src="post.files" img-alt="Image" img-top tag="article">
                       <b-card-text>
-                        {{ post.description }}
+                        {{ post.name }}
                       </b-card-text>
                       <template #footer>
                         <small class="text-muted">{{ post.price }}€ / jour</small>
@@ -64,22 +64,22 @@ export default {
       categories: [
         {id:1, title:'Bricolage', img:'https://picsum.photos/300/200'},
         {id:2, title:'Jardinage', img:'https://picsum.photos/300/200'},
-        {id:3, title:'Véhicule', img:'https://picsum.photos/300/200'},
+        {id:3, title:'Véhicule', img:'https://picsum.photos/500/200'},
         {id:4, title:'High-tech', img:'https://picsum.photos/300/200'},
         {id:5, title:'Nettoyage', img:'https://picsum.photos/300/200'},
         {id:6, title:'Vetements', img:'https://picsum.photos/300/200'},
       ],
       posts: [
-        {id:1, description:'chelsea is the best club in the world and chelsea has a great player', price:30, img:'https://picsum.photos/300/200/?image=41'},
-        {id:2, description:'chelsea is the best club in the world and chelsea has a great player', price:60, img:'https://picsum.photos/300/200/?image=41'},
-        {id:3, description:'chelsea is the best club in the world and chelsea has a great player', price:54, img:'https://picsum.photos/300/200/?image=41'},
-        {id:4, description:'chelsea is the best club in the world and chelsea has a great player', price:25, img:'https://picsum.photos/300/200/?image=41'},
-        {id:5, description:'chelsea is the best club in the world and chelsea has a great player', price:31, img:'https://picsum.photos/300/200/?image=41'},
-        {id:6, description:'chelsea is the best club in the world and chelsea has a great player', price:40, img:'https://picsum.photos/300/200/?image=41'},
-        {id:7, description:'chelsea is the best club in the world and chelsea has a great player', price:54, img:'https://picsum.photos/300/200/?image=41'},
-        {id:8, description:'chelsea is the best club in the world and chelsea has a great player', price:55, img:'https://picsum.photos/300/200/?image=41'},
-        {id:9, description:'chelsea is the best club in the world and chelsea has a great player', price:81, img:'https://picsum.photos/300/200/?image=41'},
-        {id:10, description:'chelsea is the best club in the world and chelsea has a great player', price:28, img:'https://picsum.photos/300/200/?image=41'},
+        {id:1, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:30, files:'https://picsum.photos/300/200/?image=41'},
+        {id:2, name:'chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player, chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the worldchelsea is the best chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world club in the world chelsea is the best club in the world  chelsea is the best club in the world  and chelsea has a great player', price:60, files:'https://picsum.photos/300/200/?image=41'},
+        {id:3, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:54, files:'https://picsum.photos/300/400/?image=41'},
+        {id:4, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:25, files:'https://picsum.photos/500/200/?image=41'},
+        {id:5, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:31, files:'https://picsum.photos/300/200/?image=41'},
+        {id:6, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:40, files:'https://picsum.photos/300/200/?image=41'},
+        {id:7, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:54, files:'https://picsum.photos/300/200/?image=41'},
+        {id:8, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:55, files:'https://picsum.photos/300/200/?image=41'},
+        {id:9, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:81, files:'https://picsum.photos/300/200/?image=41'},
+        {id:10, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:28, files:'https://picsum.photos/300/200/?image=41'},
       ],
     }
   },
@@ -149,15 +149,30 @@ export default {
 }
 
 .main-offers .card {
+  height: 350px;
   transition: all .2s ease-in-out;
 }
 
 .main-offers .card:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-.main-offers .card-body p {
+.main-offers .card-img-top {
+  width: 100%;
+  height: 180px;
+}
+
+.main-offers .card-body {
+  padding: 0px;
+  margin: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.main-offers .card-body .card-text {
   color: #000000;
+  height: 100%;
+  text-overflow: ellipsis;
 }
 
 .main-offers .card-footer {

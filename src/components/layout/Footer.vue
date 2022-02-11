@@ -3,14 +3,14 @@
         <div class="footer-box">
             <ul>
                 <li class="footer-title">Informations pratiques</li>
-                <li><router-link to="#" >Info 1</router-link></li>
-                <li><router-link to="#" >Info 2</router-link></li>
-                <li><router-link to="#" >Info 3</router-link></li>
+                <li><router-link to="#" >Nous contacter</router-link></li>
+                <li><router-link to="#" >Le concept</router-link></li>
+                <li><router-link to="#" >FAQ</router-link></li>
             </ul>
             <ul>
                 <li class="footer-title">Informations légales</li>
-                <li><router-link to="#" >Info 1</router-link></li>
-                <li><router-link to="#" >Info 2</router-link></li>
+                <li><router-link to="#" >Mentions légales</router-link></li>
+                <li><router-link to="#" >Protection des données</router-link></li>
             </ul>
         </div>
     </footer>
@@ -30,6 +30,7 @@ export default {
   justify-content: center;
   text-align: left;
   padding: 30px 0px 50px 0px;
+  margin-top: 50px;
 }
 
 .footer-box ul {
