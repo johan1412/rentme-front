@@ -13,6 +13,7 @@ import store from './vuex'
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import StripeCheckout from './components/pages/payment/StripeCheckout'
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
@@ -31,6 +32,8 @@ const routes = [
   { path: '/admin/categories', component: CategoryPage },
   { path: '/admin/products', component: ProductsPage },
   { path: '/search', component: SearchPage },
+  { path: '/payment', component: StripeCheckout },
+
 ]
 
 const router = new VueRouter({
