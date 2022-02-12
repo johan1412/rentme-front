@@ -35,6 +35,7 @@ export default {
       this.$store.dispatch('user',null)
       this.$store.dispatch('products',[])
       this.$store.dispatch('numberOfProductsNotValid',0)
+      this.$store.dispatch('parentCategories',[])
       this.$router.push('/')
     }
   },
