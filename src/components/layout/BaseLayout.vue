@@ -27,6 +27,14 @@ export default {
         });
     }
   },
+  watch: {
+    '$route.query': {
+      immediate: false,
+      handler() {
+        window.scrollTo(0, 0);
+      }
+    }
+  }
 };
 </script>
 

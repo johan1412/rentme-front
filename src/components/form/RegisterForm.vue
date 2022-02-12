@@ -49,7 +49,7 @@
               />
             </div>
           </b-card-text>
-          <button type="submit" class="btn btn-submit mb-3">Submit</button>
+          <button type="submit" class="btn btn-submit mb-3">S'inscrire</button>
         </b-card>
       </form>
     </div>

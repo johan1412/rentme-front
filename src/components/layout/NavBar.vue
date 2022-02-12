@@ -5,8 +5,8 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav v-if="!user" class="ml-auto">
         <b-nav-item><router-link class="btn bg-dark text-light" to="#">Publier une annonce</router-link></b-nav-item>
-        <b-nav-item><router-link class="btn text-dark" to="register">S'inscrire</router-link></b-nav-item>
-        <b-nav-item><router-link class="btn text-dark" to="login">Se connecter</router-link></b-nav-item>
+        <b-nav-item><router-link class="btn text-dark" to="/register">S'inscrire</router-link></b-nav-item>
+        <b-nav-item><router-link class="btn text-dark" to="/login">Se connecter</router-link></b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav v-else class="ml-auto">
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-secondary text-light" to="/admin/products">Annonce en attente de validation({{productsNotValidCount}})</router-link></b-nav-item>
