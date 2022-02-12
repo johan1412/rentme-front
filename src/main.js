@@ -15,6 +15,7 @@ import store from './vuex'
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import StripeCheckout from './components/pages/payment/StripeCheckout'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 
