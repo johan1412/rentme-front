@@ -9,7 +9,7 @@
         <b-nav-item><router-link class="btn text-dark" to="/login">Se connecter</router-link></b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav v-else class="ml-auto">
-        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-secondary text-light" to="/admin/products">Annonce en attente de validation({{productsNotValidCount}})</router-link></b-nav-item>
+        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-secondary text-light" to="/admin/products">Annonce en attente de validation({{numberOfProductsNotValid}})</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-secondary text-light" to="/admin/categories">Ajouter une nouvelle catégorie</router-link></b-nav-item>
         <b-nav-item><router-link class="btn bg-secondary text-light" to="#">Mon compte</router-link></b-nav-item>
         <b-nav-item v-on:click="logout"><router-link class="btn bg-light text-dark" to="/">se déconnecter</router-link></b-nav-item>
@@ -21,7 +21,6 @@
 
 <script>
 import {mapGetters} from 'vuex';
-
 export default {
   name: "NavBar",
   data() {
@@ -34,11 +33,13 @@ export default {
       localStorage.removeItem('token')
       localStorage.removeItem('userId')
       this.$store.dispatch('user',null)
+      this.$store.dispatch('products',[])
+      this.$store.dispatch('numberOfProductsNotValid',0)
       this.$router.push('/')
     }
   },
   computed:{
-    ...mapGetters(['user','productsNotValidCount','productsNotValid'])
+    ...mapGetters(['user','numberOfProductsNotValid','productsNotValid'])
   },
 };
 </script>

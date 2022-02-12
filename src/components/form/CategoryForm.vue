@@ -42,7 +42,7 @@ export default {
           this.$router.push('/')
       }
       
-      AuthService.parentCotegories().then(response => {
+      AuthService.parentCategories().then(response => {
         this.parentCategories = response.data['hydra:member'].filter(category => !category?.parent)
       }).catch(e => console.log(e))
   },

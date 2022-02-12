@@ -51,12 +51,12 @@ export default {
         localStorage.setItem("token",response.data.token)
           localStorage.setItem("userId",response.data.data.id)
           this.$store.dispatch('user',response.data.data)
-          const products = await AuthService.getProducts()
-          if(products){
-            this.$store.dispatch('products',products.data['hydra:member'])
-            this.$router.push(this.$route.query.redirect || '/') 
+          if (response.data.data.roles.includes("ROLE_ADMIN")){
+            this.$store.dispatch('numberOfProductsNotValid',response.data.data.numberOfProductsNotValid)
           }
-      }    
+          this.$router.push(this.$route.query.redirect || '/')
+      }
+
     },
   },
 };

@@ -45,6 +45,7 @@ const routes = [
   { path: '/admin/categories', component: CategoryPage },
   { path: '/admin/products', component: ProductsPage },
   { path: '/search', component: SearchPage },
+  { path: '/payment', component: StripeCheckout },
   { path: '/products/:productId', component: ProductPage },
   { path: '/user/:userId', component: ProfilePage },
 ]

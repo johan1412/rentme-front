@@ -5,7 +5,8 @@ import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex)
 const state = {
     user : null,
-    products : []
+    products : [],
+    numberOfProductsNotValid: 0
 }
 
 const store = new Vuex.Store({
@@ -15,11 +16,8 @@ const store = new Vuex.Store({
       user: (state) => {
           return state.user
       },
-      productsNotValid: (state) => {
-        return state.products.filter(product => !product.isValid)
-      },
-      productsNotValidCount: (state, getters) => {
-        return getters.productsNotValid.length
+      numberOfProductsNotValid: (state) => {
+          return state.numberOfProductsNotValid
       },
       adminPermission: (state, getters) => {
         return getters.user ? getters.user.roles.includes('ROLE_ADMIN') : false
@@ -34,7 +32,10 @@ const store = new Vuex.Store({
       },
       products(context,products){
         context.commit('products',products)
-    }
+    },
+      numberOfProductsNotValid(context,numberOfProductsNotValid){
+          context.commit('numberOfProductsNotValid',numberOfProductsNotValid)
+      },
   },
   mutations:{ 
       user(state,user){
@@ -42,7 +43,10 @@ const store = new Vuex.Store({
       },
       products(state,products){
         state.products = products
-    }
+    },
+      numberOfProductsNotValid(state,numberOfProductsNotValid){
+          state.numberOfProductsNotValid = numberOfProductsNotValid
+      }
   }
 })
 
