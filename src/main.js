@@ -9,6 +9,8 @@ import ProductPage from './components/pages/common/ProductPage.vue'
 import ProfilePage from './components/pages/common/ProfilePage.vue'
 import HomePage from './components/pages/common/HomePage'
 import SearchPage from './components/pages/common/SearchPage'
+import AddProductPage from './components/pages/renter/AddProductPage'
+import RenterProductsPage from './components/pages/renter/RenterProductsPage'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from './vuex'
 
@@ -45,6 +47,8 @@ const routes = [
   { path: '/admin/categories', component: CategoryPage },
   { path: '/admin/products', component: ProductsPage },
   { path: '/search', component: SearchPage },
+  { path: '/publish', component: AddProductPage},
+  { path: '/products', component: RenterProductsPage},
   { path: '/products/:productId', component: ProductPage },
   { path: '/user/:userId', component: ProfilePage },
 ]

@@ -43,6 +43,10 @@ const deleteProduct = async (id) => {
   return await axios.delete(`products/${id}`, {headers});
 };
 
+const postProduct = async (data) => {
+  return await axios.post("products", data, {headers});
+};
+
 export default {
   register,
   login,
@@ -52,5 +56,6 @@ export default {
   getProducts,
   updateProduct,
   deleteProduct,
-  getProductsNotValid
+  getProductsNotValid,
+  postProduct
 };
