@@ -42,7 +42,7 @@
 					<CalendarAvailabilities v-bind:product="product"/>
 				</div>
 				<div class="contact-form">
-					<FormContact v-bind:user="product.user"/>
+					<FormContact v-bind:product="product" v-bind:user="product.user"/>
 				</div>
 			</div>
 		</div>
