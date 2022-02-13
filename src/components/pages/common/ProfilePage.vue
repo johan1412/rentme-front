@@ -12,27 +12,27 @@
 							<h4>Annonces de ce loueur <small> ({{ products.length }})</small></h4>
 							<hr>
 							<div class="">
-                                <b-card-group deck class="card-deck-custom-grid">
-                                    <router-link v-for="product in paginatedProducts" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
-                                        <b-card class="product-card" :img-src="product.files" img-alt="Image" img-top>
-                                            <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
-                                            <template #footer>
-                                                <small class="text-muted">{{ product.price }}€ / jour</small>
-                                            </template>
-                                        </b-card>
-                                    </router-link>
-                                </b-card-group>
-                                <b-pagination
-                                    pills
-                                    v-model="currentPage"
-                                    :total-rows="nbResults"
-                                    :per-page="perPage"
-                                    first-number
-                                    last-number
-                                    align="center"
-                                    limit="8"
-                                    @change="onPageChanged"
-                                ></b-pagination>
+                <b-card-group deck class="card-deck-custom-grid">
+                    <router-link v-for="product in paginatedProducts" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
+                        <b-card class="product-card" :img-src="product.files" img-alt="Image" img-top>
+                            <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
+                            <template #footer>
+                                <small class="text-muted">{{ product.price }}€ / jour</small>
+                            </template>
+                        </b-card>
+                    </router-link>
+                </b-card-group>
+                <b-pagination
+                    pills
+                    v-model="currentPage"
+                    :total-rows="nbResults"
+                    :per-page="perPage"
+                    first-number
+                    last-number
+                    align="center"
+                    limit="8"
+                    @change="onPageChanged"
+                ></b-pagination>
 							</div>
 						</div>
 					</div>
@@ -59,8 +59,8 @@ import FormContact from '../../layout/FormContact.vue';
 export default {
   components: {
     Menu,
-	Comments,
-	FormContact,
+    Comments,
+    FormContact,
   },
   name: "Product",
   data() {

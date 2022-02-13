@@ -1,24 +1,90 @@
 <template>
     <div class="frame-calendar">
         <form class="form-calendar" action="#" method="post">
-            <h4 class="title-form">Disponibiltés</h4>
-            <div class="mb-5">Inclure calendrier ici ...</div>
+            <h4 class="title-form">Reservation</h4>
+            <div class="mb-4 mt-3">
+                <HotelDatePicker v-on:period-selected="dateSelected" v-on:clear-selection="clearDates" :showSingleMonth="showSingleMonth" :disabledDates="disabledDates" :halfDay="halfDay" :minNights="minNights" :hoveringTooltip="hoveringTooltip" />
+            </div>
+            <div class="date-picker-price mb-2">Total : {{ totalPrice }}€</div>
             <button class="submit-button">LOUER</button>
         </form>
     </div>
 </template>
 
 <script>
+import HotelDatePicker from 'vue-hotel-datepicker';
+import 'vue-hotel-datepicker/dist/vueHotelDatepicker.css';
 
 export default {
     name: "CalendarAvailabilities",
     props: {
         product: Object,
+    },
+    components: {
+        HotelDatePicker,
+    },
+    data() {
+        return {
+          disabledDates: [],
+          halfDay: false,
+          minNights: 0,
+          hoveringTooltip: false,
+          startingDate: '',
+          endingDate: '',
+          showSingleMonth: true,
+          totalPrice: 0,
+          productLocal: this.product,
+        }
+    },
+    methods: {
+        pad(s) {
+          return (s < 10) ? '0' + s : s;
+        },
+        convertDate(d) {
+            return [d.getFullYear(), this.pad(d.getMonth()+1), this.pad(d.getDate())].join('-');
+        },
+        priceCalcul(startingDate, endingDate) {
+            const date1 = new Date(startingDate);
+            const date2 = new Date(endingDate);
+            const diffTime = Math.abs(date2 - date1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+            this.totalPrice = (diffDays * this.product.price).toString();
+        },
+        dateSelected(e, datein, dateout) {
+            this.startingDate = this.convertDate(datein);
+            this.endingDate = this.convertDate(dateout);
+            let elt = document.getElementsByClassName('vhd__datepicker__input');
+            let d1 = datein;
+            let d2 = dateout;
+            elt[0].innerHTML = [this.pad(d1.getDate()), this.pad(d1.getMonth()+1), d1.getFullYear()].join('-');
+            elt[1].innerHTML = [this.pad(d2.getDate()), this.pad(d2.getMonth()+1), d2.getFullYear()].join('-');
+            this.priceCalcul(this.startingDate, this.endingDate);
+        },
+        clearDates() {
+            this.startingDate = '';
+            this.endingDate = '';
+            let elt = document.getElementsByClassName('vhd__datepicker__input');
+            elt[0].innerHTML = 'Début';
+            elt[1].innerHTML = 'Fin';
+        },
+    },
+    mounted() {
+        let elt = document.getElementsByClassName('vhd__datepicker__input');
+        elt[0].innerHTML = 'Début';
+        elt[1].innerHTML = 'Fin';
+        let reservations = this.product.reservations;
+        reservations.forEach(reservation => {
+            let start = new Date(reservation.rentalBeginDate);
+            let end = new Date(reservation.rentalEndDate);
+            for(start; start<=end; start.setDate(start.getDate()+1)){
+                this.disabledDates.push(this.convertDate(new Date(start)));
+            }
+        });
     }
 }
 </script>
 
-<style scoped>
+<style>
 .frame-calendar {
     margin: 50px 0px 50px 50px;
     padding: 40px 50px;
