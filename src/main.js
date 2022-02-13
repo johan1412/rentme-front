@@ -15,7 +15,7 @@ import store from './vuex'
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import StripeCheckout from './components/pages/payment/StripeCheckout'
+//import StripeCheckout from './components/pages/payment/StripeCheckout.vue'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 
@@ -45,7 +45,6 @@ const routes = [
   { path: '/admin/categories', component: CategoryPage },
   { path: '/admin/products', component: ProductsPage },
   { path: '/search', component: SearchPage },
-  { path: '/payment', component: StripeCheckout },
   { path: '/products/:productId', component: ProductPage },
   { path: '/user/:userId', component: ProfilePage },
 ]

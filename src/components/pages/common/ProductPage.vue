@@ -111,6 +111,9 @@ export default {
 				{ id: 1, text: 'blobloblo', createdAt: '01/01/2022', rating: '2.8', user: { id: 24, firstName: 'emile', lastName: 'Roux'}},
                 { id: 2, text: 'bliblibli', createdAt: '05/01/2022', rating: '3.7', user: { id: 21, firstName: 'stephane', lastName: 'Martin'}},
                 { id: 3, text: 'blablabla', createdAt: '02/01/2022', rating: '1', user: { id: 37, firstName: 'amelie', lastName: 'Audart'}},
+			],
+			reservations: [
+				{ id: 1, rentalBeginDate: '2022/02/16', rentalEndDate: '2022/02/24'},
 			]
 		};
 		this.product = product;
