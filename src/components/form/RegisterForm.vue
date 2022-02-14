@@ -24,13 +24,31 @@
                 placeholder="Saisissez votre prénom"
               />
             </div>
-            <div class="form-group">
-              <input
-                type="text"
-                v-model="address"
-                id="address"
-                placeholder="Saisissez votre addresse"
-              />
+            <div class="form-group address-form mt-4">
+              <label class="address-label">Votre adresse</label>
+              <div class="frame-address-form-input">
+                <input
+                  type="text"
+                  v-model="addressStreet"
+                  id="addressStreet"
+                  placeholder="Nom de la rue"
+                  @change="handleChangeAddress"
+                />
+                <input
+                  type="text"
+                  v-model="addressCity"
+                  id="addressCity"
+                  placeholder="Nom de la ville"
+                  @change="handleChangeAddress"
+                />
+                <input
+                  type="text"
+                  v-model="addressRegion"
+                  id="addressRegion"
+                  placeholder="Numéro de département"
+                  @change="handleChangeAddress"
+                />
+              </div>
             </div>
             <div class="form-group">
               <input
@@ -48,6 +66,17 @@
                 placeholder="Nouveau mot de passe"
               />
             </div>
+            <div class="form-group mt-5">
+              <b-form-checkbox
+                id="roleChoice"
+                v-model="role"
+                name="roleChoice"
+                value="accepted"
+                unchecked-value="not_accepted"
+              >
+                Je souhaite pouvoir mettre en location mes produits sur le site
+              </b-form-checkbox>
+            </div>
           </b-card-text>
           <button type="submit" class="btn btn-submit mb-3">S'inscrire</button>
         </b-card>
@@ -62,21 +91,27 @@ export default {
   data: () => ({
     firstName: "",
     lastName: "",
-    address: "",
+    addressStreet: '',
+    addressCity: '',
+    addressRegion: '',
+    address: '',
     email: "",
     password: "",
+    role: "",
   }),
-   methods: {
+  methods: {
     handleSubmit: function () {
-      AuthService.register({ firstName:this.firstName,lastName:this.lastName,address:this.address,email: this.email, password: this.password })
-        .then((response) => {
+      AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roleRenter: this.role })
+        .then(() => {
           this.$router.push('/login')
-          console.log(response.data);
         })
         .catch((e) => {
           console.log(e);
         });
     },
+    handleChangeAddress() {
+      this.address = this.addressStreet + '///&///&///&///&, ' + this.addressCity + '///&///&///&///&, ' + this.addressRegion;
+    }
   },
 };
 </script>
@@ -127,4 +162,14 @@ export default {
   outline: none;
   color: whitesmoke;
 }
+
+.address-form {
+  padding-left: 10px !important;
+}
+
+.frame-address-form-input {
+  border-left: 1px solid #cccccc;
+  padding: 10px;
+}
+
 </style>
