@@ -662,16 +662,19 @@ export default {
 	display: flex;
 }
 
+.card-deck-custom-grid > a,
+.card-deck-custom-list > a {
+	margin-top: 40px;
+}
+
 .card-deck-custom-grid .card {
 	flex: none;
-	margin-top: 40px;
 	transition: all .2s ease-in-out;
 }
 
 .card-deck-custom-list .card {
 	flex: none;
 	display: block;
-	margin-top: 40px;
 	height: 300px;
 }
 
