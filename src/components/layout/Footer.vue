@@ -23,6 +23,11 @@ export default {
 </script>
 
 <style>
+
+footer {
+  margin-top: auto;
+}
+
 .footer-box {
   background-color: #ffffff;
   color: #444444;
@@ -31,6 +36,7 @@ export default {
   text-align: left;
   padding: 30px 0px 50px 0px;
   margin-top: 50px;
+  margin-bottom: 0px;
 }
 
 .footer-box ul {

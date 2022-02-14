@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1>Mes annonces</h1>
-    <h2>Test</h2>
-    <Products-list :products=this.$store.getters.user.products  />
+  <div class="container">
+    <h1 class="title mt-5">Mes annonces</h1>
+    <hr>
+    <Products-list :productsProps="productsProps"  />
   </div>
 </template>
 <script>
@@ -12,6 +12,16 @@ export default {
     ProductsList,
   },
   name: "RenterProductsPage",
+  data() {
+    return {
+      productsProps: [],
+    }
+  },
+  mounted() {
+    if (this.$store.getters.user && this.$store.getters.user.products) {
+      this.productsProps = this.$store.getters.user.products;
+    }
+  }
 };
 </script>
 
