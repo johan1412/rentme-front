@@ -6,7 +6,7 @@
 			<div class="col-md-8">
 				<div class="user-details">
 					<h2>{{ user.firstName }} {{ user.lastName }}</h2><h2 class="title-separator"> | </h2><h4 class="user-details-note">{{ user.note }}/5</h4>
-					<div>Habite à <strong>{{ user.address.city }} ({{ user.address.region.number }})</strong></div>
+					<div>Habite à <strong>{{ addressCity }} ({{ addressRegion }})</strong></div>
 					<div class="row user-products">
 						<div class="col-md-12">
 							<h4>Annonces de ce loueur <small> ({{ products.length }})</small></h4>
@@ -74,22 +74,26 @@ export default {
       paginatedProducts: [],
       nbResults: 0,
       products: [],
+      addressCity: '',
+      addressRegion: '',
     }
   },
   mounted() {
 	let userId = this.$route.params.userId;
 	if (userId) {
-		// let user = fetch(blablabla + userId)
+		/*let user = fetch(blablabla + userId)
+    let addressUser = user.address.split('///&///&///&///&');
+    this.addressCity = addressUser[1].charAt(0).toUpperCase() + addressUser[1].slice(1);
+    this.addressRegion = addressUser[2];*/
+    ///////////////////////////////
+    this.addressCity = 'paris'.charAt(0).toUpperCase() + 'paris'.slice(1);
+    this.addressRegion = '75';
+    ///////////////////////////////
 		let user = {
 			id: 2,
 			firstName: 'julien',
 			lastName: 'Etienne',
-			address: {
-                street: 'avenue des champs elysées',
-                city: 'Paris',
-                region: { id: 2, number: "75", name: "Ile-de-france"},
-                country: 'France'
-            },
+			address: 'avenue des champs elysées///&///&///&///&, paris///&///&///&, 75',
 			note: '1.6',
 			products: [
 				{ id: 1, region: 'Ain', name: 'nom du produit test', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 24, note: '3', files: 'https://picsum.photos/300/300', category: {id:1, name:'sub item 222', parent:'Bricolage'}, },

@@ -47,13 +47,14 @@ export default {
       }
     },
     async callGeocode() {
-        let addressEncoded = encodeURI(this.address);
+        let addressEncoded = encodeURI(this.productAddress);
         let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${addressEncoded}&key=${this.$apiKey}`);
         return response.json();
     }
   },
   async mounted() {
-    this.productAddress = this.address;
+    let fullAddress = this.address.split('///&///&///&///&');
+    this.productAddress = (fullAddress[0].concat(fullAddress[1]));
     let position = await this.callGeocode();
     if (position.status == "OK") {
         let lat = position.results[0].geometry.location.lat;
