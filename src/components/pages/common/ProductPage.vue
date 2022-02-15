@@ -10,12 +10,12 @@
 		<div class="row mt-5">
 			<div class="col-md-8">
 				<div class="product-details">
-					<h2>{{ product.name }}</h2><h2 class="title-separator"> | </h2><h4 class="product-details-note">{{ product.note }}/5</h4>
+					<h2>{{ product.name }}</h2>
 					<div>Loué par <strong><router-link :to="'/user/' + this.product.user.id" class="user-link">{{ product.user.lastName }} {{ product.user.firstName }}</router-link></strong></div>
 					<div>Annonce publiée le {{ product.publishedAt }}</div>
 					<div class="row product-main-presentation">
 						<div class="col-md-6 product-image">
-							<img :src="product.files.path" width="100%"/>
+							<img :src="product.files.length !== 0 ? product.files.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" width="100%"/>
 						</div>
 						<div class="col-md-6 product-description">
 							<h4>Description</h4>
@@ -65,6 +65,8 @@ import SimilarAds from '../../layout/SimilarAds.vue';
 import FormContact from '../../layout/FormContact.vue';
 import CalendarAvailabilities from '../../layout/CalendarAvailabilities.vue';
 import GoogleMap from '../../layout/GoogleMap.vue';
+import AuthService from "@/services/AuthService";
+import {mapGetters} from "vuex";
 
 export default {
   components: {
@@ -79,45 +81,17 @@ export default {
   name: "Product",
   data() {
 	return {
-		product: {},
 		buttonDescriptionToggle: false,
 	}
   },
-  mounted() {
-	let productId = this.$route.params.productId;
-	if (productId) {
-		// let product = fetch(blablabla + productId)
-		let product = {
-			id: 2,
-			region: 'test1',
-			name: 'nom du produit',
-			description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.',
-			address: 'avenue des champs elysées, paris',
-			price: 28,
-			note: '4.3',
-			files: { id: 1, path: 'https://picsum.photos/500/300'},
-			category: {
-				id:1,
-				name:'Perceuse',
-				parent:'Bricolage'
-			},
-			user: {
-				id: 54,
-				firstName: "jean-louis",
-				lastName: "Armand",
-			},
-			publishedAt: "01/01/2022",
-			comments: [
-				{ id: 1, text: 'blobloblo', createdAt: '01/01/2022', rating: '2.8', user: { id: 24, firstName: 'emile', lastName: 'Roux'}},
-                { id: 2, text: 'bliblibli', createdAt: '05/01/2022', rating: '3.7', user: { id: 21, firstName: 'stephane', lastName: 'Martin'}},
-                { id: 3, text: 'blablabla', createdAt: '02/01/2022', rating: '1', user: { id: 37, firstName: 'amelie', lastName: 'Audart'}},
-			],
-			reservations: [
-				{ id: 1, rentalBeginDate: '2022/02/16', rentalEndDate: '2022/02/24'},
-			]
-		};
-		this.product = product;
-	}
+  created() {
+    AuthService.getProduct(this.$route.params.productId).then(response => {
+      this.$store.dispatch('product',response.data)
+      console.log(response.data)
+    }).catch(e => console.log(e))
+  },
+  computed:{
+    ...mapGetters(['product'])
   },
 };
 </script>

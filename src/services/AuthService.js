@@ -19,7 +19,7 @@ const getUser = async (id) => {
 };
 
 const parentCategories = async () => {
-  return await axios.get("categories", {headers});
+  return await axios.get("categories");
 };
 
 const postCategory = async (data) => {
@@ -27,7 +27,13 @@ const postCategory = async (data) => {
 };
 
 const getProducts = async () => {
-  return await axios.get("products", {headers});
+  return await axios.get("products");
+};
+const getProduct = async (id) => {
+  return await axios.get(`products/${id}`);
+};
+const getCategories = async () => {
+  return await axios.get("categories");
 };
 
 const getProductsNotValid = async () => {
@@ -36,6 +42,10 @@ const getProductsNotValid = async () => {
 
 const updateProduct = async (id,data) => {
   return await axios.patch(`products/${id}`,data, {headers});
+};
+
+const getSessionIdPayment = async (product,tenant) => {
+  return await axios.post(`https://localhost:8444/create-checkout-session`,{product:product,tenant:tenant});
 };
 
 
@@ -57,5 +67,8 @@ export default {
   updateProduct,
   deleteProduct,
   getProductsNotValid,
-  postProduct
+  postProduct,
+  getCategories,
+  getProduct,
+  getSessionIdPayment
 };
