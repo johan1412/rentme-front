@@ -6,7 +6,14 @@
                 <HotelDatePicker v-on:period-selected="dateSelected" v-on:clear-selection="clearDates" :showSingleMonth="showSingleMonth" :disabledDates="disabledDates" :halfDay="halfDay" :minNights="minNights" :hoveringTooltip="hoveringTooltip" />
             </div>
             <div class="date-picker-price mb-2">Total : {{ totalPrice }}€</div>
-            <button class="submit-button">LOUER</button>
+          <div>
+            <stripe-checkout
+                ref="checkoutRef"
+                :pk="publishableKey"
+                :session-id="sessionId"
+            />
+            <div class="submit-button" @click="submit">LOUER</div>
+          </div>
         </form>
     </div>
 </template>
@@ -14,7 +21,8 @@
 <script>
 import HotelDatePicker from 'vue-hotel-datepicker';
 import 'vue-hotel-datepicker/dist/vueHotelDatepicker.css';
-
+import AuthService from "@/services/AuthService";
+import { StripeCheckout } from '@vue-stripe/vue-stripe';
 export default {
     name: "CalendarAvailabilities",
     props: {
@@ -22,9 +30,13 @@ export default {
     },
     components: {
         HotelDatePicker,
+      StripeCheckout,
     },
     data() {
+      this.publishableKey = 'pk_test_51ImJIiH1ST2SneRlcZYRNGSWv9DE5C9SeBkRtEjIcL72hRXM15rrWuViXIn7TibG2SJgjDHyrCWxcqUljDNm2wPn002HVq6LJB';
         return {
+          loading: false,
+          sessionId: '', // session id from backend
           disabledDates: [],
           halfDay: false,
           minNights: 0,
@@ -67,6 +79,16 @@ export default {
             elt[0].innerHTML = 'Début';
             elt[1].innerHTML = 'Fin';
         },
+      submit () {
+        if (this.$store.getters.user){
+          AuthService.getSessionIdPayment({...this.product,price:this.totalPrice},this.$store.getters.user)
+              .then(response => {
+                this.sessionId = response.data.id
+                console.log(response.data.id)
+              }).catch(e => console.log(e))
+          this.$refs.checkoutRef.redirectToCheckout();
+        }
+      },
     },
     mounted() {
         let elt = document.getElementsByClassName('vhd__datepicker__input');
@@ -88,6 +110,7 @@ export default {
 .frame-calendar {
     margin: 50px 0px 50px 50px;
     padding: 40px 50px;
+    min-width: 350px;
     background-color: #ffffff;
     border-radius: 25px;
 }
@@ -111,5 +134,6 @@ export default {
     font-weight: bold;
     font-size: 90%;
     border: 1px solid #dddddd;
+    cursor:pointer
 }
 </style>

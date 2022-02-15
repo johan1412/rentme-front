@@ -12,6 +12,7 @@ import SearchPage from './components/pages/common/SearchPage'
 import AddProductPage from './components/pages/renter/AddProductPage'
 import RenterProductsPage from './components/pages/renter/RenterProductsPage'
 import MessagesPage from './components/pages/common/MessagesPage'
+import Success from './components/pages/payment/Sucess'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from './vuex'
 
@@ -52,7 +53,8 @@ const routes = [
   { path: '/products', component: RenterProductsPage},
   { path: '/products/:productId', component: ProductPage },
   { path: '/user/:userId', component: ProfilePage },
-  { path: '/messages', component: MessagesPage }
+  { path: '/messages', component: MessagesPage },
+  { path: '/success', component: Success }
 ]
 
 const router = new VueRouter({

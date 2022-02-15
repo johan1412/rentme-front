@@ -6,8 +6,10 @@ Vue.use(Vuex)
 const state = {
     user : null,
     products : [],
+    product : null,
     numberOfProductsNotValid: 0,
-    parentCategories:[]
+    parentCategories:[],
+    categories:[]
 }
 
 const store = new Vuex.Store({
@@ -16,6 +18,9 @@ const store = new Vuex.Store({
   getters:{
       user: (state) => {
           return state.user
+      },
+      product: (state) => {
+          return state.product
       },
       parentCategories: (state) => {
           return state.parentCategories
@@ -28,11 +33,17 @@ const store = new Vuex.Store({
       },
       products: (state) => {
         return state.products
+      },
+      categories: (state) => {
+        return state.categories
       }
   },
   actions:{
       user(context,user){
           context.commit('user',user)
+      },
+      product(context,product){
+          context.commit('product',product)
       },
       products(context,products){
         context.commit('products',products)
@@ -43,10 +54,16 @@ const store = new Vuex.Store({
       parentCategories(context,parentCategories){
           context.commit('parentCategories',parentCategories)
      },
+      categories(context,categories){
+          context.commit('categories',categories)
+     },
   },
   mutations:{ 
       user(state,user){
           state.user = user
+      },
+      product(state,product){
+          state.product = product
       },
       products(state,products){
         state.products = products
@@ -56,7 +73,10 @@ const store = new Vuex.Store({
     },
       parentCategories(state,parentCategories){
           state.parentCategories = parentCategories
-      }
+      },
+      categories(state,categories){
+        state.categories = categories
+    }
   }
 })
 
