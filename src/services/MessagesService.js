@@ -8,13 +8,11 @@ const headers = {
 
 
  const postMessage = async (data) => {
-    axios.defaults.baseURL =  "https://localhost:8444/"
-    return await axios.post("messages", data, {headers});
+    return await axios.post("https://localhost:8444/messages", data, {headers});
   };
   
   const getConversations = async (id) => {
-    axios.defaults.baseURL =  "https://localhost:8444/"
-    return await axios.get(`conversations/${id}`, {headers});
+    return await axios.get(`https://localhost:8444/conversations/${id}`, {headers});
   };
   
 
