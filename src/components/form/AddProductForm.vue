@@ -69,7 +69,7 @@ export default {
       formData.append('file', this.Images);
       let image = await AuthService.postImage(formData);
       if(image.data.contentUrl){
-      await AuthService.postProduct({
+      const response = await AuthService.postProduct({
         name: this.name,
         description: this.description,
         address: this.address,
@@ -80,6 +80,10 @@ export default {
           {path : image.data.contentUrl}
         ]
       });
+      console.log(response.data)
+      this.$store.dispatch('products',[...this.$store.getters.user.products],response.data)
+
+
       this.$router.push("/");}
     },
   },
