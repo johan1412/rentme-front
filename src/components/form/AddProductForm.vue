@@ -7,15 +7,25 @@
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <input type="textarea" class="form-control" v-model="description" id="description" />
+        <input
+          type="textarea"
+          class="form-control"
+          v-model="description"
+          id="description"
+        />
       </div>
       <div class="form-group">
         <label for="price">Prix / Jour (€)</label>
-        <input type="number" class="form-control" v-model="price" id="price" /> 
+        <input type="number" class="form-control" v-model="price" id="price" />
       </div>
       <div class="form-group">
         <label for="address">Adresse</label>
-        <input type="text" class="form-control" v-model="address" id="address" />
+        <input
+          type="text"
+          class="form-control"
+          v-model="address"
+          id="address"
+        />
       </div>
       <div class="form-group">
         <label for="category">Catégorie</label>
@@ -25,7 +35,13 @@
       </div>
       <div class="form-group">
         <label for="photos">Photos</label>
-        <input type="file" class="form-control" id="photos" /> 
+        <input
+          type="file"
+          class="form-control"
+          id="photos"
+          ref="file"
+          @change="uploadFile"
+        />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -41,19 +57,34 @@ export default {
     description: "",
     address: "",
     price: "",
-    category: ""
+    category: "",
+    images: null
   }),
-   methods: {
-    handleSubmit:  async function () {
-      await AuthService.postProduct({ 
+  methods: {
+    uploadFile() {
+      this.Images = this.$refs.file.files[0];
+    },
+    handleSubmit: async function () {
+      const formData = new FormData();
+      formData.append('file', this.Images);
+      let image = await AuthService.postImage(formData);
+      if(image.data.contentUrl){
+      const response = await AuthService.postProduct({
         name: this.name,
         description: this.description,
         address: this.address,
         price: parseInt(this.price),
-        category: "/categories/"+this.category,
-        user: this.$store.getters.user['@id']
-        })
-      this.$router.push('/')
+        category: "/categories/" + this.category,
+        user: this.$store.getters.user["@id"],
+        files: [
+          {path : image.data.contentUrl}
+        ]
+      });
+      console.log(response.data)
+      this.$store.dispatch('products',[...this.$store.getters.user.products],response.data)
+
+
+      this.$router.push("/");}
     },
   },
 };
