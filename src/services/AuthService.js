@@ -15,7 +15,7 @@ const register = async data => {
 };
 
 const getUser = async (id) => {
-  return await axios.get(`https://localhost:8443/users/${id}`, {});
+  return await axios.get(`https://localhost:8443/users/${id}`, {headers});
 };
 
 const parentCategories = async () => {

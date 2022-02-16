@@ -138,7 +138,7 @@
 			</div>
 			<b-card-group deck v-bind:class="[deckGrid ? 'card-deck-custom-grid' : 'card-deck-custom-list']">
 				<router-link v-for="product in sortedBy" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
-					<b-card v-if="deckGrid" class="product-card" img-alt="Image" :img-src="product.files.length !== 0 ? product.files.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-top>
+					<b-card v-if="deckGrid" class="product-card" img-alt="Image" :img-src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-top>
 						<b-card-text class="product-card-text">{{ product.name }}</b-card-text>
 						<template #footer>
 							<small class="text-muted">{{ product.price }}€ / jour</small>

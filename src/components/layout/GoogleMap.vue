@@ -53,8 +53,8 @@ export default {
     }
   },
   async mounted() {
-    let fullAddress = this.address.split('///&///&///&///&');
-    this.productAddress = (fullAddress[0].concat(fullAddress[1]));
+    this.productAddress = this.address;
+  //  this.productAddress = (fullAddress[0].concat(fullAddress[1]));
     let position = await this.callGeocode();
     if (position.status == "OK") {
         let lat = position.results[0].geometry.location.lat;

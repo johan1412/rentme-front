@@ -15,7 +15,7 @@
 					<div>Annonce publiée le {{ product.publishedAt }}</div>
 					<div class="row product-main-presentation">
 						<div class="col-md-6 product-image">
-							<img :src="product.files.length !== 0 ? product.files.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" width="100%"/>
+							<img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" width="100%"/>
 						</div>
 						<div class="col-md-6 product-description">
 							<h4>Description</h4>
