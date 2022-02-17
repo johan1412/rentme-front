@@ -30,7 +30,8 @@
       <div class="form-group">
         <label for="category">Catégorie</label>
         <select class="form-control" v-model="category" id="category">
-          <option value="2">Test cat2</option>
+            <option v-if="parentCategories.length < 1"> pas de parent</option>
+            <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
         </select>
       </div>
       <div class="form-group">
@@ -50,6 +51,7 @@
 
 <script>
 import AuthService from "../../services/AuthService";
+import {mapGetters} from "vuex";
 export default {
   name: "AddProductForm",
   data: () => ({
@@ -57,7 +59,6 @@ export default {
     description: "",
     address: "",
     price: "",
-    category: "",
     images: null
   }),
   methods: {
@@ -65,6 +66,7 @@ export default {
       this.Images = this.$refs.file.files[0];
     },
     handleSubmit: async function () {
+      console.log(this.$store.getters.user)
       const formData = new FormData();
       formData.append('file', this.Images);
       let image = await AuthService.postImage(formData);
@@ -74,18 +76,25 @@ export default {
         description: this.description,
         address: this.address,
         price: parseInt(this.price),
-        category: "/categories/" + this.category,
-        user: this.$store.getters.user["@id"],
+        category: "/categories/"+this.category.id,
+        user: "/users/"+this.$store.getters.user["id"],
         files: [
           {path : image.data.contentUrl}
         ]
       });
-      console.log(response.data)
-      this.$store.dispatch('products',[...this.$store.getters.user.products],response.data)
+      this.$store.dispatch('user',{...this.$store.getters.user, products:[...this.$store.getters.user.products, response.data]})
 
 
       this.$router.push("/");}
     },
   },
+   computed:{
+    ...mapGetters(['parentCategories'])
+  },
+  created() {
+    AuthService.parentCategories().then(response => {
+      this.$store.dispatch('parentCategories',response.data['hydra:member'].filter(category => category?.parent))
+    }).catch(e => console.log(e))
+    }
 };
 </script>

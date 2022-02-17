@@ -101,7 +101,7 @@ export default {
   }),
   methods: {
     handleSubmit: function () {
-      AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roleRenter: this.role })
+      AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
         .then(() => {
           this.$router.push('/login')
         })

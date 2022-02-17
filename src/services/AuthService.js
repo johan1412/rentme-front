@@ -15,11 +15,11 @@ const register = async data => {
 };
 
 const getUser = async (id) => {
-  return await axios.get(`https://localhost:8443/users/${id}`, {});
+  return await axios.get(`https://localhost:8443/users/${id}`, {headers});
 };
 
 const parentCategories = async () => {
-  return await axios.get("https://localhost:8443/categories", {headers});
+  return await axios.get("https://localhost:8443/categories");
 };
 
 const postCategory = async (data) => {
@@ -27,7 +27,13 @@ const postCategory = async (data) => {
 };
 
 const getProducts = async () => {
-  return await axios.get("https://localhost:8443/products", {headers});
+  return await axios.get("https://localhost:8443/products");
+};
+const getProduct = async (id) => {
+  return await axios.get(`https://localhost:8443/products/${id}`);
+};
+const getCategories = async () => {
+  return await axios.get("https://localhost:8443/categories");
 };
 
 const getProductsNotValid = async () => {
@@ -36,6 +42,10 @@ const getProductsNotValid = async () => {
 
 const updateProduct = async (id,data) => {
   return await axios.patch(`https://localhost:8443/products/${id}`,data, {headers});
+};
+
+const getSessionIdPayment = async (product,tenant) => {
+  return await axios.post(`https://localhost:8444/create-checkout-session`,{product:product,tenant:tenant});
 };
 
 
@@ -74,7 +84,10 @@ export default {
   deleteProduct,
   getProductsNotValid,
   postProduct,
-  postImage,
   getReservations,
-  updateReservation
+  updateReservation,
+  getCategories,
+  getProduct,
+  getSessionIdPayment,
+  postImage
 };

@@ -44,6 +44,7 @@ export default {
   },
   methods: {
     paginate(page_size, page_number) {
+      console.log(this.products)
       let productsToParse = this.products;
       this.paginatedProducts = productsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
     },
