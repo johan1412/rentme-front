@@ -138,7 +138,7 @@
 			</div>
 			<b-card-group deck v-bind:class="[deckGrid ? 'card-deck-custom-grid' : 'card-deck-custom-list']">
 				<router-link v-for="product in sortedBy" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
-					<b-card v-if="deckGrid" class="product-card" img-alt="Image" :img-src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-top>
+					<b-card v-if="deckGrid" class="product-card" img-alt="Image" :img-src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-top>
 						<b-card-text class="product-card-text">{{ product.name }}</b-card-text>
 						<template #footer>
 							<small class="text-muted">{{ product.price }}€ / jour</small>
@@ -147,7 +147,7 @@
 					<b-card v-else no-body class="overflow-hidden">
 						<b-row no-gutters class="h-100">
 							<b-col md="4">
-								<b-card-img :src="product.files.length !== 0 ? product.files.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="Image" class="rounded-0"></b-card-img>
+								<b-card-img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="Image" class="rounded-0"></b-card-img>
 							</b-col>
 							<b-col md="8" class="d-flex flex-column justify-content-between">
 								<b-card-body :title="product.name">
@@ -336,12 +336,12 @@ export default {
     }).catch(e => console.log(e))
   },
   mounted() {
-	let category = this.$route.query.category.toLowerCase();
+	let category = this.$route.query.category;
 	let words = this.$route.query.words;
 	if (words) {
 		this.paramWords = words;
-	} else if (category && this.categories.some(c => c.name.toLowerCase() == category)) {
-		this.paramCategory = category;
+	} else if (category && this.categories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
+		this.paramCategory = category.toLowerCase();
 		this.initializaFilterCategories();
 	}
 	this.nbResults = this.products.length;
@@ -376,7 +376,9 @@ export default {
   methods: {
 	paginate(page_size, page_number) {
 		let productsToParse = this.$store.getters.products;
-		this.paginatedProducts = productsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
+		if (productsToParse) {
+			this.paginatedProducts = productsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
+		}
 	},
     onPageChanged(page) {
       this.paginate(this.perPage, page - 1);
@@ -433,16 +435,16 @@ export default {
 		}
 	},
 	selectedAllSubCategories(category) {
-		let index = this.categories.map(function(elt) {return elt.name.toLowerCase()}).indexOf(typeof category === 'string' ? category : category.name) + 1;
+		let index = this.categories.map(function(elt) {return elt.name.toLowerCase()}).indexOf(typeof category === 'string' ? category.toLowerCase() : category.name.toLowerCase()) + 1;
 		if (index > 0) {
 			let categoryObject = typeof category === 'string' ? this.categories[index - 1] : category;
 			if (document.getElementById('category' + index).checked) {
-        categoryObject.children.forEach(element => {
+                categoryObject.children.forEach(element => {
 					this.selected.categories.push(element.name);
 				});
 			} else {
 				categoryObject.children.forEach(element => {
-					let subIndex = this.selected.categories.indexOf(element.name);
+					let subIndex = this.selected.categories.map(function(elt) {return elt.toLowerCase()}).indexOf(element.name.toLowerCase());
 					this.selected.categories.splice(subIndex, 1);
 				});
 			}
@@ -458,7 +460,6 @@ export default {
 	initializaFilterCategories() {
 		let category = this.paramCategory;
 		this.unselectAllCategories();
-		console.log(this.categories)
 		let index = this.categories.map(function(elt) { return elt.name.toLowerCase() }).indexOf(category) + 1;
 		document.getElementById('category' + index).checked = true;
 		this.selectedAllSubCategories(category);
