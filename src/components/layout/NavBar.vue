@@ -14,7 +14,7 @@
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-secondary text-light" to="/admin/categories">Ajouter une nouvelle catégorie</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn bg-secondary text-light" to="/publish">Publier une annonce</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn bg-secondary text-light" to="/products">Mes annonces</router-link></b-nav-item>
-        <b-nav-item><router-link class="btn bg-secondary text-light" to="#">Mon compte</router-link></b-nav-item>
+        <b-nav-item><router-link class="btn bg-secondary text-light" to="/account">Mon compte</router-link></b-nav-item>
         <b-nav-item v-on:click="logout"><router-link class="btn bg-light text-dark" to="/">se déconnecter</router-link></b-nav-item>
       </b-navbar-nav>
     </b-collapse>

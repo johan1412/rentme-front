@@ -9,6 +9,7 @@ import ProductPage from './components/pages/common/ProductPage.vue'
 import ProfilePage from './components/pages/common/ProfilePage.vue'
 import HomePage from './components/pages/common/HomePage'
 import SearchPage from './components/pages/common/SearchPage'
+import AccountPage from './components/pages/common/Account'
 import AddProductPage from './components/pages/renter/AddProductPage'
 import RenterProductsPage from './components/pages/renter/RenterProductsPage'
 import MessagesPage from './components/pages/common/MessagesPage'
@@ -54,7 +55,8 @@ const routes = [
   { path: '/products/:productId', component: ProductPage },
   { path: '/user/:userId', component: ProfilePage },
   { path: '/messages', component: MessagesPage },
-  { path: '/success', component: Success }
+  { path: '/success', component: Success },
+  { path: '/account', component: AccountPage }
 ]
 
 const router = new VueRouter({
