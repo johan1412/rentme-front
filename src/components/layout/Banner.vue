@@ -9,16 +9,15 @@
       </p>
     </div>
     <div class="searchForm">
-      <form @submit.prevent="handleSubmit">
+      <form>
         <input type="text" v-model="searchInput" placeholder="Rechercher un produit ..." />
-        <span><button type="submit" class="btn btn-dark">Rechercher</button></span>
+        <span><router-link :to="'/search?words=' + searchInput"><button type="submit" class="btn btn-dark">Rechercher</button></router-link></span>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import SearchService from "../../services/SearchService";
 
 export default {
   name: "Banner",
@@ -26,19 +25,6 @@ export default {
     return {
       searchInput: '',
     }
-  },
-  methods: {
-    handleSubmit: function () {
-      let searchInput = this.searchInput;
-      SearchService.searchInput({})
-        .then((response) => {
-          console.log(searchInput)
-          console.log(response)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    },
   },
 };
 </script>

@@ -134,7 +134,7 @@ export default {
 }
 
 .submit-button {
-    background-color: #ea9009;
+    background-color: #0072b5;
     color: #ffffff;
     width: fit-content;
     padding: 5px 30px;

@@ -1,7 +1,7 @@
 <template>
     <div class="comments-section">
         <div class="comments-section-header">
-            <h4>Commentaires</h4>
+            <h4>Commentaires et notes</h4>
             <div class="button-new-comment" @click="formIsVisible = !formIsVisible"><b-icon icon="chat-left-text-fill" aria-hidden="true"></b-icon>{{ formIsVisible ? 'Masquer le formulaire' : 'Ecrire un commentaire' }}</div>
         </div>
         <hr>
@@ -12,13 +12,13 @@
         </div>
         </transition>
         <div class="comments-list">
-            <div v-if="comments.length < 1">
+            <div v-if="commentsLocal.length < 1">
                 <p>Il n'y a aucun commentaire</p>
             </div>
             <div class="comment-item" v-for="comment in commentsLocal" :key="comment.id">
                 <div class="comment-top">
-                    <div><strong>{{ comment.user.firstName }} {{ comment.user.lastName }}</strong> - {{ comment.createdAt }}</div>
-                    <div class="comment-rating">{{ comment.rating }}/5</div>
+                    <div><strong :class="comment.user == this.$store.getters.user ? 'personal-comment' : ''">{{ comment.user.firstName }} {{ comment.user.lastName }}</strong> - {{ comment.createdAt }}</div>
+                    <div class="comment-rating">{{ comment.rating ? comment.rating : '-' }}/5</div>
                 </div>
                 <div class="comment-text">{{ comment.text }}</div>
             </div>
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import CommentService from '../../services/CommentService';
+
 export default {
     name: "Comments",
     props: {
@@ -45,8 +47,11 @@ export default {
     },
     methods: {
         validateComment() {
-            // fetch(.......).then(data) { let response = ... }
-            let response = { id: 15, text: 'petit commentaire de test pour vérifier tout simplement.', createdAt: '01/01/2022', rating: '2.8', user: { id: 24, firstName: 'emile', lastName: 'Roux'} };
+            let response = CommentService.postComment({
+                user : parseInt(this.user.id),
+                text : this.text,
+                product : parseInt(this.product.id)
+            })
             this.commentsLocal.unshift(response);
         }
     }
@@ -70,6 +75,10 @@ export default {
     padding: 10px;
     border: 1px solid #dddddd;
     cursor: pointer;
+}
+
+.button-new-comment:hover {
+    border: 1px solid #999999;
 }
 
 .button-new-comment .b-icon.bi {
@@ -113,6 +122,12 @@ export default {
 
 .comment-top .comment-rating {
     font-size: 130%;
+}
+
+.personal-comment {
+    background-color: #0072b5;
+    color: #ffffff;
+    padding: 5px 10px;
 }
 
 </style>
