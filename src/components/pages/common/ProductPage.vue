@@ -10,7 +10,31 @@
 		<div class="row mt-5">
 			<div class="col-md-8">
 				<div class="product-details">
-					<h2>{{ product.name }}</h2>
+					<h2>{{ product.name }}</h2><h2 class="title-separator"> | </h2><h4 class="product-details-note">{{ product.note }}/5 <small>(0 note)</small></h4>
+					<div class="block-notation-stars">
+						<button @click="showNote = !showNote" class="button-new-note">Noter le produit</button>
+						<div v-show="showNote" class="sub-block-notation-stars">
+							<div>
+							<span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
+							<span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
+							<span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
+							<b-icon :icon="currentNote < 0.5 ? 'star' : (currentNote > 0.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 0.5" aria-hidden="true"></b-icon>
+							<span class="star-selection" @mouseover="currentNote = 1">&nbsp;</span>
+							<b-icon :icon="currentNote < 1.5 ? 'star' : (currentNote > 1.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 1.5" aria-hidden="true"></b-icon>
+							<span class="star-selection" @mouseover="currentNote = 2">&nbsp;</span>
+							<b-icon :icon="currentNote < 2.5 ? 'star' : (currentNote > 2.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 2.5" aria-hidden="true"></b-icon>
+							<span class="star-selection" @mouseover="currentNote = 3">&nbsp;</span>
+							<b-icon :icon="currentNote < 3.5 ? 'star' : (currentNote > 3.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 3.5" aria-hidden="true"></b-icon>
+							<span class="star-selection" @mouseover="currentNote = 4">&nbsp;</span>
+							<b-icon :icon="currentNote < 4.5 ? 'star' : (currentNote > 4.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 4.5" aria-hidden="true"></b-icon>
+							<span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+							<span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+							<span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+							</div>
+							<div class="note-number">{{ currentNote }} / 5</div>
+							<button @click="handleSubmitNote" class="button-submit-note mt-3">NOTER</button>
+						</div>
+					</div>
 					<div>Loué par <strong><router-link :to="'/user/' + this.product.user.id" class="user-link">{{ product.user.lastName }} {{ product.user.firstName }}</router-link></strong></div>
 					<div>Annonce publiée le {{ product.publishedAt }}</div>
 					<div class="row product-main-presentation">
@@ -65,6 +89,7 @@ import SimilarAds from '../../layout/SimilarAds.vue';
 import FormContact from '../../layout/FormContact.vue';
 import CalendarAvailabilities from '../../layout/CalendarAvailabilities.vue';
 import GoogleMap from '../../layout/GoogleMap.vue';
+import CommentService from "../../../services/CommentService";
 import AuthService from "@/services/AuthService";
 import {mapGetters} from "vuex";
 
@@ -82,6 +107,8 @@ export default {
   data() {
 	return {
 		buttonDescriptionToggle: false,
+		currentNote: 0,
+		showNote: false,
 	}
   },
   created() {
@@ -92,6 +119,25 @@ export default {
   },
   computed:{
     ...mapGetters(['product'])
+  },
+  methods: {
+    handleSubmitNote() {
+      if (this.$store.getters.user) {
+        let commentExist = this.product.comments.filter(c => c.user == this.$store.getters.user);
+		if (commentExist) {
+          CommentService.updateComment({
+            rating : this.currentNote,
+          }, commentExist.id,)
+		} else {
+			CommentService.postComment({
+				text: null,
+				rating: this.currentNote,
+				user: this.$store.getters.user,
+				product: this.product,
+			})
+		}
+      }
+    }
   },
 };
 </script>
@@ -156,8 +202,65 @@ export default {
 	margin: 20px 20px 20px 0px;
 }
 
-.product-image {
-	height: min-content;
+.sub-block-notation-stars {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	top: 40px;
+	left: 50%;
+	background-color: rgba(250, 250, 250, 1);
+	padding: 50px;
+	border-radius: 25px;
+	width: max-content;
+	transform: translateX(-50%);
+	z-index: 1;
+}
+
+.sub-block-notation-stars .b-icon,
+.sub-block-notation-stars span {
+	cursor: pointer;
+}
+
+.block-notation-stars .b-icon.bi {
+	width: 30px !important;
+	height: 30px !important;
+}
+
+.sub-block-notation-stars .star-selection {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.button-submit-note {
+	background-color: #0072b5;
+	color: #ffffff;
+	border: none;
+	padding: 10px 20px;
+	font-weight: bold;
+}
+
+.note-number {
+	margin-top: 10px;
+	text-align: center;
+	font-size: 2rem;
+}
+
+.button-new-note {
+    background-color: rgb(250, 250, 250);
+    padding: 10px;
+    border: 1px solid #dddddd;
+    cursor: pointer;
+}
+
+.button-new-note:hover {
+    border: 1px solid #999999;
+}
+
+.product-image img {
+	max-width: 100%;
+	max-height: 500px;
 }
 
 .product-description {

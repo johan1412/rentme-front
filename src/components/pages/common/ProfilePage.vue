@@ -5,7 +5,7 @@
 		<div class="row mt-5">
 			<div class="col-md-8">
 				<div class="user-details">
-					<h2>{{ user.firstName }} {{ user.lastName }}</h2><h2 class="title-separator"> | </h2><h4 class="user-details-note">{{ user.note }}/5</h4>
+					<h2>{{ user.firstName }} {{ user.lastName }}</h2><h2 class="title-separator"> | </h2><h4 class="user-details-note">{{ user.note }}/5 <small> (0 note)</small></h4>
 					<div>Habite à <strong>{{ addressCity }} ({{ addressRegion }})</strong></div>
 					<div class="row user-products">
 						<div class="col-md-12">
@@ -40,9 +40,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="comments">
-					<Comments v-bind:comments="user.comments"/>
-				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="contact-form">
@@ -56,13 +53,11 @@
 
 <script>
 import Menu from '../../layout/CommonMenu.vue';
-import Comments from '../../layout/Comments.vue';
 import FormContact from '../../layout/FormContact.vue';
 
 export default {
   components: {
     Menu,
-    Comments,
     FormContact,
   },
   name: "Product",
