@@ -32,6 +32,12 @@ const store = new Vuex.Store({
       adminPermission: (state, getters) => {
         return getters.user ? getters.user.roles.includes('ROLE_ADMIN') : false
       },
+      userPermission: (state, getters) => {
+          return getters.user ? getters.user.roles.includes('ROLE_USER') : false
+      },
+      renterPermission: (state, getters) => {
+          return getters.user ? getters.user.roles.includes('ROLE_RENTER') : false
+      },
       products: (state) => {
         return state.products
       },

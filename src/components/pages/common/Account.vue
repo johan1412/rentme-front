@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid my-5 d-sm-flex justify-content-center">
     <div class="d-flex flex-column">
-      <div class="p-2" v-for="reservation in reservations" :key="reservation.id">
+      <div class="p-2" v-for="reservation in reservations.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))" :key="reservation.id">
         <div class="card px-2">
           <div class="card-header bg-white">
             <div class="row justify-content-between">
@@ -52,7 +52,7 @@
                 <botton v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Récupérer le produit</botton>
                 <botton v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Rendre le produit</botton>
                 <h5 v-on:click="myMethod(reservation)" v-if="reservation.state === 'restored'">
-                  <p>Après une petite  vérification de rendu de produit au stock, on va vous rembourser vote caution de {{reservation.product.caution}}€ dans les brefs délais</p>
+                  <p>Après une petite  vérification de rendu de produit au stock, on va vous rembourser votre caution de {{reservation.product.caution}}€ dans les brefs délais</p>
                 </h5>
               </div>
             </div>
@@ -83,6 +83,12 @@ export default {
   computed:{
     ...mapGetters(['reservations'])
   },
+  mounted() {
+    const userPermission = this.$store.getters.userPermission
+    if(!userPermission){
+      this.$router.push('/')
+    }
+    },
   methods: {
     myMethod: function myMethod(reservation) {
       this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === reservation.id ? {...elem,state:reservation.state === 'payed' ? 'retrieved' : 'restored'} : elem))

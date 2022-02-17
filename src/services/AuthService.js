@@ -73,6 +73,10 @@ const updateReservation = async (data) => {
   return await axios.patch(`https://localhost:8443/reservations/${data.id}`,data, {headers});
 };
 
+const postReservation = async (data) => {
+  return await axios.post("https://localhost:8443/reservations", data, {headers});
+};
+
 export default {
   register,
   login,
@@ -89,5 +93,6 @@ export default {
   getCategories,
   getProduct,
   getSessionIdPayment,
-  postImage
+  postImage,
+  postReservation
 };

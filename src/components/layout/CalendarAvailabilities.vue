@@ -81,16 +81,24 @@ export default {
         },
       submit () {
         if (this.$store.getters.user){
-          AuthService.getSessionIdPayment({...this.product,price:this.totalPrice},this.$store.getters.user)
+          AuthService.postReservation({price:parseInt(this.totalPrice),rentalBeginDate:this.startingDate,rentalEndDate:this.endingDate,createdAt:new Date(),state:'payed',product:'/products/'+this.product.id,user:'/users/'+this.$store.getters.user.id})
               .then(response => {
-                this.sessionId = response.data.id
-                console.log(response.data.id)
+                console.log(response)
               }).catch(e => console.log(e))
-          this.$refs.checkoutRef.redirectToCheckout();
         }
+        AuthService.getSessionIdPayment({...this.product,price:this.totalPrice},this.$store.getters.user)
+            .then(response => {
+              this.sessionId = response.data.id
+              console.log(response.data.id)
+            }).catch(e => console.log(e))
+        this.$refs.checkoutRef.redirectToCheckout();
       },
     },
     mounted() {
+        const userPermission = this.$store.getters.userPermission
+        if(!userPermission){
+          this.$router.push('/')
+        }
         let elt = document.getElementsByClassName('vhd__datepicker__input');
         elt[0].innerHTML = 'Début';
         elt[1].innerHTML = 'Fin';
