@@ -1,35 +1,61 @@
 <template>
     <div class="container m-auto">
-      <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label>Nom de la catégorie</label>
-          <input
-            type="text"
-            v-model="name"
-            class="form-control"
-            aria-describedby="emailHelp"
-            placeholder="Enter le nom de la catégorie"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label>Catégorie parente :</label>
-          <select v-model="parent" class="form-select form-select-lg mb-3">
-            <option v-if="parentCategories.length < 1"> pas de parent</option>
-            <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+      <ValidationObserver v-slot="{ handleSubmit }">
+        <form @submit.prevent="handleSubmit">
+          <div class="form-group">
+            <label>Nom de la catégorie</label>
+            <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
+              <input
+                type="text"
+                v-model="name"
+                class="form-control"
+                placeholder="Entrez le nom de la catégorie"
+                required
+              />
+              <span class="form-error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+          <div class="form-group">
+            <label>Catégorie parente :</label>
+            <ValidationProvider rules="minmax:1,50" v-slot="{ errors }">
+              <select v-model="parent" class="form-select form-select-lg mb-3">
+                <option v-if="parentCategories.length < 1"> pas de parent</option>
+                <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
+              </select>
+              <span class="form-error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </ValidationObserver>
     </div>
 </template>
 
 <script>
 import AuthService from "../../services/AuthService";
 import {mapGetters} from "vuex";
-//import {mapGetters} from 'vuex'
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required } from 'vee-validate/dist/rules';
+
+extend('minmax', {
+  validate(value, { min, max }) {
+    return value.length >= min && value.length <= max;
+  },
+  message: 'Ce champs doit contenir entre {min} et {max} caractères',
+  params: ['min', 'max']
+});
+
+extend('required', {
+    ...required,
+    message: 'Ce champs est obligatoire',
+});
+
 export default {
   name: "CategoryForm",
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   data: () => ({
     parent: {},
     name:""
