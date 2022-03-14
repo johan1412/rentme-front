@@ -9,23 +9,46 @@
       </p>
     </div>
     <div class="searchForm">
-      <form>
-        <input type="text" v-model="searchInput" placeholder="Rechercher un produit ..." />
-        <span><router-link :to="'/search?words=' + searchInput"><button type="submit" class="btn btn-dark">Rechercher</button></router-link></span>
-      </form>
+      <ValidationObserver v-slot="{ handleSubmit }">
+        <form @submit.prevent="handleSubmit">
+          <ValidationProvider rules="max:50" v-slot="{ errors }">
+            <input type="text" v-model="searchInput" placeholder="Rechercher un produit ..." />
+            <span><button type="submit" class="btn btn-dark">Rechercher</button></span>
+            <div class="form-error-banner">{{ errors[0] }}</div>
+          </ValidationProvider>
+        </form>
+      </ValidationObserver>
     </div>
   </div>
 </template>
 
 <script>
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+
+extend('max', {
+  validate(value, { max }) {
+    return value.length <= max;
+  },
+  message: 'Ce champs doit contenir au maximum {max} caractères',
+  params: ['max']
+});
 
 export default {
   name: "Banner",
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   data: () => {
     return {
       searchInput: '',
     }
   },
+  methods: {
+    handleSubmit: function () {
+      this.$router.push('/search?words=' + this.searchInput);
+    },
+  }
 };
 </script>
 <style scoped>
@@ -87,5 +110,13 @@ export default {
   border: none;
   font-size: 140%;
   vertical-align: baseline;
+}
+
+.form-error-banner {
+  color: #eeeeee;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: #ff7f00;
+  margin: 10px;
 }
 </style>

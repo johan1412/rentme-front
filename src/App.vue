@@ -32,4 +32,9 @@ export default {
   flex-direction: column;
 }
 
+.form-error {
+  font-size: 0.8rem;
+  color: red;
+}
+
 </style>

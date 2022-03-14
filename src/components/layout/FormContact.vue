@@ -1,25 +1,50 @@
 <template>
   <div class="frame-form-contact-user">
-    <form class="form-contact-user" @submit.prevent="handleSubmit">
-      <h4 class="title-form">Demande d'informations</h4>
-      <div>
-        Message pour <strong>{{ user.firstName }} {{ user.lastName }}</strong>
-      </div>
-      <textarea
-        class="input-message"
-        type="text"
-        placeholder="Bonjour,"
-        v-model="text"
-      ></textarea>
-      <button class="submit-button">ENVOYER LE MESSAGE</button>
-    </form>
+    <ValidationObserver v-slot="{ handleSubmit }">
+      <form class="form-contact-user" @submit.prevent="handleSubmit">
+        <h4 class="title-form">Demande d'informations</h4>
+        <div>
+          Message pour <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+        </div>
+        <ValidationProvider rules="required|minmax:1,1000" v-slot="{ errors }">
+          <textarea
+            class="input-message"
+            type="text"
+            placeholder="Bonjour,"
+            v-model="text"
+          ></textarea>
+          <span class="form-error">{{ errors[0] }}</span>
+        </ValidationProvider>
+        <button class="submit-button">ENVOYER LE MESSAGE</button>
+      </form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
 import MessagesService from "../../services/MessagesService";
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required } from 'vee-validate/dist/rules';
+
+extend('minmax', {
+  validate(value, { min, max }) {
+    return value.length >= min && value.length <= max;
+  },
+  message: 'Le message doit contenir au maximum {max} caractères',
+  params: ['min', 'max']
+});
+
+extend('required', {
+    ...required,
+    message: 'Ce champs est obligatoire',
+});
+
 export default {
   name: "FormContact",
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   props: {
     product: Object,
     user: Object,
