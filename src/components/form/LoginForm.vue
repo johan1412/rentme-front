@@ -1,7 +1,7 @@
 <template>
    <div class="container m-auto">
-     <ValidationObserver v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit">
+     <ValidationObserver v-slot="{ validate }">
+       <form @submit.prevent="validate().then(handleSubmit)">
           <b-card class="form-frame mx-auto">
             <b-card-text class="form-top text-center">
               <b-icon icon="person-circle" aria-hidden="true"></b-icon>
@@ -9,24 +9,26 @@
             </b-card-text>
             <b-card-text class="form-data">
               <div class="form-group">
-                <ValidationProvider rules="required|email|minmax:1,50" v-slot="{ errors }">
+                <ValidationProvider rules="required|email|minmax:1,50" v-slot="{ errors,failed }">
                   <input
                     type="email"
                     v-model="email"
                     id="inputEmail"
                     aria-describedby="emailHelp"
+                    :class="`is-${failed}`"
                     placeholder="Email"
                   />
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
               </div>
               <div class="form-group mt-4">
-                <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors }">
+                <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors,failed }">
                   <input
                     type="password"
                     v-model="password"
                     id="inputPassword"
                     placeholder="Mot de passe"
+                    :class="`is-${failed}`"
                   />
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>

@@ -1,7 +1,7 @@
 <template>
   <div class="container m-auto">
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit">
+    <ValidationObserver v-slot="{ validate }">
+      <form @submit.prevent="validate().then(handleSubmit)">
         <div class="form-group">
           <label for="title">Titre de l'annonce</label>
           <ValidationProvider rules="required|minmax:5,50" v-slot="{ errors }">
@@ -11,39 +11,48 @@
         </div>
         <div class="form-group">
           <label for="description">Description</label>
-          <ValidationProvider rules="required|minmax:10,500" v-slot="{ errors }">
+          <ValidationProvider rules="required|minmax:10,500" v-slot="{ errors,failed }">
             <input
               type="textarea"
               class="form-control"
               v-model="description"
               id="description"
+              :class="`is-${failed}`"
             />
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
         <div class="form-group">
           <label for="price">Prix / Jour (€)</label>
-          <ValidationProvider rules="required|integer|minmax:1,10" v-slot="{ errors }">
-            <input type="number" class="form-control" v-model="price" id="price" />
+          <ValidationProvider rules="required|integer|minmax:1,10" v-slot="{ errors,failed }">
+            <input
+                type="number"
+                class="form-control"
+                v-model="price" id="price"
+                :class="`is-${failed}`"
+            />
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
         <div class="form-group">
           <label for="address">Adresse de retrait du produit</label>
-          <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
+          <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors,failed }">
             <input
               type="text"
               class="form-control"
               v-model="address"
               id="address"
+              :class="`is-${failed}`"
             />
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
         <div class="form-group">
           <label for="category">Catégorie</label>
-          <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
-            <select class="form-control" v-model="category" id="category">
+          <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors,failed }">
+            <select class="form-control" v-model="category"
+                    :class="`is-${failed}`"
+                    id="category">
                 <option v-if="parentCategories.length < 1"> pas de parent</option>
                 <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
             </select>
@@ -52,13 +61,14 @@
         </div>
         <div class="form-group">
           <label for="photos">Photos</label>
-          <ValidationProvider rules="size:2000" v-slot="{ errors }">
+          <ValidationProvider rules="size:2000" v-slot="{ errors,failed }">
             <input
               type="file"
               class="form-control"
               id="photos"
               ref="file"
               @change="uploadFile"
+              :class="`is-${failed}`"
             />
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>

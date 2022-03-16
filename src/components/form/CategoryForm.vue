@@ -1,24 +1,25 @@
 <template>
     <div class="container m-auto">
-      <ValidationObserver v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit">
+      <ValidationObserver v-slot="{ validate }">
+        <form @submit.prevent="validate().then(handleSubmit)">
           <div class="form-group">
             <label>Nom de la catégorie</label>
-            <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
+            <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors,failed }">
               <input
                 type="text"
                 v-model="name"
                 class="form-control"
                 placeholder="Entrez le nom de la catégorie"
                 required
+                :class="`is-${failed}`"
               />
               <span class="form-error">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
           <div class="form-group">
             <label>Catégorie parente :</label>
-            <ValidationProvider rules="minmax:1,50" v-slot="{ errors }">
-              <select v-model="parent" class="form-select form-select-lg mb-3">
+            <ValidationProvider rules="minmax:1,50" v-slot="{ errors,failed }">
+              <select v-model="parent" :class="`is-${failed}`" class="form-select form-select-lg mb-3">
                 <option v-if="parentCategories.length < 1"> pas de parent</option>
                 <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
               </select>
