@@ -1,7 +1,7 @@
 <template>
   <div class="container m-auto">
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit">
+    <ValidationObserver v-slot="{ validate }">
+      <form @submit.prevent="validate().then(handleSubmit)">
         <b-card class="form-frame mx-auto">
           <b-card-text class="form-top text-center">
             <b-icon icon="person-circle" aria-hidden="true"></b-icon>
@@ -9,22 +9,24 @@
           </b-card-text>
           <b-card-text class="form-data">
             <div class="form-group">
-              <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
+              <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
                 <input
                   type="text"
                   v-model="firstName"
                   id="firstName"
+                  :class="`is-${failed}`"
                   placeholder="Saisissez votre nom"
                 />
                 <span class="form-error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
             <div class="form-group">
-              <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
+              <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
                 <input
                   type="text"
                   v-model="lastName"
                   id="lastName"
+                  :class="`is-${failed}`"
                   placeholder="Saisissez votre prénom"
                 />
                 <span class="form-error">{{ errors[0] }}</span>
@@ -33,55 +35,55 @@
             <div class="form-group address-form mt-4">
               <label class="address-label">Votre adresse</label>
               <div class="frame-address-form-input">
-                <ValidationProvider rules="required|minmax:1,100" v-slot="{ errors }">
+                <ValidationProvider rules="required|minmax:1,100" v-slot="{ errors, failed }">
                   <input
                     type="text"
                     v-model="addressStreet"
                     id="addressStreet"
+                    :class="`is-${failed}`"
                     placeholder="Nom de la rue"
-                    @change="handleChangeAddress"
                   />
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
-                <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
+                <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
                   <input
                     type="text"
                     v-model="addressCity"
                     id="addressCity"
+                    :class="`is-${failed}`"
                     placeholder="Nom de la ville"
-                    @change="handleChangeAddress"
                   />
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
-                <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors }">
-                  <input
-                    type="text"
-                    v-model="addressRegion"
-                    id="addressRegion"
-                    placeholder="Numéro de département"
-                    @change="handleChangeAddress"
-                  />
+                <ValidationProvider rules="required|integer" v-slot="{ errors }">
+                  <b-form-select v-model="addressRegion" :options="optionsRegion" value-field="number" text-field="name" class="mt-3">
+                    <template #first>
+                      <b-form-select-option :value="null" disabled>-- Selectionnez votre département --</b-form-select-option>
+                    </template>
+                  </b-form-select>
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
               </div>
             </div>
             <div class="form-group">
-              <ValidationProvider rules="required|email|minmax:1,50" v-slot="{ errors }">
+              <ValidationProvider rules="required|email|minmax:1,50" v-slot="{ errors, failed }">
                 <input
                   type="email"
                   v-model="email"
                   id="exampleInputEmail1"
+                  :class="`is-${failed}`"
                   placeholder="Email"
                 />
                 <span class="form-error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
             <div class="form-group">
-              <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors }">
+              <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors, failed }">
                 <input
                   type="password"
                   v-model="password"
                   id="exampleInputPassword1"
+                  :class="`is-${failed}`"
                   placeholder="Nouveau mot de passe"
                 />
                 <span class="form-error">{{ errors[0] }}</span>
@@ -112,6 +114,7 @@
 
 <script>
 import AuthService from "../../services/AuthService";
+//import RegionService from "../../services/RegionService";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email, oneOf } from 'vee-validate/dist/rules';
 
@@ -149,11 +152,17 @@ export default {
     lastName: "",
     addressStreet: '',
     addressCity: '',
-    addressRegion: '',
-    address: '',
+    addressRegion: null,
     email: "",
     password: "",
     role: "",
+    optionsRegion: [
+      { id: 1, number: 75, name: 'test1' },
+      { id: 2, number: 76, name: 'test2' },
+      { id: 3, number: 77, name: 'test3' },
+      { id: 4, number: 78, name: 'test4' },
+      { id: 5, number: 79, name: 'test5' },
+    ],
   }),
   methods: {
     handleSubmit: function () {
@@ -165,9 +174,20 @@ export default {
           console.log(e);
         });
     },
-    handleChangeAddress() {
-      this.address = this.addressStreet + '///&///&///&///&, ' + this.addressCity + '///&///&///&///&, ' + this.addressRegion;
-    }
+    updateRegion(region) {
+      this.addressRegion = region; //this.addressStreet + '///&///&///&///&, ' + this.addressCity + '///&///&///&///&, ' + this.addressRegion;
+    },
+  },
+  created() {
+    //let regions = RegionService.getRegions();
+    //this.optionsRegion = regions;
+    this.optionsRegion = [
+      { id: 1, number: 75, name: 'test1' },
+      { id: 2, number: 76, name: 'test2' },
+      { id: 3, number: 77, name: 'test3' },
+      { id: 4, number: 78, name: 'test4' },
+      { id: 5, number: 79, name: 'test5' },
+    ]
   },
 };
 </script>
@@ -205,6 +225,11 @@ export default {
   width: 100%;
 }
 
+.form-frame input.is-true {
+  border: 1px solid red;
+  border-radius: 3px;
+}
+
 .form-frame .btn-submit,
 .form-frame .btn-submit:hover,
 .form-frame .btn-submit:active,
@@ -226,6 +251,10 @@ export default {
 .frame-address-form-input {
   border-left: 1px solid #cccccc;
   padding: 10px;
+}
+
+.frame-address-form-input .custom-select {
+  color: rgb(120, 120, 121);
 }
 
 </style>
