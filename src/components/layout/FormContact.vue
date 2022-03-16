@@ -1,17 +1,18 @@
 <template>
   <div class="frame-form-contact-user">
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form class="form-contact-user" @submit.prevent="handleSubmit">
+    <ValidationObserver v-slot="{ validate }">
+      <form class="form-contact-user" @submit.prevent="validate().then(handleSubmit)">
         <h4 class="title-form">Demande d'informations</h4>
         <div>
           Message pour <strong>{{ user.firstName }} {{ user.lastName }}</strong>
         </div>
-        <ValidationProvider rules="required|minmax:1,1000" v-slot="{ errors }">
+        <ValidationProvider rules="required|minmax:1,1000" v-slot="{ errors,failed }">
           <textarea
             class="input-message"
             type="text"
             placeholder="Bonjour,"
             v-model="text"
+            :class="`is-${failed}`"
           ></textarea>
           <span class="form-error">{{ errors[0] }}</span>
         </ValidationProvider>

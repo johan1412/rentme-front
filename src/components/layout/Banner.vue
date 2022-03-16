@@ -9,10 +9,10 @@
       </p>
     </div>
     <div class="searchForm">
-      <ValidationObserver v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit">
-          <ValidationProvider rules="max:50" v-slot="{ errors }">
-            <input type="text" v-model="searchInput" placeholder="Rechercher un produit ..." />
+      <ValidationObserver v-slot="{ validate }">
+        <form @submit.prevent="validate().then(handleSubmit)">
+          <ValidationProvider rules="max:50" v-slot="{ errors,failed }">
+            <input type="text" v-model="searchInput" :class="`is-${failed}`" placeholder="Rechercher un produit ..." />
             <span><button type="submit" class="btn btn-dark">Rechercher</button></span>
             <div class="form-error-banner">{{ errors[0] }}</div>
           </ValidationProvider>
