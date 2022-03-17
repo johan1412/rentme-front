@@ -9,6 +9,7 @@ const checkout = async (productId,renterId,tenantId) => {
   return await axios.post(`/create-checkout-session/${productId}/${renterId}/${tenantId}`, headers);
 };
 
+
 export default {
   checkout,
 };

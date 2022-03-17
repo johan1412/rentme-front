@@ -48,6 +48,10 @@ const getSessionIdPayment = async (product,tenant) => {
   return await axios.post(`https://localhost:8444/create-checkout-session`,{product:product,tenant:tenant});
 };
 
+const refund = async (data) => {
+  return await axios.post(`https://localhost:8444/refund`,data);
+};
+
 
 const deleteProduct = async (id) => {
   return await axios.delete(`https://localhost:8443/products/${id}`, {headers});
@@ -58,9 +62,8 @@ const postProduct = async (data) => {
 };
 
 const postImage = async (data) => {
-  return await axios.post("https://localhost:8443/media_objects", data, {
-    'Content-type': 'multipart/form-data',
-    'Authorization': 'Bearer '+localStorage.getItem('token')
+  return await axios.post("https://localhost:8443/media_objects", data, {...headers,
+    'Content-type': 'multipart/form-data'
    });
 };
 
@@ -94,5 +97,6 @@ export default {
   getProduct,
   getSessionIdPayment,
   postImage,
-  postReservation
+  postReservation,
+  refund
 };

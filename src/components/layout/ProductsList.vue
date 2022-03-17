@@ -27,15 +27,13 @@
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   components: {},
-  props: {
-    productsProps: Array,
-  },
   name: "ProductsList",
   data() {
     return {
-      products: this.productsProps,
       perPage: 20,
       currentPage: 1,
       paginatedProducts: [],
@@ -44,8 +42,8 @@ export default {
   },
   methods: {
     paginate(page_size, page_number) {
-      console.log(this.products)
-      let productsToParse = this.products;
+      console.log(this.user.products)
+      let productsToParse = this.user.products;
       this.paginatedProducts = productsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
     },
     onPageChanged(page) {
@@ -54,9 +52,12 @@ export default {
     },
   },
   mounted() {
-    this.nbResults = this.products.length;
+    this.nbResults = this.user.products.length;
     this.paginate(this.perPage, 0);
-  }
+  },
+  computed:{
+    ...mapGetters(['user'])
+  },
 };
 </script>
 

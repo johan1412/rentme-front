@@ -14,6 +14,7 @@ import AddProductPage from './components/pages/renter/AddProductPage'
 import RenterProductsPage from './components/pages/renter/RenterProductsPage'
 import MessagesPage from './components/pages/common/MessagesPage'
 import Success from './components/pages/payment/Sucess'
+import Refund from './components/pages/payment/Refund'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from './vuex'
 
@@ -56,6 +57,7 @@ const routes = [
   { path: '/user/:userId', component: ProfilePage },
   { path: '/messages', component: MessagesPage },
   { path: '/success', component: Success },
+  { path: '/refund', component: Refund },
   { path: '/account', component: AccountPage }
 ]
 
