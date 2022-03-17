@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="title mt-5">Mes annonces</h1>
     <hr>
-    <Products-list :productsProps="user.products"  />
+    <Products-list />
   </div>
 </template>
 <script>

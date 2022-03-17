@@ -52,7 +52,7 @@
                 <botton v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Récupérer le produit</botton>
                 <botton v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Rendre le produit</botton>
                 <h5 v-on:click="myMethod(reservation)" v-if="reservation.state === 'restored'">
-                  <p>Après une petite  vérification de rendu de produit au stock, on va vous rembourser votre caution de {{reservation.product.caution}}€ dans les brefs délais</p>
+                  <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé</p>
                 </h5>
               </div>
             </div>
@@ -96,6 +96,13 @@ export default {
             console.log(response)
       }
       ).catch(e => console.log(e))
+      if (reservation.state === 'retrieved'){
+        AuthService.refund({caution:reservation.product.caution,paymentIntent:reservation.paymentIntent})
+            .then(response => {
+              console.log(response)
+            }
+        ).catch(e => console.log(e))
+      }
     }
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3 class="mt-5">Annonce en attente de validation ({{ numberOfProductsNotValid }})</h3>
+    <h3 class="mt-5 text-center">Annonce en attente de validation ({{ numberOfProductsNotValid }})</h3>
     <hr>
     <div v-if="numberOfProductsNotValid > 0">
       <b-card-group deck class="card-deck-custom-list">
@@ -38,7 +38,7 @@
       </b-card-group>
     </div>
     <div v-else>
-      <p>Aucune annonce en attente de validation pour le moment</p>
+      <p class="text-center">Aucune annonce en attente de validation pour le moment</p>
     </div>
   </div>
 </template>
