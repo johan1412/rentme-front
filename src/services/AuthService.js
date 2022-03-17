@@ -27,13 +27,13 @@ const postCategory = async (data) => {
 };
 
 const getProducts = async () => {
-  return await axios.get("https://localhost:8443/products");
+  return await axios.get("https://localhost:8443/products",{headers});
 };
 const getProduct = async (id) => {
   return await axios.get(`https://localhost:8443/products/${id}`);
 };
 const getCategories = async () => {
-  return await axios.get("https://localhost:8443/categories");
+  return await axios.get("https://localhost:8443/categories",{headers});
 };
 
 const getProductsNotValid = async () => {

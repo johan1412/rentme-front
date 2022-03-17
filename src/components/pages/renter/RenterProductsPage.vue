@@ -7,21 +7,13 @@
 </template>
 <script>
 import ProductsList from "../../layout/ProductsList.vue";
-import {mapGetters} from "vuex";
 
 
 export default {
   components: {
     ProductsList,
   },
-  name: "RenterProductsPage",
-
-  computed:{
-  ...mapGetters(['user'])
-},
-created() {
-  console.log(this.user)
-}
+  name: "RenterProductsPage"
 
 };
 </script>

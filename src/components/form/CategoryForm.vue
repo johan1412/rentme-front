@@ -85,7 +85,6 @@ export default {
         this.$store.dispatch('parentCategories',[...this.$store.getters.parentCategories,{ name: this.name, parent: null }])
       }
       this.$router.push('/admin/categories')
-      this.parent = {},
           this.name =""
     },
   },
