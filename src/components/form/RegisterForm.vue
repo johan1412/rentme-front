@@ -156,13 +156,7 @@ export default {
     email: "",
     password: "",
     role: "",
-    optionsRegion: [
-      { id: 1, number: 75, name: 'test1' },
-      { id: 2, number: 76, name: 'test2' },
-      { id: 3, number: 77, name: 'test3' },
-      { id: 4, number: 78, name: 'test4' },
-      { id: 5, number: 79, name: 'test5' },
-    ],
+    optionsRegion: [],
   }),
   methods: {
     handleSubmit: function () {
