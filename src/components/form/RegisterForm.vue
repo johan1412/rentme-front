@@ -55,7 +55,7 @@
                   />
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
-                <ValidationProvider rules="required|integer" v-slot="{ errors }">
+                <ValidationProvider rules="required|integer|minmax:1,99" v-slot="{ errors }">
                   <b-form-select v-model="addressRegion" :options="optionsRegion" value-field="number" text-field="name" class="mt-3">
                     <template #first>
                       <b-form-select-option :value="null" disabled>-- Selectionnez votre département --</b-form-select-option>
@@ -114,7 +114,7 @@
 
 <script>
 import AuthService from "../../services/AuthService";
-//import RegionService from "../../services/RegionService";
+import RegionService from "../../services/RegionService";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email, oneOf } from 'vee-validate/dist/rules';
 
@@ -153,6 +153,7 @@ export default {
     addressStreet: '',
     addressCity: '',
     addressRegion: null,
+    address: {},
     email: "",
     password: "",
     role: "",
@@ -160,6 +161,7 @@ export default {
   }),
   methods: {
     handleSubmit: function () {
+      this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion.id };
       AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
         .then(() => {
           this.$router.push('/login')
@@ -173,15 +175,10 @@ export default {
     },
   },
   created() {
-    //let regions = RegionService.getRegions();
-    //this.optionsRegion = regions;
-    this.optionsRegion = [
-      { id: 1, number: 75, name: 'test1' },
-      { id: 2, number: 76, name: 'test2' },
-      { id: 3, number: 77, name: 'test3' },
-      { id: 4, number: 78, name: 'test4' },
-      { id: 5, number: 79, name: 'test5' },
-    ]
+    RegionService.getRegions().then(response => {
+      this.optionsRegion = response.data['hydra:member'];
+      this.$store.dispatch('regions',response.data['hydra:member'])
+    }).catch(e => console.log(e))
   },
 };
 </script>
