@@ -10,6 +10,8 @@ import ProfilePage from './components/pages/common/ProfilePage.vue'
 import HomePage from './components/pages/common/HomePage'
 import SearchPage from './components/pages/common/SearchPage'
 import AccountPage from './components/pages/common/Account'
+import Cgu from './components/pages/common/Cgu'
+import Cgv from './components/pages/common/Cgv'
 import AddProductPage from './components/pages/renter/AddProductPage'
 import RenterProductsPage from './components/pages/renter/RenterProductsPage'
 import MessagesPage from './components/pages/common/MessagesPage'
@@ -58,7 +60,9 @@ const routes = [
   { path: '/messages', component: MessagesPage },
   { path: '/success', component: Success },
   { path: '/refund', component: Refund },
-  { path: '/account', component: AccountPage }
+  { path: '/account', component: AccountPage },
+  { path: '/conditions-generales-utilisation', component: Cgu },
+  { path: '/conditions-generales-vente', component: Cgv }
 ]
 
 const router = new VueRouter({
