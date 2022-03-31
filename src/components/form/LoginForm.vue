@@ -23,13 +23,16 @@
               </div>
               <div class="form-group mt-4">
                 <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors,failed }">
-                  <input
-                    type="password"
-                    v-model="password"
-                    id="inputPassword"
-                    placeholder="Mot de passe"
-                    :class="`is-${failed}`"
-                  />
+                  <div class="d-flex align-items-center password-group">
+                    <input
+                      :type="passwordVisible ? 'text' : 'password'"
+                      v-model="password"
+                      id="inputPassword"
+                      placeholder="Mot de passe"
+                      :class="`is-${failed}`"
+                    />
+                    <b-icon :icon="passwordVisible ? 'eye' : 'eye-slash'" aria-hidden="true" class="eye-icon" @click="passwordVisible = !passwordVisible"></b-icon>
+                  </div>
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
               </div>
@@ -73,6 +76,7 @@ export default {
   data: () => ({
     email: "",
     password: "",
+    passwordVisible: false,
   }),
   mounted(){
     if(this.$store.getters.user){
@@ -91,7 +95,6 @@ export default {
           }
           this.$router.push(this.$route.query.redirect || '/')
       }
-
     },
   },
 };
@@ -142,5 +145,10 @@ export default {
   -webkit-appearance: none;
   outline: none;
   color: whitesmoke;
+}
+
+.eye-icon {
+  margin-left: -30px;
+  cursor: pointer;
 }
 </style>
