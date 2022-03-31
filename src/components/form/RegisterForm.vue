@@ -79,13 +79,16 @@
             </div>
             <div class="form-group">
               <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors, failed }">
-                <input
-                  type="password"
-                  v-model="password"
-                  id="exampleInputPassword1"
-                  :class="`is-${failed}`"
-                  placeholder="Nouveau mot de passe"
-                />
+                <div class="d-flex align-items-center password-group">
+                  <input
+                    :type="passwordVisible ? 'text' : 'password'"
+                    v-model="password"
+                    id="inputPassword"
+                    placeholder="Nouveau mot de passe"
+                    :class="`is-${failed}`"
+                  />
+                  <b-icon :icon="passwordVisible ? 'eye' : 'eye-slash'" aria-hidden="true" class="eye-icon" @click="passwordVisible = !passwordVisible"></b-icon>
+                </div>
                 <span class="form-error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
@@ -174,6 +177,7 @@ export default {
     role: "",
     cgu: false,
     optionsRegion: [],
+    passwordVisible: false,
   }),
   methods: {
     handleSubmit: function () {
@@ -270,6 +274,11 @@ export default {
 
 .frame-address-form-input .custom-select {
   color: rgb(120, 120, 121);
+}
+
+.eye-icon {
+  margin-left: -30px;
+  cursor: pointer;
 }
 
 </style>
