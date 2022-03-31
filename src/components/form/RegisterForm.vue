@@ -104,8 +104,23 @@
                 <span class="form-error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
+            <div class="form-group mt-5">
+              <ValidationProvider rules="required" v-slot="{ errors }">
+                <b-form-checkbox
+                  id="cgu"
+                  v-model="cgu"
+                  name="cgu"
+                  value="accepted"
+                  unchecked-value="not_accepted"
+                  @change="updateCgu"
+                >
+                  Je reconnais avoir lu et compris les <router-link to="/conditions-generales-utilisation" class="text-dark" target="_blank"><u>Conditions générales d'utilisation</u></router-link> et je les accepte
+                </b-form-checkbox>
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
           </b-card-text>
-          <button type="submit" class="btn btn-submit mb-3">S'inscrire</button>
+          <button type="submit" id="registerButton" class="btn btn-submit mb-3">S'inscrire</button>
         </b-card>
       </form>
     </ValidationObserver>
@@ -157,22 +172,31 @@ export default {
     email: "",
     password: "",
     role: "",
+    cgu: false,
     optionsRegion: [],
   }),
   methods: {
     handleSubmit: function () {
-      this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion.id };
-      AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
-        .then(() => {
-          this.$router.push('/login')
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if(this.cgu == 'accepted') {
+        this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion.id };
+        AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
+          .then(() => {
+            this.$router.push('/login')
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    },
+    updateCgu() {
+      this.cgu == 'accepted' ? document.getElementById('registerButton').removeAttribute('disabled') : document.getElementById('registerButton').setAttribute('disabled', true);
     },
     updateRegion(region) {
       this.addressRegion = region; //this.addressStreet + '///&///&///&///&, ' + this.addressCity + '///&///&///&///&, ' + this.addressRegion;
     },
+  },
+  mounted() {
+    document.getElementById('registerButton').setAttribute('disabled', true);
   },
   created() {
     RegionService.getRegions().then(response => {
