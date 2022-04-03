@@ -18,7 +18,7 @@
         <b-nav-item v-on:click="logout"><router-link class="btn bg-light text-dark" to="/">se déconnecter</router-link></b-nav-item>
       </b-navbar-nav>
       <div>
-        <circle-spin v-bind:loading="localStorage.getItem('isLoading')"></circle-spin>
+        <circle-spin v-bind:loading="isLoading"></circle-spin>
       </div>
     </b-collapse>
   </b-navbar>
@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       modalShow: false,
+      isLoading : false
     }
   },
   methods: {

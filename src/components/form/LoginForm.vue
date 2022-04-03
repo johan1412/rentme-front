@@ -88,7 +88,6 @@ export default {
   methods: {
     handleSubmit: async function () {
       this.isLoading = true
-      localStorage.setItem("isLoading",false)
       const response =  await AuthService.login({ email: this.email, password: this.password })
       if(response){
         localStorage.setItem("token",response.data.token)
