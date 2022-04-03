@@ -118,7 +118,7 @@ export default {
     }).catch(e => console.log(e))
   },
   computed:{
-    ...mapGetters(['product'])
+    ...mapGetters(['product','user'])
   },
   methods: {
     handleSubmitNote() {

@@ -1,5 +1,8 @@
 <template>
     <div class="frame-calendar">
+        <div>
+          <circle-spin v-bind:loading="isLoading"></circle-spin>
+        </div>
         <form class="form-calendar" action="#" method="post">
             <h4 class="title-form">Reservation</h4>
             <div class="mb-4 mt-3">
@@ -47,6 +50,7 @@ export default {
           showSingleMonth: true,
           totalPrice: 0,
           productLocal: this.product,
+          isLoading:true
         }
     }
   ,
@@ -63,6 +67,7 @@ export default {
             const diffTime = Math.abs(date2 - date1);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
             this.totalPrice = (diffDays * this.product.price);
+            this.isLoading = true
             AuthService.getSessionIdPayment({...this.product,price:this.totalPrice+this.product.caution},this.$store.getters.user)
               .then(response => {
                 this.sessionId = response.data.checkout_session.id
@@ -70,6 +75,7 @@ export default {
                 console.log(response.data.checkout_sessioon.id)
               })
               .catch(e => console.log(e))
+          .finally(() => this.isLoading = false)
         },
         dateSelected(e, datein, dateout) {
             this.startingDate = this.convertDate(datein);

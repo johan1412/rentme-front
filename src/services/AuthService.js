@@ -27,8 +27,13 @@ const postCategory = async (data) => {
 };
 
 const getProducts = async () => {
-  return await axios.get("https://localhost:8443/products",{headers});
+  return await axios.get("https://localhost:8443/products");
 };
+
+const getProductsValid = async () => {
+  return await axios.get("https://localhost:8443/products/products-valid");
+};
+
 const getProduct = async (id) => {
   return await axios.get(`https://localhost:8443/products/${id}`);
 };
@@ -98,5 +103,6 @@ export default {
   getSessionIdPayment,
   postImage,
   postReservation,
-  refund
+  refund,
+  getProductsValid
 };

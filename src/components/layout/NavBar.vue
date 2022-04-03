@@ -17,6 +17,9 @@
         <b-nav-item><router-link class="btn bg-secondary text-light" to="/account">Mon compte</router-link></b-nav-item>
         <b-nav-item v-on:click="logout"><router-link class="btn bg-light text-dark" to="/">se déconnecter</router-link></b-nav-item>
       </b-navbar-nav>
+      <div>
+        <circle-spin v-bind:loading="localStorage.getItem('isLoading')"></circle-spin>
+      </div>
     </b-collapse>
   </b-navbar>
 </div>
@@ -24,6 +27,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
+
 export default {
   name: "NavBar",
   data() {
@@ -40,6 +44,7 @@ export default {
       this.$store.dispatch('numberOfProductsNotValid',0)
       this.$store.dispatch('parentCategories',[])
       this.$store.dispatch('categories',[])
+      this.$store.dispatch('reservations',[])
       this.$router.push('/')
     }
   },

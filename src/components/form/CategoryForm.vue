@@ -18,13 +18,10 @@
           </div>
           <div class="form-group">
             <label>Catégorie parente :</label>
-            <ValidationProvider rules="minmax:1,50" v-slot="{ errors,failed }">
               <select v-model="parent" :class="`is-${failed}`" class="form-select form-select-lg mb-3">
                 <option v-if="parentCategories.length < 1"> pas de parent</option>
                 <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
               </select>
-              <span class="form-error">{{ errors[0] }}</span>
-            </ValidationProvider>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -58,7 +55,7 @@ export default {
     ValidationObserver,
   },
   data: () => ({
-    parent: {},
+    parent: null,
     name:""
   }),
   created() {
@@ -78,14 +75,15 @@ export default {
   },
   methods: {
     handleSubmit:  async function () {
-      if(typeof this.parent.id !== 'undefined'){
+      if(this.parent){
         await AuthService.postCategory({ name: this.name, parent: "/categories/"+this.parent.id })
       }else{
-        await AuthService.postCategory({ name: this.name,parent:null})
-        this.$store.dispatch('parentCategories',[...this.$store.getters.parentCategories,{ name: this.name, parent: null }])
+        const response = await AuthService.postCategory({ name: this.name,parent:null})
+        this.$store.dispatch('parentCategories',[...this.$store.getters.parentCategories,response.data])
       }
       this.$router.push('/admin/categories')
           this.name =""
+          this.parent = null
     },
   },
 };
