@@ -331,7 +331,7 @@ export default {
     AuthService.getCategories().then(response => {
       this.$store.dispatch('categories',response.data['hydra:member'].filter(category => !category?.parent))
     }).catch(e => console.log(e))
-    AuthService.getProducts().then(response => {
+    AuthService.getProductsValid().then(response => {
       this.$store.dispatch('products',response.data['hydra:member'])
     }).catch(e => console.log(e))
   },

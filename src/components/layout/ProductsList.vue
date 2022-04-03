@@ -1,7 +1,7 @@
 <template>
-    <div v-if="paginatedProducts.length > 0" class="">
+    <div v-if="user.products.length > 0" class="">
       <b-card-group deck class="card-deck-custom-grid mb-5">
-          <router-link v-for="product in paginatedProducts" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
+          <router-link v-for="product in user.products" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
               <b-card class="product-card" :img-src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-alt="Image" img-top>
                   <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
                   <template #footer>

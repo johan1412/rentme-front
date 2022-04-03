@@ -1,5 +1,6 @@
 <template>
    <div class="container m-auto">
+     <circle-spin v-bind:loading="isLoading"></circle-spin>
      <ValidationObserver v-slot="{ validate }">
        <form @submit.prevent="validate().then(handleSubmit)">
           <b-card class="form-frame mx-auto">
@@ -76,6 +77,7 @@ export default {
   data: () => ({
     email: "",
     password: "",
+    isLoading : false,
     passwordVisible: false,
   }),
   mounted(){
@@ -85,6 +87,7 @@ export default {
   },
   methods: {
     handleSubmit: async function () {
+      this.isLoading = true
       const response =  await AuthService.login({ email: this.email, password: this.password })
       if(response){
         localStorage.setItem("token",response.data.token)
@@ -93,7 +96,8 @@ export default {
           if (response.data.data.roles.includes("ROLE_ADMIN")){
             this.$store.dispatch('numberOfProductsNotValid',response.data.data.numberOfProductsNotValid)
           }
-          this.$router.push(this.$route.query.redirect || '/')
+        this.isLoading = false
+        this.$router.push(this.$route.query.redirect || '/')
       }
     },
   },

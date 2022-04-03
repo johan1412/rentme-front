@@ -58,7 +58,7 @@
                 <ValidationProvider rules="required|integer|minmax:1,99" v-slot="{ errors }">
                   <b-form-select v-model="addressRegion" :options="optionsRegion" value-field="number" text-field="name" class="mt-3">
                     <template #first>
-                      <b-form-select-option :value="null" disabled>-- Selectionnez votre département --</b-form-select-option>
+                      <b-form-select-option :value="null" enabled>-- Selectionnez votre département --</b-form-select-option>
                     </template>
                   </b-form-select>
                   <span class="form-error">{{ errors[0] }}</span>
@@ -205,6 +205,7 @@ export default {
   created() {
     RegionService.getRegions().then(response => {
       this.optionsRegion = response.data['hydra:member'];
+      console.log(this.optionsRegion)
       this.$store.dispatch('regions',response.data['hydra:member'])
     }).catch(e => console.log(e))
   },
