@@ -1,6 +1,9 @@
 <template>
   <div class="app">
     <NavBar/>
+    <div class="alert alert-success text-center mt-5 p-3" v-if="messageNotification">
+      {{ messageNotification }}
+    </div>
     <slot></slot>
     <Footer />
   </div>
@@ -12,6 +15,9 @@ import Footer from "../layout/Footer.vue";
 import AuthService from "../../services/AuthService";
 export default {
   name: "BaseLayout",
+  data: () => ({
+    messageNotification: null,
+  }),
   components: {
     NavBar,
     Footer
@@ -26,12 +32,25 @@ export default {
           console.log(e);
         });
     }
+    if(localStorage.getItem("successMessage")) {
+      this.messageNotification = localStorage.getItem("successMessage");
+    }
   },
   watch: {
     '$route.query': {
       immediate: false,
       handler() {
         window.scrollTo(0, 0);
+        if(this.$route.fullPath != "/login") {
+          if(localStorage.getItem("successMessage")) {
+            this.messageNotification = null;
+            localStorage.removeItem("successMessage");
+          }
+        } else {
+          if(localStorage.getItem("successMessage")) {
+            this.messageNotification = localStorage.getItem("successMessage");
+          }
+        }
       }
     }
   }

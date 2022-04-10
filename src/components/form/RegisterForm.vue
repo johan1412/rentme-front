@@ -55,8 +55,8 @@
                   />
                   <span class="form-error">{{ errors[0] }}</span>
                 </ValidationProvider>
-                <ValidationProvider rules="required|integer|minmax:1,99" v-slot="{ errors }">
-                  <b-form-select v-model="addressRegion" :options="optionsRegion" value-field="number" text-field="name" class="mt-3">
+                <ValidationProvider rules="required|integer|between:1,99" v-slot="{ errors }">
+                  <b-form-select v-model="addressRegion" :options="optionsRegion" value-field="id" text-field="name" class="mt-3">
                     <template #first>
                       <b-form-select-option :value="null" enabled>-- Selectionnez votre département --</b-form-select-option>
                     </template>
@@ -134,7 +134,7 @@
 import AuthService from "../../services/AuthService";
 import RegionService from "../../services/RegionService";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, email, oneOf } from 'vee-validate/dist/rules';
+import { required, email, oneOf, between, integer } from 'vee-validate/dist/rules';
 
 extend('minmax', {
   validate(value, { min, max }) {
@@ -147,6 +147,17 @@ extend('minmax', {
 extend('required', {
     ...required,
     message: 'Ce champs est obligatoire',
+});
+
+extend('integer', {
+    ...integer,
+    message: 'Ce champs doit etre un nombre',
+});
+
+extend('between', {
+    ...between,
+    message: 'La valeur doit être entre {min} et {max}',
+    params: ['min', 'max']
 });
 
 extend('email', {
@@ -182,9 +193,10 @@ export default {
   methods: {
     handleSubmit: function () {
       if(this.cgu == 'accepted') {
-        this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion.id };
+        this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
           .then(() => {
+            localStorage.setItem("successMessage", "Votre compte a bien été créé");
             this.$router.push('/login')
           })
           .catch((e) => {
@@ -196,7 +208,7 @@ export default {
       this.cgu == 'accepted' ? document.getElementById('registerButton').removeAttribute('disabled') : document.getElementById('registerButton').setAttribute('disabled', true);
     },
     updateRegion(region) {
-      this.addressRegion = region; //this.addressStreet + '///&///&///&///&, ' + this.addressCity + '///&///&///&///&, ' + this.addressRegion;
+      this.addressRegion = region;
     },
   },
   mounted() {
@@ -205,7 +217,6 @@ export default {
   created() {
     RegionService.getRegions().then(response => {
       this.optionsRegion = response.data['hydra:member'];
-      console.log(this.optionsRegion)
       this.$store.dispatch('regions',response.data['hydra:member'])
     }).catch(e => console.log(e))
   },
