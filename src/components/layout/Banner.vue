@@ -1,5 +1,6 @@
 <template>
   <div id="banner">
+    <div v-if="user" class="welcome-message">Bonjour {{ user.firstName }} {{ user.lastName }} !</div>
     <div class="banner-text-box">
       <p class="banner-text banner-text-big">
         LOCATION DE PARTICULIER À PARTICULIER
@@ -42,17 +43,31 @@ export default {
   data: () => {
     return {
       searchInput: '',
+      user: null,
     }
   },
   methods: {
     handleSubmit: function () {
       this.$router.push('/search?words=' + this.searchInput);
     },
+  },
+  watch: {
+    '$route.query': {
+      immediate: true,
+      handler() {
+        if(this.$store.getters.user){
+          this.user = { firstName: this.$store.getters.user.firstName, lastName: this.$store.getters.user.lastName };
+        } else {
+          this.user = null;
+        }
+      }
+    }
   }
 };
 </script>
 <style scoped>
 #banner {
+  position: relative;
   height: 600px;
   width: 100%;
   background-image: url("../../../public/images/banner.jpg");
@@ -118,5 +133,16 @@ export default {
   font-weight: bold;
   background-color: #ff7f00;
   margin: 10px;
+}
+
+.welcome-message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: max-content;
+  padding: 15px 40px;
+  background-color: rgba(250 , 250, 250, 0.8);
+  color: #000000;
+  margin: 10px 0px;
 }
 </style>
