@@ -46,7 +46,11 @@ export default {
       this.$store.dispatch('parentCategories',[])
       this.$store.dispatch('categories',[])
       this.$store.dispatch('reservations',[])
-      this.$router.push('/')
+      if(this.$route.fullPath != '/') {
+        this.$router.push('/')
+      } else {
+        this.$router.go()
+      }
     }
   },
   computed:{
