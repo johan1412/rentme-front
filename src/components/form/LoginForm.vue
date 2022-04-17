@@ -39,6 +39,7 @@
               </div>
             </b-card-text>
             <button type="submit" class="btn btn-submit mb-3">Se connecter</button>
+            <a href="https://localhost:8443/reset-password" class="btn">Mot de passe oublié ?</a>
           </b-card>
         </form>
      </ValidationObserver>
@@ -99,7 +100,7 @@ export default {
         this.isLoading = false
         this.$router.push(this.$route.query.redirect || '/')
       }
-    },
+    }
   },
 };
 </script>

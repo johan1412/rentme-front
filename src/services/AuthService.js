@@ -14,6 +14,10 @@ const register = async data => {
   return await axios.post("https://localhost:8443/users", data);
 };
 
+const resetPassword = async () => {
+  return await axios.post("https://localhost:8443/reset-password");
+};
+
 const getUser = async (id) => {
   return await axios.get(`https://localhost:8443/users/${id}`, {headers});
 };
@@ -88,6 +92,7 @@ const postReservation = async (data) => {
 export default {
   register,
   login,
+  resetPassword,
   getUser,
   parentCategories,
   postCategory,
