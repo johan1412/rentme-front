@@ -110,7 +110,7 @@ export default {
 }
 
 .main-content h1 {
-  font-size: 160%;
+  font-size: 140%;
   margin: 0px;
 }
 

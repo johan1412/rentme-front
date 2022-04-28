@@ -3,7 +3,7 @@
     <h3 class="mt-5 text-center">Annonce en attente de validation ({{ numberOfProductsNotValid }})</h3>
     <hr>
     <div v-if="numberOfProductsNotValid > 0">
-      <b-card-group deck class="card-deck-custom-list">
+      <b-card-group deck class="card-deck-custom-list my-5">
         <div v-for="product in products" :key="product.id" class="d-flex align-items-center">
           <router-link :to="'/products/' + product.id" class="mt-3">
             <b-card no-body class="overflow-hidden">
@@ -37,8 +37,8 @@
         </div>
       </b-card-group>
     </div>
-    <div v-else>
-      <p class="text-center">Aucune annonce en attente de validation pour le moment</p>
+    <div v-else class="message-no-data shadow my-5">
+      <div class="text-center">Aucune annonce en attente de validation pour le moment</div>
     </div>
   </div>
 </template>
@@ -83,3 +83,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+  .message-no-data {
+    background-color: #ffffff;
+    padding: 20px 80px;
+    font-size: 18px;
+  }
+
+</style>
