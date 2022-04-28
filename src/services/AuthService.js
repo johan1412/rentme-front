@@ -6,11 +6,11 @@ const headers = {
   'Authorization': 'Bearer '+localStorage.getItem('token')
  }
 
-const login = async data => {
+const login = async (data) => {
   return await axios.post("https://localhost:8443/authentication_token", data);
 };
 
-const register = async data => {
+const register = async (data) => {
   return await axios.post("https://localhost:8443/users", data);
 };
 
@@ -20,6 +20,10 @@ const resetPassword = async () => {
 
 const getUser = async (id) => {
   return await axios.get(`https://localhost:8443/users/${id}`, {headers});
+};
+
+const updateUser = async (id, data) => {
+  return await axios.patch(`https://localhost:8443/users/${id}`,data, {headers});
 };
 
 const parentCategories = async () => {
@@ -94,6 +98,7 @@ export default {
   login,
   resetPassword,
   getUser,
+  updateUser,
   parentCategories,
   postCategory,
   getProducts,

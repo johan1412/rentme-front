@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <h1 class="text-center">Création une nouvelle catégorié</h1>
+  <div class="container">
+    <h3 class="text-center mt-5">Créé une nouvelle catégorie</h3>
+    <hr>
     <CategoryForm />
   </div>
 </template>

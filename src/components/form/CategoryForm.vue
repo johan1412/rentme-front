@@ -1,5 +1,5 @@
 <template>
-    <div class="container m-auto">
+    <div class="container mx-auto mt-5">
       <ValidationObserver v-slot="{ validate }">
         <form @submit.prevent="validate().then(handleSubmit)">
           <div class="form-group">
@@ -18,12 +18,12 @@
           </div>
           <div class="form-group">
             <label>Catégorie parente :</label>
-              <select v-model="parent" :class="`is-${failed}`" class="form-select form-select-lg mb-3">
-                <option v-if="parentCategories.length < 1"> pas de parent</option>
-                <option v-for=" item in parentCategories" :key="item.id" v-bind:value="{id:item.id}">{{item.name}}</option>
+              <select v-model="parent" class="form-select form-select-lg mb-3">
+                <option v-if="parentCategories.length < 1" v-bind:value="null"> pas de parent</option>
+                <option v-for=" item in parentCategories" :key="item.id" v-bind:value="item.id">{{item.name}}</option>
               </select>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn text-light submit-button">Ajouter</button>
         </form>
       </ValidationObserver>
     </div>
@@ -76,15 +76,30 @@ export default {
   methods: {
     handleSubmit:  async function () {
       if(this.parent){
-        await AuthService.postCategory({ name: this.name, parent: "/categories/"+this.parent.id })
+        await AuthService.postCategory({ name: this.name, parent: "/categories/"+this.parent })
       }else{
         const response = await AuthService.postCategory({ name: this.name,parent:null})
         this.$store.dispatch('parentCategories',[...this.$store.getters.parentCategories,response.data])
       }
-      this.$router.push('/admin/categories')
-          this.name =""
-          this.parent = null
+      //this.$router.push('/admin/categories')
+      this.$router.go();
+      this.name =""
+      this.parent = null
     },
   },
 };
 </script>
+
+<style>
+.submit-button {
+  background-color: #333333 !important;
+  border: 1px solid #333333 !important;
+  border-radius: 0px !important;
+}
+
+.submit-button:hover {
+  background-color: #ffffff !important;
+  color: black !important;
+  border: 1px solid #333333 !important;
+}
+</style>
