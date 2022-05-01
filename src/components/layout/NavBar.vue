@@ -9,12 +9,12 @@
         <b-nav-item><router-link class="btn text-dark" to="/login">Se connecter</router-link></b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav v-else class="ml-auto">
-        <b-nav-item v-if="!user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-light text-dark" to="/messages">Messages</router-link></b-nav-item>
-        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-light text-dark" to="/admin/products">Annonce en attente de validation ({{numberOfProductsNotValid}})</router-link></b-nav-item>
-        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn bg-light text-dark" to="/admin/categories">Ajouter une nouvelle catégorie</router-link></b-nav-item>
+        <b-nav-item v-if="!user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/messages">Messages</router-link></b-nav-item>
+        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/products">Annonce en attente de validation ({{numberOfProductsNotValid}})</router-link></b-nav-item>
+        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/categories">Ajouter une nouvelle catégorie</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn bg-secondary text-light" to="/publish">Publier une annonce</router-link></b-nav-item>
-        <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn bg-light text-dark" to="/products">Mes annonces</router-link></b-nav-item>
-        <b-nav-item><router-link class="btn bg-light text-dark" to="/account">Mon compte</router-link></b-nav-item>
+        <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/products">Mes annonces</router-link></b-nav-item>
+        <b-nav-item><router-link class="btn text-dark" to="/account">Mon compte</router-link></b-nav-item>
         <b-nav-item v-on:click="logout"><router-link class="btn bg-dark text-light logout-button" to="/">Se déconnecter</router-link></b-nav-item>
       </b-navbar-nav>
       <div>

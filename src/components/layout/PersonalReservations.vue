@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container p-5">
     <div class="container-fluid my-5 d-sm-flex justify-content-center">
       <div class="d-flex flex-column">
         <div class="p-2" v-for="reservation in reservations" :key="reservation.id">
@@ -61,7 +61,7 @@
           </div>
         </div>
         <div v-if="reservations.length == 0">
-          <div class="h5">Vous n'avez aucune réservation</div>
+          <div>Vous n'avez aucune réservation</div>
         </div>
       </div>
     </div>

@@ -1,6 +1,10 @@
 <template>
    <div class="container m-auto">
-     <circle-spin v-bind:loading="isLoading"></circle-spin>
+     <div class="spinner-middle">
+      <div v-show="isLoading" class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
      <ValidationObserver v-slot="{ validate }">
        <form @submit.prevent="validate().then(handleSubmit)">
           <b-card class="form-frame mx-auto">
@@ -39,7 +43,7 @@
               </div>
             </b-card-text>
             <button type="submit" class="btn btn-submit mb-3">Se connecter</button>
-            <a href="https://localhost:8443/reset-password" class="btn">Mot de passe oublié ?</a>
+            <a href="https://localhost:8443/reset-password" class="btn"><u>Mot de passe oublié ?</u></a>
           </b-card>
         </form>
      </ValidationObserver>
@@ -106,6 +110,12 @@ export default {
 </script>
 
 <style scoped>
+.spinner-middle {
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+}
+
 .form-frame {
   width: 350px;
   background-color: rgba(255, 255, 255, 1);
