@@ -8,9 +8,9 @@
       <hr>
       <ul>
         <li v-for="category in categories" :key="category.id">
-          <router-link :to="'/search?category=' + category.title">
+          <router-link :to="'/search?category=' + category.name">
             <img :src="category.img" alt="" class="icon-category">
-            <p>{{ category.title }}</p>
+            <p>{{ category.name }}</p>
           </router-link>
         </li>
       </ul>
@@ -48,7 +48,9 @@
 <script>
 import Menu from '../../layout/MainMenu.vue';
 import Banner from '../../layout/Banner.vue';
+import AuthService from '../../../services/AuthService';
 import { Carousel, Slide } from 'vue-carousel';
+
 export default {
   components: {
     Menu,
@@ -61,14 +63,7 @@ export default {
     return {
       slide: 0,
       sliding: null,
-      categories: [
-        {id:1, title:'Bricolage', img:'https://picsum.photos/300/200'},
-        {id:2, title:'Jardinage', img:'https://picsum.photos/300/200'},
-        {id:3, title:'Véhicule', img:'https://picsum.photos/500/200'},
-        {id:4, title:'High-tech', img:'https://picsum.photos/300/200'},
-        {id:5, title:'Nettoyage', img:'https://picsum.photos/300/200'},
-        {id:6, title:'Vetements', img:'https://picsum.photos/300/200'},
-      ],
+      categories: [],
       posts: [
         {id:1, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:30, files:'https://picsum.photos/300/200/?image=41'},
         {id:2, name:'chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player, chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the worldchelsea is the best chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world club in the world chelsea is the best club in the world  chelsea is the best club in the world  and chelsea has a great player', price:60, files:'https://picsum.photos/300/200/?image=41'},
@@ -82,6 +77,11 @@ export default {
         {id:10, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:28, files:'https://picsum.photos/300/200/?image=41'},
       ],
     }
+  },
+  mounted() {
+    AuthService.getCategories().then(response => {
+      this.categories = response.data['hydra:member'];
+    }).catch(e => console.log(e))
   },
   methods: {
     onSlideStart() {

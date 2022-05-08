@@ -124,10 +124,9 @@ export default {
   }),
   methods: {
     uploadFile() {
-      this.Images = this.$refs.file.files[0];
+      this.images = this.$refs.file.files[0];
     },
     handleSubmit: async function () {
-      console.log(this.$store.getters.user)
       const formData = new FormData();
       formData.append('file', this.Images);
       let image = await AuthService.postImage(formData);
