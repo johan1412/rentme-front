@@ -1,6 +1,5 @@
 <template>
 <div class="dqs main-frame">
-	<Menu />
 	<div class="main-content row mx-0 justify-content-between">
 		<div class="filters-box col-md-3">
 			<h2>Filtres</h2>
@@ -182,14 +181,12 @@
 </template>
 
 <script>
-import Menu from '../../layout/CommonMenu.vue';
 import SearchBar from '../../layout/CommonSearchBar.vue';
 import AuthService from "@/services/AuthService";
 import {mapGetters} from "vuex";
 
 export default {
   components: {
-    Menu,
 	SearchBar,
   },
   name: "Home",

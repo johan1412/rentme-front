@@ -1,6 +1,8 @@
 <template>
   <div class="app">
     <NavBar/>
+    <MainMenu v-if="mainMenu" />
+    <CommonMenu v-else />
     <div class="alert-message alert alert-success text-center mt-5 p-3" v-if="messageNotification">
       {{ messageNotification }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -15,15 +17,21 @@
 <script>
 import NavBar from "../layout/NavBar.vue";
 import Footer from "../layout/Footer.vue";
+import MainMenu from "../layout/MainMenu.vue";
+import CommonMenu from "../layout/CommonMenu.vue";
 import AuthService from "../../services/AuthService";
+
 export default {
   name: "BaseLayout",
   data: () => ({
     messageNotification: null,
+    mainMenu: false,
   }),
   components: {
     NavBar,
-    Footer
+    Footer,
+    MainMenu,
+    CommonMenu,
   },
   created() {
     if(this.$store.getters.user){
@@ -35,6 +43,7 @@ export default {
           console.log(e);
         });
     }
+    this.$route.fullPath == "/" ? this.mainMenu = true : this.mainMenu = false;
     if(localStorage.getItem("successMessage")) {
       this.messageNotification = localStorage.getItem("successMessage");
     }
@@ -44,6 +53,7 @@ export default {
       immediate: false,
       handler() {
         window.scrollTo(0, 0);
+        this.$route.fullPath == "/" ? this.mainMenu = true : this.mainMenu = false;
         if(this.$route.fullPath != "/login") {
           if(localStorage.getItem("successMessage")) {
             this.messageNotification = null;

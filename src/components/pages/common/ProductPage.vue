@@ -1,6 +1,5 @@
 <template>
 <div class="dqs main-frame">
-	<Menu />
 	<div class="main-content row mx-0 justify-content-between">
 		<div class="products-list col-md-8 offset-md-4">
 			<SearchBar />
@@ -82,7 +81,6 @@
 </template>
 
 <script>
-import Menu from '../../layout/CommonMenu.vue';
 import SearchBar from '../../layout/CommonSearchBar.vue';
 import Comments from '../../layout/Comments.vue';
 import SimilarAds from '../../layout/SimilarAds.vue';
@@ -95,7 +93,6 @@ import {mapGetters} from "vuex";
 
 export default {
   components: {
-    Menu,
 	SearchBar,
 	Comments,
 	SimilarAds,

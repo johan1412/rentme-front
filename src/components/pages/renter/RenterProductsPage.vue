@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title mt-5">Mes annonces</h1>
+    <h1 class="h3 mt-5">Mes annonces</h1>
     <hr>
     <Products-list />
   </div>

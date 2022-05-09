@@ -73,7 +73,9 @@ export default {
 }
 .common-menu {
     background-color: #ffffff;
-	margin: 30px 0px;
+    width: 95%;
+    max-width: 1800px;
+	margin: 30px auto;
 	border-radius: 10px;
 }
 
@@ -103,6 +105,20 @@ export default {
 .common-menu > ul > li > a {
     padding: 20px 40px;
     font-size: 120%;
+}
+
+.common-menu > ul > li > a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #000000;
+    transition: width 0.3s;
+}
+
+.common-menu > ul > li > a:hover::after {
+    width: 100%;
+    transition: width 0.3s;
 }
 
 .common-menu ul li ul {

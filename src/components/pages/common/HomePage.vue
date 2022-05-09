@@ -1,6 +1,5 @@
 <template>
 <div class="dqs">
-  <Menu />
   <Banner />
   <div class="main-content">
     <div class="main-categories">
@@ -46,14 +45,12 @@
 </template>
 
 <script>
-import Menu from '../../layout/MainMenu.vue';
 import Banner from '../../layout/Banner.vue';
 import AuthService from '../../../services/AuthService';
 import { Carousel, Slide } from 'vue-carousel';
 
 export default {
   components: {
-    Menu,
     Banner,
     Carousel,
     Slide
