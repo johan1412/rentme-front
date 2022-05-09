@@ -1,6 +1,5 @@
 <template>
 <div class="dqs main-frame">
-	<Menu />
 	<div class="container m-0 p-0 mw-100">
 		<div class="row mt-5">
 			<div class="col-md-8">
@@ -52,12 +51,10 @@
 </template>
 
 <script>
-import Menu from '../../layout/CommonMenu.vue';
 import FormContact from '../../layout/FormContact.vue';
 
 export default {
   components: {
-    Menu,
     FormContact,
   },
   name: "Product",
