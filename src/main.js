@@ -25,9 +25,12 @@ import VueSpinners from 'vue-spinners'
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 //import StripeCheckout from './components/pages/payment/StripeCheckout.vue'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
+
+import './registerServiceWorker'
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
