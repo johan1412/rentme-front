@@ -15,7 +15,7 @@ build:
 
 deploy:
   stage: deploy
-  image: 'ruby:2.5'
+  image: 'ruby:2.6'
   script:
     - apt-get update -qy
     - apt-get install rubygems ruby-dev -y
@@ -26,3 +26,4 @@ deploy:
   only:
     - main
     - cicd
+
