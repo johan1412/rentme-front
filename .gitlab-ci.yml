@@ -12,6 +12,7 @@ build:
       - dist/
   only:
     - main
+    - cicd
 
 deploy:
   stage: deploy
