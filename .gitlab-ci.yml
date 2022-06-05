@@ -25,3 +25,4 @@ deploy:
       --skip_cleanup
   only:
     - main
+    - cicd
