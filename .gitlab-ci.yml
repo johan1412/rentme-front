@@ -5,7 +5,7 @@ build:
   stage: build
   image: 'node:8'
   script:
-    - npm install --only=production
+    - npm install
     - npm run build
   artifacts:
     paths:
