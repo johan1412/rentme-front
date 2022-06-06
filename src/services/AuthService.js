@@ -57,12 +57,12 @@ const updateProduct = async (id,data) => {
   return await axios.patch(`https://localhost:8443/products/${id}`,data, {headers});
 };
 
-const getSessionIdPayment = async (product,tenant) => {
-  return await axios.post(`https://localhost:8444/create-checkout-session`,{product:product,tenant:tenant});
+const getSessionIdPayment = async (productId,tenantId,price) => {
+  return await axios.post(`https://localhost:8443/create-checkout-session/${productId}/${tenantId}`,{...price},{headers});
 };
 
 const refund = async (data) => {
-  return await axios.post(`https://localhost:8444/refund`,data);
+  return await axios.get(`https://localhost:8443/refund`,data,{headers});
 };
 
 
