@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-for="message in messages" :key="message.id">
-      <p v-if="message.senderId == user">Moi : {{ message.text }}</p>
-      <p v-else>{{ message.senderId }} : {{ message.text }}</p>
+      <p v-if="message.sender == user">Moi : {{ message.text }}</p>
+      <p v-else>{{ message.sender }} : {{ message.text }}</p>
     </div>
   </div>
 </template>
