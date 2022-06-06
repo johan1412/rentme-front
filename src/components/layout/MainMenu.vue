@@ -87,6 +87,21 @@ export default {
 .main-menu > ul > li > a {
     padding: 20px 40px;
     font-size: 120%;
+    letter-spacing: 0.5px;
+}
+
+.main-menu > ul > li > a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #000000;
+    transition: width 0.3s;
+}
+
+.main-menu > ul > li > a:hover::after {
+    width: 100%;
+    transition: width 0.3s;
 }
 
 .main-menu ul li ul {

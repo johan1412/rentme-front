@@ -1,117 +1,224 @@
 <template>
   <div class="container m-auto">
-      <form @submit.prevent="handleSubmit">
-         <b-card class="form-frame mx-auto">
+    <ValidationObserver v-slot="{ validate }">
+      <form @submit.prevent="validate().then(handleSubmit)">
+        <b-card class="form-frame mx-auto">
           <b-card-text class="form-top text-center">
             <b-icon icon="person-circle" aria-hidden="true"></b-icon>
             <p>INSCRIVEZ-VOUS</p>
           </b-card-text>
           <b-card-text class="form-data">
             <div class="form-group">
-              <input
-                type="text"
-                v-model="firstName"
-                id="firstName"
-                aria-describedby="emailHelp"
-                placeholder="Saisissez votre nom"
-              />
+              <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
+                <input
+                  type="text"
+                  v-model="firstName"
+                  id="firstName"
+                  :class="`is-${failed}`"
+                  placeholder="Saisissez votre nom"
+                />
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
             </div>
             <div class="form-group">
-              <input
-                type="text"
-                v-model="lastName"
-                id="lastName"
-                placeholder="Saisissez votre prénom"
-              />
+              <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
+                <input
+                  type="text"
+                  v-model="lastName"
+                  id="lastName"
+                  :class="`is-${failed}`"
+                  placeholder="Saisissez votre prénom"
+                />
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
             </div>
             <div class="form-group address-form mt-4">
               <label class="address-label">Votre adresse</label>
               <div class="frame-address-form-input">
-                <input
-                  type="text"
-                  v-model="addressStreet"
-                  id="addressStreet"
-                  placeholder="Nom de la rue"
-                  @change="handleChangeAddress"
-                />
-                <input
-                  type="text"
-                  v-model="addressCity"
-                  id="addressCity"
-                  placeholder="Nom de la ville"
-                  @change="handleChangeAddress"
-                />
-                <input
-                  type="text"
-                  v-model="addressRegion"
-                  id="addressRegion"
-                  placeholder="Numéro de département"
-                  @change="handleChangeAddress"
-                />
+                <ValidationProvider rules="required|minmax:1,100" v-slot="{ errors, failed }">
+                  <input
+                    type="text"
+                    v-model="addressStreet"
+                    id="addressStreet"
+                    :class="`is-${failed}`"
+                    placeholder="Nom de la rue"
+                  />
+                  <span class="form-error">{{ errors[0] }}</span>
+                </ValidationProvider>
+                <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
+                  <input
+                    type="text"
+                    v-model="addressCity"
+                    id="addressCity"
+                    :class="`is-${failed}`"
+                    placeholder="Nom de la ville"
+                  />
+                  <span class="form-error">{{ errors[0] }}</span>
+                </ValidationProvider>
+                <ValidationProvider rules="required|integer|between:1,99" v-slot="{ errors }">
+                  <b-form-select v-model="addressRegion" :options="optionsRegion" value-field="id" text-field="name" class="mt-3">
+                    <template #first>
+                      <b-form-select-option :value="null" enabled>-- Selectionnez votre département --</b-form-select-option>
+                    </template>
+                  </b-form-select>
+                  <span class="form-error">{{ errors[0] }}</span>
+                </ValidationProvider>
               </div>
             </div>
             <div class="form-group">
-              <input
-                type="email"
-                v-model="email"
-                id="exampleInputEmail1"
-                placeholder="Email"
-              />
+              <ValidationProvider rules="required|email|minmax:1,50" v-slot="{ errors, failed }">
+                <input
+                  type="email"
+                  v-model="email"
+                  id="exampleInputEmail1"
+                  :class="`is-${failed}`"
+                  placeholder="Email"
+                />
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
             </div>
             <div class="form-group">
-              <input
-                type="password"
-                v-model="password"
-                id="exampleInputPassword1"
-                placeholder="Nouveau mot de passe"
-              />
+              <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors, failed }">
+                <div class="d-flex align-items-center password-group">
+                  <input
+                    :type="passwordVisible ? 'text' : 'password'"
+                    v-model="password"
+                    id="inputPassword"
+                    placeholder="Nouveau mot de passe"
+                    :class="`is-${failed}`"
+                  />
+                  <b-icon :icon="passwordVisible ? 'eye' : 'eye-slash'" aria-hidden="true" class="eye-icon" @click="passwordVisible = !passwordVisible"></b-icon>
+                </div>
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
             </div>
             <div class="form-group mt-5">
-              <b-form-checkbox
-                id="roleChoice"
-                v-model="role"
-                name="roleChoice"
-                value="accepted"
-                unchecked-value="not_accepted"
-              >
-                Je souhaite pouvoir mettre en location mes produits sur le site
-              </b-form-checkbox>
+              <ValidationProvider rules="oneOf:accepted,not_accepted" v-slot="{ errors }">
+                <b-form-checkbox
+                  id="roleChoice"
+                  v-model="role"
+                  name="roleChoice"
+                  value="accepted"
+                  unchecked-value="not_accepted"
+                >
+                  Je souhaite pouvoir mettre en location mes produits sur le site
+                  <div><small>(vous pourrez toujours selectionner cette option plus tard, depuis votre espace personnel)</small></div>
+                </b-form-checkbox>
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <div class="form-group mt-5">
+              <ValidationProvider rules="required" v-slot="{ errors }">
+                <b-form-checkbox
+                  id="cgu"
+                  v-model="cgu"
+                  name="cgu"
+                  value="accepted"
+                  unchecked-value="not_accepted"
+                  @change="updateCgu"
+                >
+                  Je reconnais avoir lu et compris les <router-link to="/conditions-generales-utilisation" class="text-dark" target="_blank"><u>Conditions générales d'utilisation</u></router-link> et je les accepte
+                </b-form-checkbox>
+                <span class="form-error">{{ errors[0] }}</span>
+              </ValidationProvider>
             </div>
           </b-card-text>
-          <button type="submit" class="btn btn-submit mb-3">S'inscrire</button>
+          <button type="submit" id="registerButton" class="btn btn-submit mb-3">S'inscrire</button>
         </b-card>
       </form>
-    </div>
+    </ValidationObserver>
+  </div>
 </template>
 
 <script>
 import AuthService from "../../services/AuthService";
+import RegionService from "../../services/RegionService";
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required, email, oneOf, between, integer } from 'vee-validate/dist/rules';
+
+extend('minmax', {
+  validate(value, { min, max }) {
+    return value.length >= min && value.length <= max;
+  },
+  message: 'Ce champs doit contenir entre {min} et {max} caractères',
+  params: ['min', 'max']
+});
+
+extend('required', {
+    ...required,
+    message: 'Ce champs est obligatoire',
+});
+
+extend('integer', {
+    ...integer,
+    message: 'Ce champs doit etre un nombre',
+});
+
+extend('between', {
+    ...between,
+    message: 'La valeur doit être entre {min} et {max}',
+    params: ['min', 'max']
+});
+
+extend('email', {
+    ...email,
+    message: 'Le format ne correspond pas à un email'
+});
+
+extend('oneOf', {
+    ...oneOf,
+    message: 'Ne correspond à aucune valeur possible'
+});
+
 export default {
   name: "Register",
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   data: () => ({
     firstName: "",
     lastName: "",
     addressStreet: '',
     addressCity: '',
-    addressRegion: '',
-    address: '',
+    addressRegion: null,
+    address: {},
     email: "",
     password: "",
     role: "",
+    cgu: false,
+    optionsRegion: [],
+    passwordVisible: false,
   }),
   methods: {
     handleSubmit: function () {
-      AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
-        .then(() => {
-          this.$router.push('/login')
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if(this.cgu == 'accepted') {
+        this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
+        AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
+          .then(() => {
+            localStorage.setItem("successMessage", "Votre compte a bien été créé");
+            this.$router.push('/login')
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
-    handleChangeAddress() {
-      this.address = this.addressStreet + '///&///&///&///&, ' + this.addressCity + '///&///&///&///&, ' + this.addressRegion;
-    }
+    updateCgu() {
+      this.cgu == 'accepted' ? document.getElementById('registerButton').removeAttribute('disabled') : document.getElementById('registerButton').setAttribute('disabled', true);
+    },
+    updateRegion(region) {
+      this.addressRegion = region;
+    },
+  },
+  mounted() {
+    document.getElementById('registerButton').setAttribute('disabled', true);
+  },
+  created() {
+    RegionService.getRegions().then(response => {
+      this.optionsRegion = response.data['hydra:member'];
+      this.$store.dispatch('regions',response.data['hydra:member'])
+    }).catch(e => console.log(e))
   },
 };
 </script>
@@ -149,6 +256,11 @@ export default {
   width: 100%;
 }
 
+.form-frame input.is-true {
+  border: 1px solid red;
+  border-radius: 3px;
+}
+
 .form-frame .btn-submit,
 .form-frame .btn-submit:hover,
 .form-frame .btn-submit:active,
@@ -170,6 +282,15 @@ export default {
 .frame-address-form-input {
   border-left: 1px solid #cccccc;
   padding: 10px;
+}
+
+.frame-address-form-input .custom-select {
+  color: rgb(120, 120, 121);
+}
+
+.eye-icon {
+  margin-left: -30px;
+  cursor: pointer;
 }
 
 </style>

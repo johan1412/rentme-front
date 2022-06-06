@@ -9,8 +9,8 @@
             </ul>
             <ul>
                 <li class="footer-title">Informations légales</li>
-                <li><router-link to="#" >Mentions légales</router-link></li>
-                <li><router-link to="#" >Protection des données</router-link></li>
+                <li><router-link to="/conditions-generales-utilisation" >Conditions Générales d'Utilisation</router-link></li>
+                <li><router-link to="/conditions-generales-vente" >Conditions Générales de Vente</router-link></li>
             </ul>
         </div>
     </footer>

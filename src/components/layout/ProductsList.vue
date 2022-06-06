@@ -1,7 +1,7 @@
 <template>
-    <div v-if="paginatedProducts.length > 0" class="">
+    <div v-if="user.products.length > 0" class="">
       <b-card-group deck class="card-deck-custom-grid mb-5">
-          <router-link v-for="product in paginatedProducts" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
+          <router-link v-for="product in user.products" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
               <b-card class="product-card" :img-src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-alt="Image" img-top>
                   <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
                   <template #footer>
@@ -27,15 +27,13 @@
     </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   components: {},
-  props: {
-    productsProps: Array,
-  },
   name: "ProductsList",
   data() {
     return {
-      products: this.productsProps,
       perPage: 20,
       currentPage: 1,
       paginatedProducts: [],
@@ -44,8 +42,8 @@ export default {
   },
   methods: {
     paginate(page_size, page_number) {
-      console.log(this.products)
-      let productsToParse = this.products;
+      console.log(this.user.products)
+      let productsToParse = this.user.products;
       this.paginatedProducts = productsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
     },
     onPageChanged(page) {
@@ -54,9 +52,12 @@ export default {
     },
   },
   mounted() {
-    this.nbResults = this.products.length;
+    this.nbResults = this.user.products.length;
     this.paginate(this.perPage, 0);
-  }
+  },
+  computed:{
+    ...mapGetters(['user'])
+  },
 };
 </script>
 

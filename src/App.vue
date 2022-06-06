@@ -32,4 +32,19 @@ export default {
   flex-direction: column;
 }
 
+.btn,
+.btn:hover,
+.btn:active,
+.btn:focus {
+  border: 1px solid transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.form-error {
+  font-size: 0.8rem;
+  color: red;
+}
+
 </style>

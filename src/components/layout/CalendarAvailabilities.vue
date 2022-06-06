@@ -1,11 +1,14 @@
 <template>
     <div class="frame-calendar">
+        <div>
+          <circle-spin v-if="this.loading" v-bind:loading="true"></circle-spin>
+        </div>
         <form class="form-calendar" action="#" method="post">
             <h4 class="title-form">Reservation</h4>
             <div class="mb-4 mt-3">
-                <HotelDatePicker v-on:period-selected="dateSelected" v-on:clear-selection="clearDates" :showSingleMonth="showSingleMonth" :disabledDates="disabledDates" :halfDay="halfDay" :minNights="minNights" :hoveringTooltip="hoveringTooltip" />
+                <HotelDatePicker v-on:period-selected="dateSelected" v-on:clear-selection="clearDates" :showSingleMonth="showSingleMonth" :disabledDates="disabledDates" :halfDay="halfDay" :minNights="minNights" :hoveringTooltip="hoveringTooltip"/>
             </div>
-            <div class="date-picker-price mb-2">Total : {{ totalPrice }}€</div>
+            <div class="date-picker-price mb-2">Total : {{ totalPrice }}€ + caution {{ product.caution }}€ </div>
           <div>
             <stripe-checkout
                 ref="checkoutRef"
@@ -37,6 +40,7 @@ export default {
         return {
           loading: false,
           sessionId: '', // session id from backend
+          paymentIntent: '', // session id from backend
           disabledDates: [],
           halfDay: false,
           minNights: 0,
@@ -46,8 +50,10 @@ export default {
           showSingleMonth: true,
           totalPrice: 0,
           productLocal: this.product,
+          isLoading:false
         }
-    },
+    }
+  ,
     methods: {
         pad(s) {
           return (s < 10) ? '0' + s : s;
@@ -60,7 +66,16 @@ export default {
             const date2 = new Date(endingDate);
             const diffTime = Math.abs(date2 - date1);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
-            this.totalPrice = (diffDays * this.product.price).toString();
+            this.totalPrice = (diffDays * this.product.price);
+            this.isLoading = true
+            console.log(this.isLoading)
+            AuthService.getSessionIdPayment({...this.product,price:this.totalPrice+this.product.caution},this.$store.getters.user)
+              .then(response => {
+                this.sessionId = response.data.checkout_session.id
+                this.paymentIntent = response.data.checkout_session.payment_intent
+              })
+              .catch(e => console.log(e))
+          .finally(() => this.isLoading = false)
         },
         dateSelected(e, datein, dateout) {
             this.startingDate = this.convertDate(datein);
@@ -80,17 +95,24 @@ export default {
             elt[1].innerHTML = 'Fin';
         },
       submit () {
-        if (this.$store.getters.user){
-          AuthService.getSessionIdPayment({...this.product,price:this.totalPrice},this.$store.getters.user)
-              .then(response => {
-                this.sessionId = response.data.id
-                console.log(response.data.id)
-              }).catch(e => console.log(e))
-          this.$refs.checkoutRef.redirectToCheckout();
-        }
+        AuthService.postReservation({
+          price:parseInt(this.totalPrice),
+          rentalBeginDate:this.startingDate,
+          rentalEndDate:this.endingDate,
+          createdAt:new Date(),
+          state:'payed',
+          product:'/products/'+this.product.id,
+          user:'/users/'+this.$store.getters.user.id,
+          paymentIntent: this.paymentIntent
+        })
+        this.$refs.checkoutRef.redirectToCheckout();
       },
     },
     mounted() {
+        const userPermission = this.$store.getters.userPermission
+        if(!userPermission){
+          this.$router.push('/')
+        }
         let elt = document.getElementsByClassName('vhd__datepicker__input');
         elt[0].innerHTML = 'Début';
         elt[1].innerHTML = 'Fin';
@@ -126,7 +148,7 @@ export default {
 }
 
 .submit-button {
-    background-color: #ea9009;
+    background-color: #0072b5;
     color: #ffffff;
     width: fit-content;
     padding: 5px 30px;

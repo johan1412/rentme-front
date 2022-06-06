@@ -1,5 +1,6 @@
 <template>
   <div id="banner">
+    <div v-if="user" class="welcome-message">Bonjour {{ user.firstName }} {{ user.lastName }} !</div>
     <div class="banner-text-box">
       <p class="banner-text banner-text-big">
         LOCATION DE PARTICULIER À PARTICULIER
@@ -9,41 +10,64 @@
       </p>
     </div>
     <div class="searchForm">
-      <form @submit.prevent="handleSubmit">
-        <input type="text" v-model="searchInput" placeholder="Rechercher un produit ..." />
-        <span><button type="submit" class="btn btn-dark">Rechercher</button></span>
-      </form>
+      <ValidationObserver v-slot="{ validate }">
+        <form @submit.prevent="validate().then(handleSubmit)">
+          <ValidationProvider rules="max:50" v-slot="{ errors,failed }">
+            <input type="text" v-model="searchInput" :class="`is-${failed}`" placeholder="Rechercher un produit ..." />
+            <span><button type="submit" class="btn btn-dark">Rechercher</button></span>
+            <div class="form-error-banner">{{ errors[0] }}</div>
+          </ValidationProvider>
+        </form>
+      </ValidationObserver>
     </div>
   </div>
 </template>
 
 <script>
-import SearchService from "../../services/SearchService";
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+
+extend('max', {
+  validate(value, { max }) {
+    return value.length <= max;
+  },
+  message: 'Ce champs doit contenir au maximum {max} caractères',
+  params: ['max']
+});
 
 export default {
   name: "Banner",
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   data: () => {
     return {
       searchInput: '',
+      user: null,
     }
   },
   methods: {
     handleSubmit: function () {
-      let searchInput = this.searchInput;
-      SearchService.searchInput({})
-        .then((response) => {
-          console.log(searchInput)
-          console.log(response)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      this.$router.push('/search?words=' + this.searchInput);
     },
   },
+  watch: {
+    '$route.query': {
+      immediate: true,
+      handler() {
+        if(this.$store.getters.user){
+          this.user = { firstName: this.$store.getters.user.firstName, lastName: this.$store.getters.user.lastName };
+        } else {
+          this.user = null;
+        }
+      }
+    }
+  }
 };
 </script>
 <style scoped>
 #banner {
+  position: relative;
   height: 600px;
   width: 100%;
   background-image: url("../../../public/images/banner.jpg");
@@ -101,5 +125,24 @@ export default {
   border: none;
   font-size: 140%;
   vertical-align: baseline;
+}
+
+.form-error-banner {
+  color: #eeeeee;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: #ff7f00;
+  margin: 10px;
+}
+
+.welcome-message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: max-content;
+  padding: 15px 40px;
+  background-color: rgba(250 , 250, 250, 0.8);
+  color: #000000;
+  margin: 10px 0px;
 }
 </style>

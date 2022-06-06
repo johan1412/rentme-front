@@ -9,6 +9,7 @@ const state = {
     product : null,
     numberOfProductsNotValid: 0,
     parentCategories:[],
+    reservations : [],
     categories:[]
 }
 
@@ -31,8 +32,17 @@ const store = new Vuex.Store({
       adminPermission: (state, getters) => {
         return getters.user ? getters.user.roles.includes('ROLE_ADMIN') : false
       },
+      userPermission: (state, getters) => {
+          return getters.user ? getters.user.roles.includes('ROLE_USER') : false
+      },
+      renterPermission: (state, getters) => {
+          return getters.user ? getters.user.roles.includes('ROLE_RENTER') : false
+      },
       products: (state) => {
         return state.products
+      },
+      reservations: (state) => {
+            return state.reservations
       },
       categories: (state) => {
         return state.categories
@@ -54,9 +64,12 @@ const store = new Vuex.Store({
       parentCategories(context,parentCategories){
           context.commit('parentCategories',parentCategories)
      },
-      categories(context,categories){
-          context.commit('categories',categories)
-     },
+      reservations(context,reservations){
+            context.commit('reservations',reservations)
+      },
+        categories(context,categories){
+            context.commit('categories',categories)
+      },
   },
   mutations:{ 
       user(state,user){
@@ -74,7 +87,10 @@ const store = new Vuex.Store({
       parentCategories(state,parentCategories){
           state.parentCategories = parentCategories
       },
-      categories(state,categories){
+      reservations(state,reservations){
+          state.reservations = reservations
+      },
+    categories(state,categories){
         state.categories = categories
     }
   }

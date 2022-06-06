@@ -6,16 +6,24 @@ const headers = {
   'Authorization': 'Bearer '+localStorage.getItem('token')
  }
 
-const login = async data => {
+const login = async (data) => {
   return await axios.post("https://localhost:8443/authentication_token", data);
 };
 
-const register = async data => {
+const register = async (data) => {
   return await axios.post("https://localhost:8443/users", data);
+};
+
+const resetPassword = async () => {
+  return await axios.post("https://localhost:8443/reset-password");
 };
 
 const getUser = async (id) => {
   return await axios.get(`https://localhost:8443/users/${id}`, {headers});
+};
+
+const updateUser = async (id, data) => {
+  return await axios.patch(`https://localhost:8443/users/${id}`,data, {headers});
 };
 
 const parentCategories = async () => {
@@ -29,6 +37,11 @@ const postCategory = async (data) => {
 const getProducts = async () => {
   return await axios.get("https://localhost:8443/products");
 };
+
+const getProductsValid = async () => {
+  return await axios.get("https://localhost:8443/products/products-valid");
+};
+
 const getProduct = async (id) => {
   return await axios.get(`https://localhost:8443/products/${id}`);
 };
@@ -48,6 +61,10 @@ const getSessionIdPayment = async (product,tenant) => {
   return await axios.post(`https://localhost:8444/create-checkout-session`,{product:product,tenant:tenant});
 };
 
+const refund = async (data) => {
+  return await axios.post(`https://localhost:8444/refund`,data);
+};
+
 
 const deleteProduct = async (id) => {
   return await axios.delete(`https://localhost:8443/products/${id}`, {headers});
@@ -58,16 +75,30 @@ const postProduct = async (data) => {
 };
 
 const postImage = async (data) => {
-  return await axios.post("https://localhost:8443/media_objects", data, {
-    'Content-type': 'multipart/form-data',
-    'Authorization': 'Bearer '+localStorage.getItem('token')
+  return await axios.post("https://localhost:8443/media_objects", data, {...headers,
+    'Content-type': 'multipart/form-data'
    });
+};
+
+
+const getReservations = async () => {
+  return await axios.get("https://localhost:8443/reservations/user", {headers});
+};
+
+const updateReservation = async (data) => {
+  return await axios.patch(`https://localhost:8443/reservations/${data.id}`,data, {headers});
+};
+
+const postReservation = async (data) => {
+  return await axios.post("https://localhost:8443/reservations", data, {headers});
 };
 
 export default {
   register,
   login,
+  resetPassword,
   getUser,
+  updateUser,
   parentCategories,
   postCategory,
   getProducts,
@@ -75,8 +106,13 @@ export default {
   deleteProduct,
   getProductsNotValid,
   postProduct,
+  getReservations,
+  updateReservation,
   getCategories,
   getProduct,
   getSessionIdPayment,
-  postImage
+  postImage,
+  postReservation,
+  refund,
+  getProductsValid
 };

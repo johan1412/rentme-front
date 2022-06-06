@@ -9,19 +9,28 @@ import ProductPage from './components/pages/common/ProductPage.vue'
 import ProfilePage from './components/pages/common/ProfilePage.vue'
 import HomePage from './components/pages/common/HomePage'
 import SearchPage from './components/pages/common/SearchPage'
+import AccountPage from './components/pages/common/Account'
+import Cgu from './components/pages/common/Cgu'
+import Cgv from './components/pages/common/Cgv'
 import AddProductPage from './components/pages/renter/AddProductPage'
 import RenterProductsPage from './components/pages/renter/RenterProductsPage'
 import MessagesPage from './components/pages/common/MessagesPage'
 import Success from './components/pages/payment/Sucess'
+import Refund from './components/pages/payment/Refund'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from './vuex'
+
+import VueSpinners from 'vue-spinners'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 //import StripeCheckout from './components/pages/payment/StripeCheckout.vue'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
+
+import './registerServiceWorker'
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
@@ -41,6 +50,7 @@ Vue.config.productionTip = false;
 
 Vue.use(VueRouter)
 
+Vue.use(VueSpinners)
 
 const routes = [
   { path: '/', component: HomePage },
@@ -54,7 +64,11 @@ const routes = [
   { path: '/products/:productId', component: ProductPage },
   { path: '/user/:userId', component: ProfilePage },
   { path: '/messages', component: MessagesPage },
-  { path: '/success', component: Success }
+  { path: '/success', component: Success },
+  { path: '/refund', component: Refund },
+  { path: '/account', component: AccountPage },
+  { path: '/conditions-generales-utilisation', component: Cgu },
+  { path: '/conditions-generales-vente', component: Cgv }
 ]
 
 const router = new VueRouter({

@@ -43,6 +43,8 @@
 <script>
 import Conversation from "../../layout/Conversation.vue";
 import MessagesService from "../../../services/MessagesService";
+//import { response } from 'express';
+
 export default {
   components: {
     Conversation,
@@ -54,10 +56,13 @@ export default {
       conversationsWithNames: [],
     };
   },
-  async mounted() {
-    this.conversations = await MessagesService.getConversations(
+  mounted() {
+    MessagesService.getConversations(
       this.$store.getters.user["@id"].split("/")[2]
-    );
+    ).then(response => {
+      console.log(response);
+      this.conversations = response;
+    }).catch(e => console.log(e));
   },
   methods: {
     conversationToggle(id) {

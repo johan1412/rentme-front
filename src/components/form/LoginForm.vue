@@ -1,43 +1,89 @@
 <template>
    <div class="container m-auto">
-      <form @submit.prevent="handleSubmit">
-        <b-card class="form-frame mx-auto">
-          <b-card-text class="form-top text-center">
-            <b-icon icon="person-circle" aria-hidden="true"></b-icon>
-            <p>CONNECTEZ-VOUS</p>
-          </b-card-text>
-          <b-card-text class="form-data">
-            <div class="form-group">
-              <input
-                type="email"
-                v-model="email"
-                id="inputEmail"
-                aria-describedby="emailHelp"
-                placeholder="Email"
-              />
-            </div>
-            <div class="form-group mt-4">
-              <input
-                type="password"
-                v-model="password"
-                id="inputPassword"
-                placeholder="Mot de passe"
-              />
-            </div>
-          </b-card-text>
-          <button type="submit" class="btn btn-submit mb-3">Se connecter</button>
-        </b-card>
-      </form>
+     <div class="spinner-middle">
+      <div v-show="isLoading" class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+     <ValidationObserver v-slot="{ validate }">
+       <form @submit.prevent="validate().then(handleSubmit)">
+          <b-card class="form-frame mx-auto">
+            <b-card-text class="form-top text-center">
+              <b-icon icon="person-circle" aria-hidden="true"></b-icon>
+              <p>CONNECTEZ-VOUS</p>
+            </b-card-text>
+            <b-card-text class="form-data">
+              <div class="form-group">
+                <ValidationProvider rules="required|email|minmax:1,50" v-slot="{ errors,failed }">
+                  <input
+                    type="email"
+                    v-model="email"
+                    id="inputEmail"
+                    aria-describedby="emailHelp"
+                    :class="`is-${failed}`"
+                    placeholder="Email"
+                  />
+                  <span class="form-error">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+              <div class="form-group mt-4">
+                <ValidationProvider rules="required|minmax:5,15" v-slot="{ errors,failed }">
+                  <div class="d-flex align-items-center password-group">
+                    <input
+                      :type="passwordVisible ? 'text' : 'password'"
+                      v-model="password"
+                      id="inputPassword"
+                      placeholder="Mot de passe"
+                      :class="`is-${failed}`"
+                    />
+                    <b-icon :icon="passwordVisible ? 'eye' : 'eye-slash'" aria-hidden="true" class="eye-icon" @click="passwordVisible = !passwordVisible"></b-icon>
+                  </div>
+                  <span class="form-error">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </div>
+            </b-card-text>
+            <button type="submit" class="btn btn-submit mb-3">Se connecter</button>
+            <a href="https://localhost:8443/reset-password" class="btn"><u>Mot de passe oublié ?</u></a>
+          </b-card>
+        </form>
+     </ValidationObserver>
    </div>
 </template>
 
 <script>
 import AuthService from "../../services/AuthService";
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required, email } from 'vee-validate/dist/rules';
+
+extend('minmax', {
+  validate(value, { min, max }) {
+    return value.length >= min && value.length <= max;
+  },
+  message: 'Ce champs doit contenir entre {min} et {max} caractères',
+  params: ['min', 'max']
+});
+
+extend('required', {
+    ...required,
+    message: 'Ce champs est obligatoire',
+});
+
+extend('email', {
+    ...email,
+    message: 'Le format ne correspond pas à un email'
+});
+
 export default {
   name: "LoginForm",
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   data: () => ({
     email: "",
     password: "",
+    isLoading : false,
+    passwordVisible: false,
   }),
   mounted(){
     if(this.$store.getters.user){
@@ -46,6 +92,7 @@ export default {
   },
   methods: {
     handleSubmit: async function () {
+      this.isLoading = true
       const response =  await AuthService.login({ email: this.email, password: this.password })
       if(response){
         localStorage.setItem("token",response.data.token)
@@ -54,15 +101,21 @@ export default {
           if (response.data.data.roles.includes("ROLE_ADMIN")){
             this.$store.dispatch('numberOfProductsNotValid',response.data.data.numberOfProductsNotValid)
           }
-          this.$router.push(this.$route.query.redirect || '/')
+        this.isLoading = false
+        this.$router.push(this.$route.query.redirect || '/')
       }
-
-    },
+    }
   },
 };
 </script>
 
 <style scoped>
+.spinner-middle {
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+}
+
 .form-frame {
   width: 350px;
   background-color: rgba(255, 255, 255, 1);
@@ -107,5 +160,10 @@ export default {
   -webkit-appearance: none;
   outline: none;
   color: whitesmoke;
+}
+
+.eye-icon {
+  margin-left: -30px;
+  cursor: pointer;
 }
 </style>
