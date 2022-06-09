@@ -1,44 +1,27 @@
 <template>
-  <div class="accordion" role="tablist">
+  <div >
     <div
-      v-for="(conversationsByProduct, productId) of conversations.data"
-      :key="conversationsByProduct.id"
+        v-for="(conversationsByProduct, productId) of conversations.data"
+        :key="conversationsByProduct.id"
     >
       <div
-        v-for="(conversation, otherUser) in conversationsByProduct"
-        :key="conversation.id"
+          v-for="(conversation, otherUser) in conversationsByProduct"
+          :key="conversation.id"
       >
-       
-
-
-        <b-card no-body class="mb-1">
-          <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-button block v-b-toggle.accordion-1 variant="info">
-               <h3>productID: {{ productId }}</h3>
-               <h3>OtherUser: {{ otherUser }}</h3>
-              </b-button
-            >
-          </b-card-header>
-                <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
-
-            <b-card-body>
-              <b-card-text
-                >
-                        <Conversation :messages="conversation" />
-                        <input type="text" />
-                        <button>Envoyer</button>
-
-                </b-card-text
-              >
-              
-            </b-card-body>
-          </b-collapse>
-        </b-card>
+        <div class="row">
+          <h2>ProductID: {{ productId }}</h2>
+          <h2>OtherUser: {{ otherUser }}</h2>
+        </div>
+        <Conversation :messages="conversation" />
+        <input type="text" :id="productId.toString()+'-'+otherUser.toString()" />
+        <button
+        @click="handleSubmit(productId,otherUser)"
+        >Envoyer</button>
       </div>
     </div>
   </div>
 
-   
+
 </template>
 <script>
 import Conversation from "../../layout/Conversation.vue";
@@ -58,15 +41,30 @@ export default {
   },
   mounted() {
     MessagesService.getConversations(
-      this.$store.getters.user["@id"].split("/")[2]
+        this.$store.getters.user["@id"].split("/")[2]
     ).then(response => {
       console.log(response);
       this.conversations = response;
     }).catch(e => console.log(e));
   },
   methods: {
-    conversationToggle(id) {
-      document.getElementById(id).classList.toggle('visible')
+    handleSubmit(productId,otherUser){
+     const text = document.getElementById(productId+'-'+otherUser).value
+      MessagesService.postMessage({
+        sender:"users/"+this.$store.getters.user["@id"].split("/")[2],
+        reciever:"users/"+otherUser,
+        text:text
+      }).then(
+          response => {
+            console.log(response);
+            MessagesService.getConversations(
+                this.$store.getters.user["@id"].split("/")[2]
+            ).then(response => {
+              console.log(response);
+              this.conversations = response;
+            }).catch(e => console.log(e));
+          }
+      ).catch(e => console.log(e));
     }
   }
 };

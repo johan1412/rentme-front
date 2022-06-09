@@ -1,10 +1,13 @@
 import axios from "axios";
 
 axios.defaults.baseURL =  "https://localhost:8443/"
+
 const headers = {
   'Content-type': 'application/json',
   'Authorization': 'Bearer '+localStorage.getItem('token')
  }
+
+
 
 const login = async (data) => {
   return await axios.post("https://localhost:8443/authentication_token", data);
@@ -75,9 +78,11 @@ const postProduct = async (data) => {
 };
 
 const postImage = async (data) => {
-  return await axios.post("https://localhost:8443/media_objects", data, {...headers,
-    'Content-type': 'multipart/form-data'
-   });
+  const headers = {
+    'Content-type': 'multipart/form-data',
+    'Authorization': 'Bearer '+localStorage.getItem('token')
+  }
+  return await axios.post("https://localhost:8443/media_objects", data, {headers});
 };
 
 
