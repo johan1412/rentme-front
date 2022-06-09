@@ -61,8 +61,8 @@ const getSessionIdPayment = async (productId,tenantId,price) => {
   return await axios.post(`https://localhost:8443/create-checkout-session/${productId}/${tenantId}`,{...price},{headers});
 };
 
-const refund = async (data) => {
-  return await axios.get(`https://localhost:8443/refund`,data,{headers});
+const refund = async (reservation) => {
+  return await axios.get(`https://localhost:8443/refund/${reservation.id}`,{headers});
 };
 
 

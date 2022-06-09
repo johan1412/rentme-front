@@ -106,7 +106,7 @@ export default {
       }
       ).catch(e => console.log(e))
       if (reservation.state === 'retrieved'){
-        AuthService.refund({caution:reservation.product.caution,paymentIntent:reservation.paymentIntent})
+        AuthService.refund({id:reservation.id})
             .then(response => {
               console.log(response)
             }
