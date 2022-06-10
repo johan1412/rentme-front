@@ -53,7 +53,7 @@
                   <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Récupérer le produit</button>
                   <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Rendre le produit</button>
                   <h5 v-on:click="myMethod(reservation)" v-if="reservation.state === 'restored'">
-                    <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé</p>
+                    <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé, veuillez vérifier vote boite mail</p>
                   </h5>
                 </div>
               </div>
