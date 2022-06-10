@@ -40,7 +40,7 @@ export default {
         return {
           loading: false,
           sessionId: '', // session id from backend
-          paymentIntent: '', // session id from backend
+          paymentIntent: '',
           disabledDates: [],
           halfDay: false,
           minNights: 0,
@@ -69,13 +69,6 @@ export default {
             this.totalPrice = (diffDays * this.product.price);
             this.isLoading = true
             console.log(this.isLoading)
-            AuthService.getSessionIdPayment({...this.product,price:this.totalPrice+this.product.caution},this.$store.getters.user)
-              .then(response => {
-                this.sessionId = response.data.checkout_session.id
-                this.paymentIntent = response.data.checkout_session.payment_intent
-              })
-              .catch(e => console.log(e))
-          .finally(() => this.isLoading = false)
         },
         dateSelected(e, datein, dateout) {
             this.startingDate = this.convertDate(datein);
@@ -95,17 +88,24 @@ export default {
             elt[1].innerHTML = 'Fin';
         },
       submit () {
-        AuthService.postReservation({
-          price:parseInt(this.totalPrice),
-          rentalBeginDate:this.startingDate,
-          rentalEndDate:this.endingDate,
-          createdAt:new Date(),
-          state:'payed',
-          product:'/products/'+this.product.id,
-          user:'/users/'+this.$store.getters.user.id,
-          paymentIntent: this.paymentIntent
-        })
-        this.$refs.checkoutRef.redirectToCheckout();
+        AuthService.getSessionIdPayment(this.product.id,this.$store.getters.user.id,{price:this.totalPrice+this.product.caution})
+            .then(response => {
+              this.sessionId = response.data.checkout_session.id
+              console.log(response.data.checkout_session.payment_intent)
+              AuthService.postReservation({
+                price:parseInt(this.totalPrice),
+                rentalBeginDate:this.startingDate,
+                rentalEndDate:this.endingDate,
+                createdAt:new Date(),
+                state:'payed',
+                product:'/products/'+this.product.id,
+                renter:'/users/'+this.product.user.id,
+                tenant:'/users/'+this.$store.getters.user.id,
+                paymentIntent: response.data.checkout_session.payment_intent
+              }).then(res => console.log(res.data))
+            })
+            .catch(e => console.log(e))
+            .finally(()=> this.$refs.checkoutRef.redirectToCheckout())
       },
     },
     mounted() {
