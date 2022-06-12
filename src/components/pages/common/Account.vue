@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3 class="mt-5 text-center">Mon compte</h3>
+    <h1 class="h3 mt-5">Mon compte</h1>
     <hr>
     <div class="sub-menu-account">
       <div class="row mx-0">

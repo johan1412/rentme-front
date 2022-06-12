@@ -1,13 +1,13 @@
 <template>
-<div>
-    <h1 class="text-center mt-5">
-        Creation d'une annonce
-    </h1>
+<div class="container">
+    <h1 class="h3 mt-5">Creation d'une annonce</h1>
+    <hr><br>
     <AddProductForm />
 </div>
 </template>
 <script>
-import AddProductForm from '../../form/AddProductForm'
+import AddProductForm from '../../form/AddProductForm';
+
 export default {
     components: { 
         AddProductForm
