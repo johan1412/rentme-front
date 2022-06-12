@@ -5,7 +5,7 @@
             <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
                 <router-link :to="'/search?category=' + category.name.toLowerCase()">{{ category.name }}</router-link>
                 <ul v-if="activeCategory == index" @click="activeCategory = null">
-                    <li v-for="subCategory in category.children" :key="subCategory.id"><router-link :to="subCategory.url">{{ subCategory.name }}</router-link></li>
+                    <li v-for="subCategory in category.children" :key="subCategory.id"><router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link></li>
                 </ul>
             </li>
         </ul>
