@@ -1,74 +1,100 @@
 <template>
-  <div class="accordion" role="tablist">
-    <div
-      v-for="(conversationsByProduct, productId) of conversations.data"
-      :key="conversationsByProduct.id"
-    >
-      <div
-        v-for="(conversation, otherUser) in conversationsByProduct"
-        :key="conversation.id"
-      >
-       
-
-
-        <b-card no-body class="mb-1">
-          <b-card-header header-tag="header" class="p-1" role="tab">
-        <b-button block v-b-toggle.accordion-1 variant="info">
-               <h3>productID: {{ productId }}</h3>
-               <h3>OtherUser: {{ otherUser }}</h3>
-              </b-button
-            >
-          </b-card-header>
-                <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
-
-            <b-card-body>
-              <b-card-text
-                >
-                        <Conversation :messages="conversation" />
-                        <input type="text" />
-                        <button>Envoyer</button>
-
-                </b-card-text
-              >
-              
-            </b-card-body>
-          </b-collapse>
-        </b-card>
+	<div class="page-messages container">
+    <h1 class="h3 mt-5">Mes messages</h1>
+    <hr><br>
+    <div v-if="conversations.length <= 0">
+      <div class="bloc-messagerie row w-100 p-5">
+        <p class="p-5">Vous n'avez aucun message</p>
       </div>
     </div>
-  </div>
-
-   
+    <div v-else>
+      <div class="bloc-messagerie row w-100 p-5">
+        <div class="list-conversations col-md-4">
+          <div v-for="(conversationsByProduct, productId) of conversations.data" :key="conversationsByProduct.id">
+            <div v-for="(conversation, otherUser) in conversationsByProduct" :key="conversation.id">
+              <div class="item-conversations row p-3" @click="handleClickConversation(conversation, productId, otherUser)">
+                <div class="img">
+                  <img src="https://via.placeholder.com/70" alt="">
+                </div>
+                <div class="info px-3">
+                  <h5>{{ otherUser }}</h5>
+                  <!--<p>{{ product.title.length < 20 ? product.title : product.title.substring(0, 20) + "..." }}</p>-->
+                  <p>Titre de l'annonce {{ productId }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-messages col-md-8">
+          <Conversation :messages="conversationSelected" :productId="productIdSelected" :otherUser="otherUserSelected"/>
+        </div>
+      </div>
+    </div>
+	</div>
 </template>
 <script>
 import Conversation from "../../layout/Conversation.vue";
 import MessagesService from "../../../services/MessagesService";
-//import { response } from 'express';
 
 export default {
-  components: {
-    Conversation,
-  },
-  name: "MessagesPage",
-  data() {
-    return {
-      conversations: [],
-      conversationsWithNames: [],
-    };
-  },
-  mounted() {
-    MessagesService.getConversations(
-      this.$store.getters.user["@id"].split("/")[2]
-    ).then(response => {
-      console.log(response);
+	components: {
+		Conversation,
+	},
+	name: "MessagesPage",
+	data() {
+		return {
+			conversations: [],
+      conversationSelected: [],
+      productIdSelected: null,
+      otherUserSelected: null,
+		};
+	},
+	mounted() {
+		MessagesService.getConversations(
+			this.$store.getters.user["@id"].split("/")[2]
+		)
+    .then((response) => {
       this.conversations = response;
-    }).catch(e => console.log(e));
-  },
+    })
+    .catch((e) => console.log(e));
+	},
   methods: {
-    conversationToggle(id) {
-      document.getElementById(id).classList.toggle('visible')
+    handleClickConversation(conversation, productId, otherUser) {
+      this.conversationSelected = conversation;
+      this.productIdSelected = productId;
+      this.otherUserSelected = otherUser;
     }
-  }
+  },
 };
 </script>
+<style scoped>
+.bloc-messagerie {
+  background-color: #fff;
+}
+
+.list-conversations {
+  float: left;
+  border-right: 1px solid #e5e5e5;
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+.list-conversations .item-conversations {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.list-conversations .item-conversations:hover {
+  background-color: #f5f5f5;
+}
+
+.list-conversations .item-conversations .img {
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+}
+</style>
 

@@ -106,7 +106,7 @@ export default {
       try {
         if(this.image) {
           const formData = new FormData();
-          formData.append('file', this.Images);
+          formData.append('file', this.image);
           let img = await AuthService.postImage(formData);
           file = img.data.contentUrl ? { path : img.data.contentUrl } : null
         }

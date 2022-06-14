@@ -207,9 +207,6 @@ export default {
     updateCgu() {
       this.cgu == 'accepted' ? document.getElementById('registerButton').removeAttribute('disabled') : document.getElementById('registerButton').setAttribute('disabled', true);
     },
-    updateRegion(region) {
-      this.addressRegion = region;
-    },
   },
   mounted() {
     document.getElementById('registerButton').setAttribute('disabled', true);

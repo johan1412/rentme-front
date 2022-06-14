@@ -6,11 +6,15 @@
 
 <script>
 import BaseLayout from "./components/layout/BaseLayout.vue";
+require('dotenv').config()
+
 
 export default {
   components: { BaseLayout },
   name: "App"
 };
+
+console.log(process.env.VUE_APP_URL)
 </script>
 
 <style>
