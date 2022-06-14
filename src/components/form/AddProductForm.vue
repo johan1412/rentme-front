@@ -33,6 +33,18 @@
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
+        <div class="form-group">
+          <label for="caution">Caution (€)</label>
+          <ValidationProvider rules="required|integer|minmax:1,10" v-slot="{ errors,failed }">
+            <input
+                type="number"
+                class="form-control"
+                v-model="caution" id="caution"
+                :class="`is-${failed}`"
+            />
+            <span class="form-error">{{ errors[0] }}</span>
+          </ValidationProvider>
+        </div>
         <div class="form-group address-form mt-4">
           <label for="address">Adresse de retrait du produit</label>
           <div class="frame-address-form-input">
@@ -161,6 +173,7 @@ export default {
     address: {},
     optionsRegion: [],
     price: "",
+    caution: "",
     images: null,
     allCategories: [],
   }),
@@ -197,7 +210,8 @@ export default {
           description: this.description,
           address: this.address,
           price: parseInt(this.price),
-          category: "/categories/"+this.subCategory.id,
+          caution: parseInt(this.caution),
+          category: "/categories/"+this.subCategory,
           user: "/users/"+this.$store.getters.user["id"],
           files: [
             {path : image.data.contentUrl}
