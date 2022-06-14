@@ -14,7 +14,6 @@ export default {
   name: "App"
 };
 
-console.log(process.env.VUE_APP_URL)
 </script>
 
 <style>
