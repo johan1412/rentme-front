@@ -56,11 +56,13 @@ export default {
   methods: {
     handleSubmit: function () {
       MessagesService.postMessage({
-          senderId : parseInt(this.user.id),
-          recieverId : parseInt(this.$store.getters.user["@id"].split("/")[2]),
-          text : this.text,
-          productId : parseInt(this.product.id)
+        sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
+        reciever: "users/" + this.user.id,
+        text : this.text,
+        productId : null
       })
+      localStorage.setItem("successMessage", "Votre compte a bien été créé");
+      this.text = "Bonjour"
     },
   },
 };
