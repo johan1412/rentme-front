@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h3 class="text-center mt-5">Création d'une nouvelle catégorie</h3>
+    <h3 class="text-left mt-5">Création d'une nouvelle catégorie</h3>
     <hr>
     <CategoryForm />
   </div>

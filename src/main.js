@@ -5,6 +5,7 @@ import LoginPage from './components/pages/common/auth/LoginPage.vue'
 import RegisterPage from './components/pages/common/auth/RegisterPage.vue'
 import CategoryPage from './components/pages/admin/CategoryPage.vue'
 import ProductsPage from './components/pages/admin/ProductsPage.vue'
+import ReportingsPage from './components/pages/admin/ReportingsPage.vue'
 import ProductPage from './components/pages/common/ProductPage.vue'
 import ProfilePage from './components/pages/common/ProfilePage.vue'
 import HomePage from './components/pages/common/HomePage'
@@ -59,6 +60,7 @@ const routes = [
   { path: '/register', component: RegisterPage },
   { path: '/admin/categories', component: CategoryPage },
   { path: '/admin/products', component: ProductsPage },
+  { path: '/admin/reportings', component: ReportingsPage },
   { path: '/search', component: SearchPage },
   { path: '/publish', component: AddProductPage},
   { path: '/products', component: RenterProductsPage},

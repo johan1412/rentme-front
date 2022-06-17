@@ -54,7 +54,7 @@ export default {
 			this.$store.getters.user["@id"].split("/")[2]
 		)
     .then((response) => {
-      this.conversations = response;
+      this.conversations = response.data;
     })
     .catch((e) => console.log(e));
 	},

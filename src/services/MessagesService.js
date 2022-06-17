@@ -11,15 +11,20 @@ const headers = {
 
 
 const postMessage = async (data) => {
-    return await axios.post(url+"/messages", data, {headers});
-  };
+  return await axios.post(url+"/messages", data, {headers});
+};
   
-  const getConversations = async (id) => {
-    return await axios.get(url+`/conversations/${id}`, {headers});
-  };
+const getConversations = async (id) => {
+  return await axios.get(url+`/conversations/${id}`, {headers});
+};
+
+const postReport = async (data) => {
+  return await axios.post(url+"/reportings", data, {headers});
+}
   
 
 export default {
   postMessage,
-  getConversations
+  getConversations,
+  postReport
 };

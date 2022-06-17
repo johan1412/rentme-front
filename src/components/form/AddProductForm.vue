@@ -218,6 +218,7 @@ export default {
           ]
         });
         this.$store.dispatch('user',{...this.$store.getters.user, products:[...this.$store.getters.user.products, response.data]})
+        localStorage.setItem('successMessage', 'Votre produit a bien été ajouté');
         this.$router.push("/");
       }
     },
