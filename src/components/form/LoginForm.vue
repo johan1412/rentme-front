@@ -100,6 +100,7 @@ export default {
           this.$store.dispatch('user',response.data.data)
           if (response.data.data.roles.includes("ROLE_ADMIN")){
             this.$store.dispatch('numberOfProductsNotValid',response.data.data.numberOfProductsNotValid)
+            this.$store.dispatch('numberOfProductsReported',response.data.data.numberOfProductsReported)
           }
         this.isLoading = false
         this.$router.push(this.$route.query.redirect || '/')

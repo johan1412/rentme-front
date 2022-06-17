@@ -1,7 +1,7 @@
 <template>
     <div class="comments-section">
         <div class="comments-section-header">
-            <h4>Commentaires et notes</h4>
+            <h4>Commentaires et notes des clients</h4>
             <div class="button-new-comment" @click="formIsVisible = !formIsVisible"><b-icon icon="chat-left-text-fill" aria-hidden="true"></b-icon>{{ formIsVisible ? 'Masquer le formulaire' : 'Ecrire un commentaire' }}</div>
         </div>
         <hr>

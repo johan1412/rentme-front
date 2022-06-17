@@ -3,10 +3,11 @@
     <ValidationObserver v-slot="{ validate }">
       <form class="form-contact-user" @submit.prevent="validate().then(handleSubmit)">
         <h4 class="title-form">Demande d'informations</h4>
-        <div>
+        <div class="mb-3">
           Message pour <strong>{{ user.firstName }} {{ user.lastName }}</strong>
         </div>
         <ValidationProvider rules="required|minmax:1,1000" v-slot="{ errors,failed }">
+          <span class="form-error">{{ errors[0] }}</span>
           <textarea
             class="input-message"
             type="text"
@@ -14,7 +15,6 @@
             v-model="text"
             :class="`is-${failed}`"
           ></textarea>
-          <span class="form-error">{{ errors[0] }}</span>
         </ValidationProvider>
         <button class="submit-button">ENVOYER LE MESSAGE</button>
       </form>
@@ -70,7 +70,7 @@ export default {
 
 <style scoped>
 .frame-form-contact-user {
-  margin: 50px 0px 50px 50px;
+  margin: 20px 0px;
   padding: 40px 50px;
   background-color: #ffffff;
   border-radius: 25px;
@@ -87,9 +87,9 @@ export default {
 }
 
 .input-message {
-  margin-top: 20px;
   margin-bottom: 40px;
   height: 300px;
+  width: 100%;
   border: 1px solid #cccccc;
 }
 

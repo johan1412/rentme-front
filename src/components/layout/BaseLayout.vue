@@ -3,10 +3,6 @@
     <NavBar/>
     <MainMenu v-if="mainMenu" />
     <CommonMenu v-else />
-    <div class="alert-message alert alert-success alert-dismissible text-center mt-5 p-3" v-if="messageNotification" role="alert">
-      {{ messageNotification }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
     <slot></slot>
     <Footer />
   </div>
@@ -22,7 +18,6 @@ import AuthService from "../../services/AuthService";
 export default {
   name: "BaseLayout",
   data: () => ({
-    messageNotification: null,
     mainMenu: false,
   }),
   components: {
@@ -54,12 +49,41 @@ export default {
         this.$route.fullPath == "/" ? this.mainMenu = true : this.mainMenu = false;
         if(this.$route.fullPath != "/login") {
           if(localStorage.getItem("successMessage")) {
-            this.messageNotification = null;
+            this.$bvToast.toast(localStorage.getItem('successMessage'), {
+              variant: 'success',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+            });
             localStorage.removeItem("successMessage");
+          }
+          if(localStorage.getItem("errorMessage")) {
+            this.$bvToast.toast(localStorage.getItem('errorMessage'), {
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+            });
+            localStorage.removeItem("errorMessage");
           }
         } else {
           if(localStorage.getItem("successMessage")) {
-            this.messageNotification = localStorage.getItem("successMessage");
+            this.$bvToast.toast(localStorage.getItem('successMessage'), {
+              variant: 'success',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+            });
+            localStorage.removeItem("successMessage");
+          }
+          if(localStorage.getItem("errorMessage")) {
+            this.$bvToast.toast(localStorage.getItem('errorMessage'), {
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+            });
+            localStorage.removeItem("errorMessage");
           }
         }
       }
@@ -78,5 +102,11 @@ export default {
   width: fit-content;
   min-width: 150px;
   margin: auto;
+}
+
+#b-toaster-top-full .b-toaster-slot .b-toast,
+#b-toaster-top-full .b-toaster-slot .b-toast .toast {
+  height: 200px;
+  font-size: 18px;
 }
 </style>

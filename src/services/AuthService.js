@@ -101,6 +101,14 @@ const postReservation = async (data) => {
   return await axios.post(url+"/reservations", data, {headers});
 };
 
+const getReportings = async () => {
+  return await axios.get(url+"/reportings", {headers});
+};
+
+const deleteReporting = async (id) => {
+  return await axios.delete(url+`/reportings/${id}`, {headers});
+};
+
 export default {
   register,
   login,
@@ -122,5 +130,7 @@ export default {
   postImage,
   postReservation,
   refund,
-  getProductsValid
+  getProductsValid,
+  getReportings,
+  deleteReporting,
 };

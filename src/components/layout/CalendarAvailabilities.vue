@@ -130,7 +130,7 @@ export default {
 
 <style>
 .frame-calendar {
-    margin: 50px 0px 50px 50px;
+  margin: 20px 0px;
     padding: 40px 50px;
     min-width: 350px;
     background-color: #ffffff;
@@ -140,6 +140,10 @@ export default {
 .form-calendar {
     display: flex;
     flex-direction: column;
+}
+
+.form-calendar .vhd__datepicker {
+  right: 0px;
 }
 
 .title-form {
