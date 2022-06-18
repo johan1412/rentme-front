@@ -12,16 +12,17 @@
         name="roleRenterButton"
         class="role-button"
         switch
+        :change="showModal = !showModal"
         >
         Activer la possibilité de pouvoir déposer des annonces
       </b-form-checkbox>
-      <b-modal id="modal-role" centered title="Demande de confirmation">
+      <b-modal v-model="showModal" id="modal-role" centered title="Demande de confirmation">
         <p v-if="roleRenter" class="my-4">Êtes-vous sûr de vouloir vous ajouter la possibilité de déposer des annonces sur le site dans le but de mettre en locations des produits ?</p>
         <p v-else class="my-4">Êtes-vous sûr de vouloir vous enlever la possibilité de déposer des annonces sur le site ?<br>Vos annonces ne seront plus visibles par les autres utilisateurs du site</p>
-        <template #modal-footer="{ ok, cancel }">
+        <template #modal-footer="{ }">
           <div class="mx-auto">
-            <b-button class="rounded-0 mr-1" @click="cancel()">Annuler</b-button>
-            <b-button class="rounded-0 ml-1" @click="handleChangeRole(ok())" variant="success">Valider</b-button>
+            <b-button class="rounded-0 mr-1" @click="closeModal()">Annuler</b-button>
+            <b-button class="rounded-0 ml-1" @click="handleChangeRole()" variant="success">Valider</b-button>
           </div>
         </template>
       </b-modal>
@@ -137,7 +138,7 @@
         <template #modal-footer="{ ok, cancel }">
           <div class="mx-auto">
             <b-button class="rounded-0 mr-1" @click="cancel()">Annuler</b-button>
-            <b-button class="rounded-0 ml-1" @click="handleEditUser(ok())" variant="success">Valider</b-button>
+            <b-button class="rounded-0 ml-1" @click="handleEditUser()" variant="success">Valider</b-button>
           </div>
         </template>
       </b-modal>
@@ -205,6 +206,7 @@ export default {
     addressRegion: null,
     email: "",
     optionsRegion: [],
+    showModal: true
   }),
   created() {
     if(this.$store.getters.user) {
@@ -245,8 +247,12 @@ export default {
       }).catch(
         e => console.log(e)
       ).finally(() => {
+        this.showModal = false;
         this.isLoading = false;
       })
+    },
+    closeModal(){
+      this.showModal = false;
     },
     handleEditUser() {
       this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };

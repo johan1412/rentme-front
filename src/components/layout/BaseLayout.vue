@@ -33,10 +33,26 @@ export default {
           this.$store.dispatch('user',response.data)
         })
         .catch((e) => {
-          console.log(e);
+          let message = e.response.data.message
+          if(message === "Expired JWT Token"){
+            localStorage.removeItem('token')
+            localStorage.removeItem('userId')
+            this.$store.dispatch('user',null)
+            this.$store.dispatch('products',[])
+            this.$store.dispatch('numberOfProductsNotValid',0)
+            this.$store.dispatch('numberOfProductsReported',0)
+            this.$store.dispatch('parentCategories',[])
+            this.$store.dispatch('categories',[])
+            this.$store.dispatch('reservations',[])
+            if(this.$route.fullPath !== '/') {
+              this.$router.push('/')
+            } else {
+              this.$router.go()
+            }
+          }
         });
     }
-    this.$route.fullPath == "/" ? this.mainMenu = true : this.mainMenu = false;
+    this.$route.fullPath === "/" ? this.mainMenu = true : this.mainMenu = false;
     if(localStorage.getItem("successMessage")) {
       this.messageNotification = localStorage.getItem("successMessage");
     }
@@ -81,7 +97,8 @@ export default {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              noAutoHide: true,
+              autoHideDelay: 2500,
+              title: 'Succès'
             });
             localStorage.removeItem("errorMessage");
           }
@@ -106,7 +123,6 @@ export default {
 
 #b-toaster-top-full .b-toaster-slot .b-toast,
 #b-toaster-top-full .b-toaster-slot .b-toast .toast {
-  height: 200px;
   font-size: 18px;
 }
 </style>
