@@ -68,14 +68,15 @@ const store = new Vuex.Store({
     numberOfProductsReported(context,numberOfProductsReported){
       context.commit('numberOfProductsReported',numberOfProductsReported)
     },
-    parentCategories(context,parentCategories){
-      context.commit('parentCategories',parentCategories)
+    parentCategories(context,categories){
+      context.commit('parentCategories',categories.filter(category => category.parent === null))
     },
       reservations(context,reservations){
             context.commit('reservations',reservations)
       },
         categories(context,categories){
             context.commit('categories',categories)
+            context.commit('parentCategories',categories)
       },
   },
   mutations:{ 
