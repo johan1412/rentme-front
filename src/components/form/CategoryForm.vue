@@ -34,7 +34,7 @@
           </div>
           <div class="form-group">
             <label>Catégorie parente :</label>
-              <b-form-select v-model="parent" :options="categories.filter(category => category.parent == null)" value-field="id" text-field="name">
+              <b-form-select v-model="parent" :options="parentCategories" value-field="id" text-field="name">
                 <template #first>
                   <b-form-select-option :value="null" enabled>Pas de parent</b-form-select-option>
                 </template>
@@ -85,7 +85,7 @@ export default {
 
   ,
   computed:{
-    ...mapGetters(['categories'])
+    ...mapGetters(['categories','parentCategories'])
   },
     mounted(){
       const adminPermission = this.$store.getters.adminPermission
@@ -109,19 +109,13 @@ export default {
         let parent = this.parent ? "/categories/" + this.parent : null;
         let name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
         const response = await AuthService.postCategory({ name: name, parent: parent, img: file });
-      /*  AuthService.getCategories().then(response => {
-          this.$store.dispatch('categories',response.data['hydra:member'])
-        }).catch(e => console.log(e)) */
-        let catArray =  this.categories
        if(parent == null){
-         catArray.push(response.data)
+         this.$store.dispatch('categories',[...this.categories,response.data])
        }else{
-         catArray = catArray.map(
-             category => category.id === parent.id ? {...category,children:[category.children, response.data]} : category
-         )
+         this.$store.dispatch('categories',[...this.categories.map(
+             category => category.id === this.parent ? {...category,children:[...category.children, response.data]} : category
+         )])
        }
-
-        this.$store.dispatch('categories',[...catArray])
         this.name = "";
         this.parent = null;
         this.$bvToast.toast('La catégorie a bien été créée', {
