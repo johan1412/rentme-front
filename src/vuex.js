@@ -11,7 +11,8 @@ const state = {
     numberOfProductsReported: 0,
     parentCategories:[],
     reservations : [],
-    categories:[]
+    categories:[],
+    regions:[]
 }
 
 const store = new Vuex.Store({
@@ -50,6 +51,9 @@ const store = new Vuex.Store({
       },
       categories: (state) => {
         return state.categories
+      },
+      regions: (state) => {
+        return state.regions
       }
   },
   actions:{
@@ -78,6 +82,9 @@ const store = new Vuex.Store({
             context.commit('categories',categories)
             context.commit('parentCategories',categories)
       },
+        regions(context,regions){
+            context.commit('regions',regions)
+      },
   },
   mutations:{ 
     user(state,user){
@@ -103,6 +110,9 @@ const store = new Vuex.Store({
     },
     categories(state,categories){
         state.categories = categories
+    },
+    regions(state,regions){
+        state.regions = regions
     }
   }
 })

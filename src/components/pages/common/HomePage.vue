@@ -76,7 +76,7 @@ export default {
     }
   },
   mounted() {
-    AuthService.getCategories().then(response => {
+    AuthService.getCategories(localStorage.getItem('token')).then(response => {
       this.categories = response.data['hydra:member'];
     }).catch(e => console.log(e))
   },

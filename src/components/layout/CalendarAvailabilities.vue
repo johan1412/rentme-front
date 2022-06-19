@@ -88,7 +88,7 @@ export default {
             elt[1].innerHTML = 'Fin';
         },
       submit () {
-        AuthService.getSessionIdPayment(this.product.id,this.$store.getters.user.id,{price:this.totalPrice+this.product.caution})
+        AuthService.getSessionIdPayment(this.product.id,this.$store.getters.user.id,{price:this.totalPrice+this.product.caution},localStorage.getItem('token'))
             .then(response => {
               this.sessionId = response.data.checkout_session.id
               console.log(response.data.checkout_session.payment_intent)
@@ -102,7 +102,7 @@ export default {
                 renter:'/users/'+this.product.user.id,
                 tenant:'/users/'+this.$store.getters.user.id,
                 paymentIntent: response.data.checkout_session.payment_intent
-              }).then(res => console.log(res.data))
+              },localStorage.getItem('token')).then(res => console.log(res.data))
             })
             .catch(e => console.log(e))
             .finally(()=> this.$refs.checkoutRef.redirectToCheckout())

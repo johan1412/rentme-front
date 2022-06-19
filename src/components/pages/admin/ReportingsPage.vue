@@ -43,7 +43,7 @@ export default {
     }
   },
   created() {
-    AuthService.getReportings().then(response => {
+    AuthService.getReportings(localStorage.getItem('token')).then(response => {
       this.$store.dispatch('reportings', response.data['hydra:member'])
       this.reportings = response.data['hydra:member'].sort((a, b) => {
         return a.product - b.product;
@@ -58,7 +58,7 @@ export default {
   },
   methods:{
     deleteReporting(reportingId) {
-      AuthService.deleteReporting(reportingId).then(() => {
+      AuthService.deleteReporting(reportingId,localStorage.getItem('token')).then(() => {
         this.reportings = this.reportings.filter(r => !(r.id === reportingId))
         this.$store.dispatch('numberOfProductsReported',this.$store.getters.numberOfProductsReported - 1)
       }).catch(e => console.log(e))

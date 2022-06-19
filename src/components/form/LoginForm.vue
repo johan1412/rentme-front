@@ -54,6 +54,7 @@
 import AuthService from "../../services/AuthService";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
+import authService from "@/services/AuthService";
 
 extend('minmax', {
   validate(value, { min, max }) {
@@ -95,15 +96,16 @@ export default {
       this.isLoading = true
       const response =  await AuthService.login({ email: this.email, password: this.password })
       if(response){
-        localStorage.setItem("token",response.data.token)
+          localStorage.setItem("token",response.data.token)
           localStorage.setItem("userId",response.data.data.id)
-          this.$store.dispatch('user',response.data.data)
+          authService.getUser(response.data.data.id,localStorage.getItem('token'))
+            .then(response => this.$store.dispatch('user',response.data))
           if (response.data.data.roles.includes("ROLE_ADMIN")){
             this.$store.dispatch('numberOfProductsNotValid',response.data.data.numberOfProductsNotValid)
             this.$store.dispatch('numberOfProductsReported',response.data.data.numberOfProductsReported)
           }
         this.isLoading = false
-        this.$router.push(this.$route.query.redirect || '/')
+        this.$router.push('/')
       }
     }
   },

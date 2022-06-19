@@ -51,7 +51,7 @@ export default {
 	},
 	mounted() {
 		MessagesService.getConversations(
-			this.$store.getters.user["@id"].split("/")[2]
+			this.$store.getters.user["@id"].split("/")[2],localStorage.getItem('token')
 		)
     .then((response) => {
       this.conversations = response.data;

@@ -75,7 +75,7 @@ export default {
   async mounted() {
     let userId = this.$route.params.userId;
     if (userId) {
-      let user = await authService.getUser(userId)
+      let user = await authService.getUser(userId,localStorage.getItem('token'))
       user = user.data
       this.addressCity = user.address.city
       this.addressRegion = user.address.region.name

@@ -14,7 +14,7 @@
           <div class="ratings averageRatings my-1">
             <span>Note moyenne:</span>
             <div class="averageRatings-details mx-5">
-              <h3>{{ product.averageRatings ? product.averageRatings : '-' }} / 5</h3>
+              <h3>{{ product.averageRatings ? Math.round(product.averageRatings * 10) / 10 : '-' }} / 5</h3>
               <small class="ml-3">({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} évaluations)</small>
             </div>
           </div>
@@ -59,7 +59,7 @@
 					<GoogleMap v-bind:address="product.address"/>
 				</div>
 				<div class="comments">
-					<Comments v-bind:comments="product.comments"/>
+					<Comments />
 				</div>
 			</div>
 			<div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -162,12 +162,20 @@ export default {
       reason: null,
     }
   },
-  created() {
+  mounted() {
+    console.log('user',this.user)
+    console.log('product',this.product)
     if(this.$store.getters.user) {
       this.showNote = true;
     }
-    AuthService.getProduct(this.$route.params.productId).then(response => {
+    AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
       this.$store.dispatch('product',response.data)
+      this.currentNote = 0
+      if (this.user.comments.length !== 0){
+        if(this.user.comments.filter(comment => comment.product.id === response.data.id).length !== 0){
+          this.currentNote = this.user.comments.filter(comment => comment.product.id === response.data.id)[0].rating
+        }
+      }
       let dateFormated = new Date(response.data.publishedAt);
       let day = dateFormated.getDate() < 10 ? '0' + dateFormated.getDate() : dateFormated.getDate();
       let month = dateFormated.getMonth() < 10 ? '0' + dateFormated.getMonth() : dateFormated.getMonth();
@@ -221,49 +229,60 @@ export default {
   methods: {
     handleSubmitNote() {
       if (this.$store.getters.user) {
-        let commentExist = this.product.comments.filter(c => c.user == this.$store.getters.user);
+        let commentExist = this.user.comments.filter(comment => comment.product.id === this.product.id);
         if (commentExist.length > 0) {
-          let oldRatings = commentExist[0].ratings;
+          let oldRatings = commentExist[0].rating;
           CommentService.updateComment({
             rating : this.currentNote,
-          }, commentExist.id,)
+          }, commentExist[0].id,localStorage.getItem('token'))
+          .then(response => {
+            this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
+            this.$store.dispatch('product',{...this.product,comments:this.product.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
+          })
           let newAverageRatings = this.product.averageRatings;
-          let newNumberOfRatings = this.product.numberOfRatings;
-          if(oldRatings) {
             newAverageRatings = ((this.product.averageRatings * this.product.numbersOfRatings) - oldRatings + this.currentNote) / (this.product.numbersOfRatings);
-            newNumberOfRatings = this.product.numberOfRatings;
-          } else {
-            newAverageRatings = ((this.product.averageRatings * this.product.numbersOfRatings) + this.currentNote) / (this.product.numbersOfRatings + 1);
-            newNumberOfRatings = this.product.numberOfRatings + 1;
-          }
+
           AuthService.updateProduct(
             this.product.id,
             {
             averageRatings: newAverageRatings,
-            numbersOfRatings: newNumberOfRatings,
-            }
+            },
+              localStorage.getItem('token')
           ).then(response => {
-            this.$store.dispatch('product',response.data)
-            this.product.averageRatings = newAverageRatings;
-            this.numbersOfRatings = newNumberOfRatings;
+            this.$store.dispatch('product',{...this.product,averageRatings:response.data.averageRatings})
           }).catch(e => console.log(e))
         } else {
           CommentService.postComment({
             text: '',
             rating: this.currentNote,
-            user: this.$store.getters.user,
-            product: this.product,
+            user: '/users/'+this.user.id,
+            product: 'products/'+this.product.id,
+          },localStorage.getItem('token'))
+          .then(response => {
+            this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
+              this.$store.dispatch('product',{...this.product,comments:[...this.product.comments,response.data]})
+            }).catch(e => console.log(e))
+
+          AuthService.updateProduct(
+              this.product.id,
+              {
+                averageRatings: ((this.product.averageRatings ?  this.product.averageRatings : 0) + this.currentNote) / ((this.product.numbersOfRatings ? this.product.numbersOfRatings : 0)  + 1),
+                numbersOfRatings: (this.product.numbersOfRatings ? this.product.numbersOfRatings : 0) + 1,
+              },
+              localStorage.getItem('token')
+          ).then(response => {
+            this.$store.dispatch('product',{...this.product,numbersOfRatings:response.data.numbersOfRatings,averageRatings:response.data.averageRatings})
           })
         }
-      }
+        }
     },
     handleClickReport() {
       if (this.$store.getters.user) {
         MessagesService.postReport({
-          sender: 'users/' + this.$store.getters.user.id,
+          sender: 'users/' + this.user.id,
           product: 'products/' + this.product.id,
           reason: this.reason,
-        }).then(() => {
+        },localStorage.getItem('token')).then(() => {
           this.$bvToast.toast('Votre signalement a été enregistré avec succès', {
             title: 'Merci !',
             variant: 'success',

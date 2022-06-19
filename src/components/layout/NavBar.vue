@@ -40,8 +40,7 @@ export default {
   },
   methods: {
     logout(){
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
+      localStorage.clear();
       this.$store.dispatch('user',null)
       this.$store.dispatch('products',[])
       this.$store.dispatch('numberOfProductsNotValid',0)
@@ -49,11 +48,7 @@ export default {
       this.$store.dispatch('parentCategories',[])
       this.$store.dispatch('categories',[])
       this.$store.dispatch('reservations',[])
-      if(this.$route.fullPath !== '/') {
-        this.$router.push('/')
-      } else {
-        this.$router.go()
-      }
+      this.$router.push('/login')
     }
   },
   computed:{
