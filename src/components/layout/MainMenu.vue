@@ -1,14 +1,18 @@
 <template>
-<div class="main-menu" v-bind:class="{ 'fixed-top': isFixed }">
+  <div class="main-menu" v-bind:class="{ 'fixed-top': isFixed }">
+    <div class="icon arrow-left" @click="handleClickPrev(0)">&lsaquo;</div>
     <ul>
-        <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
-            <router-link :to="'/search?category=' + category.name.toLowerCase()">{{ category.name }}</router-link>
-            <ul v-if="activeCategory == index" @click="activeCategory = null">
-                <li v-for="subCategory in category.children" :key="subCategory.id"><router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link></li>
-            </ul>
-        </li>
+      <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
+        <router-link :to="'/search?category=' + category.name.toLowerCase()">{{ category.name }}</router-link>
+        <ul v-if="activeCategory == index" @click="activeCategory = null">
+          <li v-for="subCategory in category.children" :key="subCategory.id">
+            <router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link>
+          </li>
+        </ul>
+      </li>
     </ul>
-</div>
+    <div class="icon arrow-right" @click="handleClickNext(0)">&rsaquo;</div>
+  </div>
 </template>
 
 <script>
@@ -16,57 +20,82 @@ import AuthService from "@/services/AuthService";
 import {mapGetters} from "vuex";
 
 export default {
-    name: "MainMenu",
-    data: () => {
-        return {
-            activeCategory: null,
-            isFixed: false
-        }
+  name: "MainMenu",
+  data: () => {
+      return {
+          activeCategory: null,
+          isFixed: false
+      }
+  },
+  created() {
+    AuthService.getCategories().then(response => {
+      this.$store.dispatch('categories',response.data['hydra:member'].filter(category => !category?.parent))
+    }).catch(e => console.log(e))
+  },
+  computed:{
+  ...mapGetters(['categories'])
+  },
+  mounted() {
+      window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+      window.removeEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    handleScroll() {
+      if (window.scrollY >= 87) {
+          this.isFixed = true
+      } else {
+          this.isFixed = false
+      }
     },
-    created() {
-      AuthService.getCategories().then(response => {
-        this.$store.dispatch('categories',response.data['hydra:member'].filter(category => !category?.parent))
-      }).catch(e => console.log(e))
+    mouseOver(index) {
+      this.activeCategory = index
     },
-    computed:{
-    ...mapGetters(['categories'])
+    mouseLeave() {
+      this.activeCategory = null
     },
-    mounted() {
-        window.addEventListener("scroll", this.handleScroll);
+    handleClickNext(number) {
+      let width = document.querySelector(".main-menu ul").offsetWidth;
+      document.getElementsByClassName("main-menu")[number].getElementsByTagName("ul")[0].scrollLeft += width;
     },
-    destroyed() {
-        window.removeEventListener("scroll", this.handleScroll);
-    },
-    methods: {
-        handleScroll() {
-            if (window.scrollY >= 87) {
-                this.isFixed = true
-            } else {
-                this.isFixed = false
-            }
-        },
-        mouseOver(index) {
-            this.activeCategory = index
-        },
-        mouseLeave() {
-            this.activeCategory = null
-        }
-    },
+    handleClickPrev(number) {
+      let width = document.querySelector(".main-menu ul").offsetWidth;
+      document.getElementsByClassName("main-menu")[number].getElementsByTagName("ul")[0].scrollLeft -= width;
+    }
+  },
 }
 </script>
 
 <style>
 .main-menu {
-    border-top: 2px solid #000000;
-    background-color: #ffffff;
+  border-top: 2px solid #000000;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+.main-menu .icon {
+  padding: 0px 30px;
+  cursor: pointer;
+  font-size: 32px;
+}
+
+.main-menu .arrow-left {
+  border-right: 1px solid #000000;
+}
+
+.main-menu .arrow-right {
+  border-left: 1px solid #000000;
 }
 
 .main-menu ul {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    margin: 0px;
-    padding: 0px;
+  display: flex;
+	justify-content: flex-start;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+  overflow: hidden;
 }
 
 .main-menu ul li {
