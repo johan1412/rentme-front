@@ -103,12 +103,12 @@ export default {
         if(this.image) {
           const formData = new FormData();
           formData.append('file', this.image);
-          let img = await AuthService.postImage(formData);
+          let img = await AuthService.postImage(formData,localStorage.getItem('token'));
           file = img.data.contentUrl ? { path : img.data.contentUrl } : null
         }
         let parent = this.parent ? "/categories/" + this.parent : null;
         let name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
-        const response = await AuthService.postCategory({ name: name, parent: parent, img: file });
+        const response = await AuthService.postCategory({ name: name, parent: parent, img: file },localStorage.getItem('token'));
        if(parent == null){
          this.$store.dispatch('categories',[...this.categories,response.data])
        }else{

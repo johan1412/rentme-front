@@ -60,7 +60,7 @@ export default {
         reciever: "users/" + this.user.id,
         text : this.text,
         productId : null
-      })
+      },localStorage.getItem('token'))
       localStorage.setItem("successMessage", "Votre compte a bien été créé");
       this.text = "Bonjour"
     },

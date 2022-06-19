@@ -7,17 +7,17 @@
         <hr>
         <transition name="fade">
         <div v-if="formIsVisible" class="form-new-comment d-flex">
-            <b-textarea v-model="inputComment"></b-textarea>
+            <b-textarea v-model="newComment"></b-textarea>
             <div @click="validateComment" class="button-new-comment-validate">Valider</div>
         </div>
         </transition>
         <div class="comments-list">
-            <div v-if="commentsLocal.length < 1">
+            <div v-if="product.comments.length < 1">
                 <p>Il n'y a aucun commentaire</p>
             </div>
-            <div class="comment-item" v-for="comment in commentsLocal" :key="comment.id">
+            <div class="comment-item" v-for="comment in product.comments" :key="comment.id">
                 <div class="comment-top">
-                    <div><strong :class="comment.user == this.$store.getters.user ? 'personal-comment' : ''">{{ comment.user.firstName }} {{ comment.user.lastName }}</strong> - {{ comment.createdAt }}</div>
+                    <div><strong :class="comment.user == user ? 'personal-comment' : ''">{{ comment.user.firstName }} {{ comment.user.lastName }}</strong> - {{ comment.createdAt }}</div>
                     <div class="comment-rating">{{ comment.rating ? comment.rating : '-' }}/5</div>
                 </div>
                 <div class="comment-text">{{ comment.text }}</div>
@@ -28,31 +28,57 @@
 
 <script>
 import CommentService from '../../services/CommentService';
+import {mapGetters} from "vuex";
 
 export default {
     name: "Comments",
-    props: {
-        comments: Array,
-    },
     data() {
         return {
-            newComment: '',
             formIsVisible: false,
-            inputComment: '',
-            commentsLocal: [],
+            newComment:"",
+            hasAlreadyComment : false,
+            idComment : null
         }
     },
-    mounted() {
-        this.commentsLocal = this.comments;
+    computed:{
+      ...mapGetters(['user','product'])
     },
+  mounted(){
+    if (this.user.comments.length !== 0){
+      if(this.user.comments.filter(comment => comment.product.id === this.product.id).length !== 0){
+        const comment = this.user.comments.filter(comment => comment.product.id === this.product.id)[0]
+        this.newComment  = comment.text
+      }
+    }
+  },
     methods: {
         validateComment() {
-            let response = CommentService.postComment({
-                user : parseInt(this.user.id),
-                text : this.text,
-                product : parseInt(this.product.id)
+          if (this.user.comments.length !== 0){
+            if(this.user.comments.filter(comment => comment.product.id === this.product.id).length !== 0){
+              const comment = this.user.comments.filter(comment => comment.product.id === this.product.id)[0]
+              this.hasAlreadyComment = true
+              this.idComment = comment.id
+            }
+          }
+          if (!this.hasAlreadyComment){
+            CommentService.postComment({
+              user : '/users/'+this.user.id,
+              text : this.newComment,
+              product : '/products/'+this.product.id,
+            },localStorage.getItem('token'))
+            .then((response) => {
+              this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
+              this.$store.dispatch('product',{...this.product,comments:[...this.product.comments,response.data]})
             })
-            this.commentsLocal.unshift(response);
+          }else{
+            CommentService.updateComment({
+              text: this.newComment,
+            },this.idComment,localStorage.getItem('token'))
+                .then(response => {
+                  this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === this.idComment ? {...comment,text:response.data.text} : comment)})
+                  this.$store.dispatch('product',{...this.product,comments:this.product.comments.map(comment => comment.id === this.idComment ? {...comment,text:response.data.text} : comment)})
+                }).catch(e => console.log(e))
+          }
         }
     }
 }

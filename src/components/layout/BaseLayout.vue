@@ -28,15 +28,14 @@ export default {
   },
   created() {
     if(this.$store.getters.user){
-      AuthService.getUser(localStorage.getItem('userId'))
+      AuthService.getUser(localStorage.getItem('userId'),localStorage.getItem('token'))
         .then((response) => {
           this.$store.dispatch('user',response.data)
         })
         .catch((e) => {
           let message = e.response.data.message
           if(message === "Expired JWT Token"){
-            localStorage.removeItem('token')
-            localStorage.removeItem('userId')
+            localStorage.clear();
             this.$store.dispatch('user',null)
             this.$store.dispatch('products',[])
             this.$store.dispatch('numberOfProductsNotValid',0)

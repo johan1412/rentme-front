@@ -202,7 +202,7 @@ export default {
       }
       const formData = new FormData();
       formData.append('file', this.images);
-      let image = await AuthService.postImage(formData);
+      let image = await AuthService.postImage(formData,localStorage.getItem('token'));
       if(image.data.contentUrl){
         this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         const response = await AuthService.postProduct({
@@ -216,10 +216,10 @@ export default {
           files: [
             {path : image.data.contentUrl}
           ]
-        });
+        },localStorage.getItem('token'));
         this.$store.dispatch('user',{...this.$store.getters.user, products:[...this.$store.getters.user.products, response.data]})
         localStorage.setItem('successMessage', 'Votre produit a bien été ajouté');
-        this.$router.push("/");
+        this.$router.push("/products");
       }
     },
   },
@@ -227,9 +227,9 @@ export default {
     ...mapGetters(['parentCategories']),
   },
   created() {
-    AuthService.parentCategories().then(response => {
+    AuthService.getCategories().then(response => {
       this.allCategories = response.data['hydra:member'];
-      this.$store.dispatch('parentCategories', response.data['hydra:member'].filter(category => category.parent == null))
+      this.$store.dispatch('categories', response.data['hydra:member'])
     }).catch(e => console.log(e))
     RegionService.getRegions().then(response => {
       this.optionsRegion = response.data['hydra:member'];

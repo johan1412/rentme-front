@@ -31,7 +31,19 @@
               <button type="button" class="btn btn-success"  @click="toValid(product)">VALIDER</button>
             </div>
             <div class="p-2">
-              <button type="button" class="btn btn-danger" @click="toDelete(product)">REFUSER</button>
+              <b-modal id="modalAlert">
+                <div class="modal-body container m-auto">
+                  <p class="my-4">Êtes-vous sûr de vouloir vous supprimer l'annonce sur le site ?</p>
+                </div>
+                <template #modal-footer="{ }">
+                  <div class="mx-auto">
+                    <b-button class="rounded-0 mr-1" @click="$bvModal.hide('modalAlert')">Annuler</b-button>
+                    <b-button class="rounded-0 ml-1" @click="toDelete(product)" variant="success">Valider</b-button>
+                  </div>
+                </template>
+              </b-modal>
+              <br>
+              <button type="button" class="btn btn-danger" @click="$bvModal.show('modalAlert')">REFUSER</button>
             </div>
           </div>
         </div>
@@ -49,12 +61,6 @@ import AuthService from "../../../services/AuthService";
 
 export default {
   name: "ProductsPage",
-  created() {
-    AuthService.getProductsNotValid().then(response => {
-      this.$store.dispatch('products',response.data['hydra:member'])
-    }
-    ).catch(e => console.log(e))
-  },
   computed:{
     ...mapGetters(['numberOfProductsNotValid','products'])
   },
@@ -63,20 +69,25 @@ export default {
     if(!adminPermission){
       this.$router.push('/')
     }
+    AuthService.getProductsNotValid(localStorage.getItem('token')).then(response => {
+          this.$store.dispatch('products',response.data['hydra:member'])
+        }
+    ).catch(e => console.log(e))
   },
    methods:{
     toValid(product){
-      AuthService.updateProduct(product.id,{isValid:true}).then(response => {
+      AuthService.updateProduct(product.id,{isValid:true},localStorage.getItem('token')).then(response => {
         this.$store.commit('products',this.$store.getters.products.filter(product => !(product.id === response.data.id)))
         this.$store.dispatch('numberOfProductsNotValid',this.$store.getters.numberOfProductsNotValid-1)
       }).catch(e => console.log(e))
       console.log(product)
     },
     toDelete(product){
-      AuthService.deleteProduct(product.id).then(() => {
+      AuthService.deleteProduct(product.id,localStorage.getItem('token')).then(() => {
         this.$store.commit('products',this.$store.getters.products.filter(prod => !(prod.id === product.id)))
         this.$store.dispatch('numberOfProductsNotValid',this.$store.getters.numberOfProductsNotValid-1)
       }).catch(e => console.log(e))
+      .finally(() => this.$bvModal.hide('modalAlert'))
       console.log(product)
     }
   },

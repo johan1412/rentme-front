@@ -84,7 +84,7 @@ export default {
     reservationsTabActive: false,
   }),
   created() {
-    AuthService.getReservations().then(response => {
+    AuthService.getReservations(localStorage.getItem('token')).then(response => {
           this.$store.dispatch('reservations',response.data['hydra:member'])
         }
     ).catch(e => console.log(e))
@@ -101,12 +101,12 @@ export default {
   methods: {
     myMethod: function myMethod(reservation) {
       this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === reservation.id ? {...elem,state:reservation.state === 'payed' ? 'retrieved' : 'restored'} : elem))
-      AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'}).then(response => {
+      AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token')).then(response => {
             console.log(response)
       }
       ).catch(e => console.log(e))
       if (reservation.state === 'retrieved'){
-        AuthService.refund({id:reservation.id})
+        AuthService.refund({id:reservation.id},localStorage.getItem('token'))
             .then(response => {
               console.log(response)
             }
