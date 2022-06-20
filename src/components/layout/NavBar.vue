@@ -17,13 +17,24 @@
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/publish">Publier une annonce</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/products">Mes annonces</router-link></b-nav-item>
         <b-nav-item><router-link class="btn text-dark" to="/account">Mon compte</router-link></b-nav-item>
-        <b-nav-item v-on:click="logout"><router-link class="btn bg-dark text-light logout-button" to="/">Se déconnecter</router-link></b-nav-item>
+        <b-nav-item @click="$bvModal.show('modalLogout')"><router-link class="btn bg-dark text-light logout-button" to="/">Se déconnecter</router-link></b-nav-item>
       </b-navbar-nav>
       <div>
         <circle-spin v-bind:loading="isLoading"></circle-spin>
       </div>
     </b-collapse>
   </b-navbar>
+  <b-modal id="modalLogout" title="Déconnexion">
+    <div class="modal-body container m-auto">
+      <p class="my-4">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+    </div>
+    <template #modal-footer="{ cancel }">
+      <div class="mx-auto">
+        <b-button class="rounded-0 mr-1" @click="cancel()">Annuler</b-button>
+        <b-button class="rounded-0 ml-1" @click="logout($bvModal.hide('modalLogout'))" variant="success">Confirmer</b-button>
+      </div>
+    </template>
+  </b-modal>
 </div>
 </template>
 
