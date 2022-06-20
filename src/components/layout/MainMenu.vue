@@ -111,6 +111,7 @@ export default {
     text-decoration: none;
     padding: 20px;
     font-size: 90%;
+    white-space: nowrap;
 }
 
 .main-menu > ul > li > a {
