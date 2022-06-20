@@ -255,6 +255,25 @@ export default {
         this.$bvModal.hide('modalEditRole')
         this.isLoading = false;
       })
+      if (this.roleRenter){
+        this.user.products.forEach(product => {
+          AuthService.updateProduct(product.id, {hasRight: true},localStorage.getItem('token'))
+          .then(response => {
+            this.$store.dispatch('user',{...this.user,products:this.user.product.map(product.id === response.data.id ? {...product,hasRight:response.data.hasRight} : product)});
+          }).catch(
+              e => console.log(e)
+          )
+        })
+      }else{
+        this.user.products.forEach(product => {
+          AuthService.updateProduct(product.id, {hasRight: false},localStorage.getItem('token'))
+              .then(response => {
+                this.$store.dispatch('user',{...this.user,products:this.user.product.map(product.id === response.data.id ? {...product,hasRight:response.data.hasRight} : product)});
+              }).catch(
+              e => console.log(e)
+          )
+        })
+      }
     },
     handleCancelRole() {
       this.roleRenter = !this.roleRenter;
