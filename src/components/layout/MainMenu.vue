@@ -72,6 +72,7 @@ export default {
   border-top: 2px solid #000000;
   background-color: #ffffff;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 

@@ -59,6 +59,10 @@ const getProducts = async () => {
   return await axios.get(url+"/products");
 };
 
+const getProductsSearch = async (data) => {
+  return await axios.get(url+"/productsSearch", {params: data});
+}
+
 const getProductsValid = async () => {
   return await axios.get(url+"/products/products-valid");
 };
@@ -178,6 +182,7 @@ export default {
   parentCategories,
   postCategory,
   getProducts,
+  getProductsSearch,
   updateProduct,
   deleteProduct,
   getProductsNotValid,

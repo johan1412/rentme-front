@@ -100,6 +100,7 @@ export default {
 	margin: 30px auto;
 	border-radius: 10px;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
