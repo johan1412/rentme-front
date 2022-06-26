@@ -19,7 +19,7 @@
 								{{ category.name }}
 								<ul class="">
 									<li v-for="(subCategory, index) in category.children" :key="subCategory.id">
-										<input type="checkbox" :value="subCategory.id" :id="'subCategory' + (index + 1)" v-model="selected.categories" />
+										<input type="checkbox" :value="subCategory.name.toLowerCase()" :id="'subCategory' + (index + 1)" v-model="selected.categories" />
 										{{ subCategory.name }}
 									</li>
 								</ul>
@@ -53,7 +53,7 @@
 					<b-collapse id="collapse-3">
 						<ul>
 							<li v-for="(region, index) in regions" :key="region.id">
-								<input type="checkbox" :value="region.id" :id="'region' + (index + 1)" v-model="selected.locations"/>
+								<input type="checkbox" :value="region.name.toLowerCase()" :id="'region' + (index + 1)" v-model="selected.locations"/>
 								{{ region.name }} ({{ region.number }})
 							</li>
 						</ul>
@@ -111,7 +111,15 @@
 		</div>
 		<div class="col-md-1"></div>
 		<div class="products-list col-md-8">
-			<SearchBar />
+      <div class="searchbar-products">
+        <form id="searchInputForm" >
+          <b-form inline>
+            <label for="inline-form-input">Rechercher : </label>
+            <b-form-input id="inline-form-input" v-model="searchInput" name="words"></b-form-input>
+            <b-button @click="getProductsByKeWord" variant="transparent"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+          </b-form>
+        </form>
+      </div>
 			<div class="orderby-box row-fluid">
 				<div v-if="paramWords != ''">
 					<h4>{{ totalProducts }} résultat{{ totalProducts > 1 ? "s " : "" }} pour "{{ paramWords }}"</h4>
@@ -138,53 +146,53 @@
       <hr>
       <div>résultats {{ 1 + ((currentPage - 1) * perPage) }} - {{ ((currentPage - 1) * perPage) + nbResults }} sur {{ totalProducts }}</div>
 			<b-card-group deck v-bind:class="[deckGrid ? 'card-deck-custom-grid' : 'card-deck-custom-list']">
-				<router-link v-for="product in products" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
+				<router-link v-for="product in products" :key="product._source.id" :to="'/products/' + product._source.id" :per-page="perPage" :current-page="currentPage">
 					<b-card v-if="deckGrid" class="product-card">
 						<template #header>
               <div>
-                <img :src="product.path !== 0 ? 'https://localhost:8443/media'+product.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                <img :src="product._source.image_path !== 0 ? 'https://localhost:8443/media'+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
               </div>
             </template>
-            <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
+            <b-card-text class="product-card-text">{{ product._source.name }}</b-card-text>
             <b-card-text class="text-muted">
-              <div class="price-bloc">{{ product.price }}€ / jour</div>
+              <div class="price-bloc">{{ product._source.price }}€ / jour</div>
               <div class="ratings-bloc">
-                <b-icon :icon="(!product.averageRatings || product.averageRatings < 0.2) ? 'star' : (product.averageRatings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                <b-icon :icon="(!product.averageRatings || product.averageRatings < 1.2) ? 'star' : (product.averageRatings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                <b-icon :icon="(!product.averageRatings || product.averageRatings < 2.2) ? 'star' : (product.averageRatings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                <b-icon :icon="(!product.averageRatings || product.averageRatings < 3.2) ? 'star' : (product.averageRatings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                <b-icon :icon="(!product.averageRatings || product.averageRatings < 4.2) ? 'star' : (product.averageRatings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                <span> ({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</span>
+                <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 0.2) ? 'star' : (product._source.average_ratings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 1.2) ? 'star' : (product._source.average_ratings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 2.2) ? 'star' : (product._source.average_ratings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 3.2) ? 'star' : (product._source.average_ratings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 4.2) ? 'star' : (product._source.average_ratings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                <span> ({{ product._source.numbers_of_ratings ? product._source.numbers_of_ratings : 0 }} avis)</span>
               </div>
-              <div class="address-bloc">{{ product.city }} &bull; {{ product.regionName }} ({{ product.region }})</div>
+              <div class="address-bloc">{{ product._source.ville }} &bull; {{ product._source.region }} ({{ product._source.region_number }})</div>
             </b-card-text>
 					</b-card>
 					<b-card v-else no-body class="overflow-hidden">
 						<b-row no-gutters class="h-100">
 							<b-col xl="4" lg="4" md="12" sm="12">
                 <div class="image-bloc">
-                  <img :src="product.path !== 0 ? 'https://localhost:8443/media'+product.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image">
+                  <img :src="product._source.image_path !== 0 ? 'https://localhost:8443/media'+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image">
                 </div>
               </b-col>
 							<b-col xl="8" lg="8" md="12" sm="12" class="d-flex flex-column justify-content-between">
-								<b-card-body :title="product.name">
+								<b-card-body :title="product._source.name">
 									<b-card-text class="product-card-description">
-										{{ product.description }}
+										{{ product._source.description }}
 									</b-card-text>
                   <b-card-text class="d-flex justify-content-between align-items-center">
-                    <div class="price-bloc">{{ product.price }}€ / jour</div>
+                    <div class="price-bloc">{{ product._source.price }}€ / jour</div>
                     <div class="ratings-bloc">
-                      <b-icon :icon="(!product.averageRatings || product.averageRatings < 0.2) ? 'star' : (product.averageRatings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                      <b-icon :icon="(!product.averageRatings || product.averageRatings < 1.2) ? 'star' : (product.averageRatings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                      <b-icon :icon="(!product.averageRatings || product.averageRatings < 2.2) ? 'star' : (product.averageRatings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                      <b-icon :icon="(!product.averageRatings || product.averageRatings < 3.2) ? 'star' : (product.averageRatings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                      <b-icon :icon="(!product.averageRatings || product.averageRatings < 4.2) ? 'star' : (product.averageRatings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                      <span> ({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</span>
+                      <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 0.2) ? 'star' : (product._source.average_ratings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                      <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 1.2) ? 'star' : (product._source.average_ratings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                      <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 2.2) ? 'star' : (product._source.average_ratings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                      <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 3.2) ? 'star' : (product._source.average_ratings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                      <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 4.2) ? 'star' : (product._source.average_ratings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                      <span> ({{ product._source.numbers_of_ratings ? product._source.numbers_of_ratings : 0 }} avis)</span>
                     </div>
                   </b-card-text>
 								</b-card-body>
 								<b-card-footer class="bg-white d-flex justify-content-between align-items-center">
-									<div class="address-bloc"><b-icon icon="geo-alt-fill" aria-hidden="true"></b-icon>&nbsp;{{ product.city }} &bull; {{ product.regionName }} ({{ product.region }})</div>
+									<div class="address-bloc"><b-icon icon="geo-alt-fill" aria-hidden="true"></b-icon>&nbsp;{{ product._source.vile }} &bull; {{ product._source.region }} ({{ product._source.region_number }})</div>
 									<div><u>Voir l'annonce <b-icon icon="arrow-right" aria-hidden="true"></b-icon></u></div>
 								</b-card-footer>
 							</b-col>
@@ -209,14 +217,13 @@
 </template>
 
 <script>
-import SearchBar from '../../layout/CommonSearchBar.vue';
 import AuthService from "@/services/AuthService";
 import RegionService from "@/services/RegionService";
 import {mapGetters} from "vuex";
 
 export default {
   components: {
-	SearchBar,
+	//SearchBar,
   },
   name: "Home",
   data() {
@@ -239,10 +246,10 @@ export default {
       },
       options: [
         { value: null, text: '' },
-        { value: 'ratingAsc', text: 'note croissante' },
-        { value: 'ratingDesc', text: 'note décroissante' },
-        { value: 'priceAsc', text: 'prix croissant' },
-        { value: 'priceDesc', text: 'prix décroissant' },
+        { value: ['average_ratings','asc'], text: 'note croissante' },
+        { value: ['average_ratings','desc'], text: 'note décroissante' },
+        { value: ['price','asc'], text: 'prix croissant' },
+        { value: ['price','desc'], text: 'prix décroissant' },
       ],
       regions: [],
       perPage: 15,
@@ -262,15 +269,17 @@ export default {
   },
   mounted() {
     let category = this.$route.query.category;
-    let words = this.$route.query.words;
-    if (words) {
-      this.paramWords = words;
-    } else if (category && this.categories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
+      if(category && this.categories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
       this.paramCategory = category.toLowerCase();
       this.initializaFilterCategories();
     }
     this.minPrice = this.getMinPrice();
     this.maxPrice = this.getMaxPrice();
+    let words = this.$route.query.words;
+    if(words) {
+      this.paramWords = words;
+      this.searchInput = words;
+    }
   },
   watch: {
     'minPrice': {
@@ -283,6 +292,12 @@ export default {
       handler(newVal) {
         this.maxPrice = newVal;
         this.updateProducts();
+      }
+    },
+    'searchInput': {
+      handler(newVal) {
+        this.searchInput = newVal;
+        this.getProductsByKeWord();
       }
     },
     'selected.locations': {
@@ -307,8 +322,18 @@ export default {
     },
   },
   methods: {
+    getProductsByKeWord() {
+      AuthService.getProductsByKeyWord({
+        page: this.currentPage,
+        word:this.searchInput
+      }).then(response => {
+        this.products = response.data.hits.hits;
+        this.nbResults = this.products.length;
+        this.totalProducts = response.data.totalProducts;
+      }).catch(e => console.log(e))
+    },
     updateProducts() {
-      AuthService.getProductsSearch({
+      AuthService.getProductsByKeyWord({
         page: this.currentPage,
         sort: this.selected.orderBy,
         category: this.selected.categories,
@@ -317,7 +342,7 @@ export default {
         region: this.selected.locations,
         averageRatings: this.selected.notes,
       }).then(response => {
-        this.products = response.data.products;
+        this.products = response.data.hits.hits;
         this.nbResults = this.products.length;
         this.totalProducts = response.data.totalProducts;
       }).catch(e => console.log(e))
@@ -328,12 +353,10 @@ export default {
       window.scrollTo(0, 0);
     },
     getMaxPrice() {
-      let max =  Math.max(...this.products.map((p) => { return p.price }));
-      return max;
+      return 1000000000;
     },
     getMinPrice() {
-      let min = Math.min(...this.products.map((p) => { return p.price }));
-      return min;
+      return 0;
     },
     selectedAllSubCategories(category) {
       let index = this.categories.map(function(elt) {return elt.name.toLowerCase()}).indexOf(typeof category === 'string' ? category.toLowerCase() : category.name.toLowerCase()) + 1;
@@ -341,7 +364,7 @@ export default {
         let categoryObject = typeof category === 'string' ? this.categories[index - 1] : category;
         if (document.getElementById('category' + index).checked) {
             categoryObject.children.forEach(element => {
-            this.selected.categories.push(element.id);
+            this.selected.categories.push(element.name.toLowerCase());
           });
         } else {
           categoryObject.children.forEach(element => {
