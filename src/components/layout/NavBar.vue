@@ -2,7 +2,7 @@
 <div class="border-bottom">
   <b-navbar toggleable="lg" type="light" variant="white">
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    <b-navbar-brand class="fw-bold"><router-link class="home-link" to="/">RENTME</router-link></b-navbar-brand>
+    <b-navbar-brand class="fw-bold brand-menu"><router-link class="home-link" to="/">RENTME</router-link></b-navbar-brand>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav v-if="!user" class="ml-auto">
         <b-nav-item><router-link class="btn bg-dark text-light" to="#">Publier une annonce</router-link></b-nav-item>
@@ -95,5 +95,22 @@ export default {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
+}
+
+@media screen and (max-width: 1400px) {
+
+  .home-link {
+    margin: 0px;
+    font-size: 20px;
+  }
+
+  .nav-item {
+    padding: 0px;
+  }
+
+  .btn {
+    padding: 10px;
+  }
+
 }
 </style>
