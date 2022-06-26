@@ -1,17 +1,23 @@
 <template>
-  <div class="main-menu" v-bind:class="{ 'fixed-top': isFixed }">
-    <div class="icon arrow-left" @click="handleClickPrev(0)">&lsaquo;</div>
-    <ul>
-      <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
-        <router-link :to="'/search?category=' + category.name.toLowerCase()">{{ category.name }}</router-link>
-        <ul v-if="activeCategory == index" @click="activeCategory = null">
+  <div v-bind:class="{ 'fixed-top': isFixed }" @mouseleave="mouseLeave()">
+    <div class="main-menu">
+      <div class="icon arrow-left" @click="handleClickPrev(0)">&lsaquo;</div>
+      <ul class="first-list">
+        <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)">
+          <router-link :to="'/search?category=' + category.name.toLowerCase()" v-bind:class="activeCategory == index ? 'underline' : ''">{{ category.name }}</router-link>
+        </li>
+      </ul>
+      <div class="icon arrow-right" @click="handleClickNext(0)">&rsaquo;</div>
+    </div>
+    <div class="sub-main-menu">
+      <div v-for="(category, index) in categories" :key="category.id">
+        <ul v-if="activeCategory == index" @click="activeCategory = null" class="sub-list">
           <li v-for="subCategory in category.children" :key="subCategory.id">
             <router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link>
           </li>
         </ul>
-      </li>
-    </ul>
-    <div class="icon arrow-right" @click="handleClickNext(0)">&rsaquo;</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -50,10 +56,10 @@ export default {
       }
     },
     mouseOver(index) {
-      this.activeCategory = index
+      this.activeCategory = index;
     },
     mouseLeave() {
-      this.activeCategory = null
+      this.activeCategory = null;
     },
     handleClickNext(number) {
       let width = document.querySelector(".main-menu ul").offsetWidth;
@@ -91,6 +97,7 @@ export default {
 }
 
 .main-menu ul {
+  position: relative;
   display: flex;
 	justify-content: flex-start;
 	list-style: none;
@@ -100,10 +107,10 @@ export default {
 }
 
 .main-menu ul li {
-    display: block;
-    position: relative;
-    background-color: #ffffff;
-    color: #000000;
+  display: block;
+  background-color: #ffffff;
+  color: #000000;
+  z-index: 99;
 }
 
 .main-menu ul a {
@@ -130,23 +137,78 @@ export default {
     transition: width 0.3s;
 }
 
-.main-menu > ul > li > a:hover::after {
+.main-menu > ul > li > a.underline::after {
     width: 100%;
     transition: width 0.3s;
 }
 
-.main-menu ul li ul {
-    display: block;
-    position: absolute;
-    left: 0px;
-    top: 61px;
+.sub-main-menu .sub-list {
+    display: flex;
+    justify-content: flex-start;
+    list-style: none;
     margin: 0px;
-    padding: 0px;
     width: 100%;
-    z-index: 1;
+    background-color: #ffffff;
 }
 
-.main-menu ul li ul li:hover {
+.sub-main-menu ul li a {
+  color: #000000;
+  display: block;
+  padding: 20px;
+  text-decoration: none;
+}
+
+.sub-main-menu ul li a:hover {
     background-color: #f0f0f0;
+}
+
+@media screen and (max-width: 992px) {
+
+  .main-menu {
+    font-size: 14px;
+  }
+
+  .main-menu > ul > li > a {
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: normal;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+
+  .main-menu > ul > li > a {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .main-menu .icon {
+    padding: 0px 25px;
+    font-size: 25px;
+  }
+
+  .sub-main-menu * {
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+
+  .main-menu > ul > li > a {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+
+  .main-menu .icon {
+    padding: 0px 20px;
+    font-size: 20px;
+  }
+
+  .sub-main-menu * {
+    font-size: 12px;
+  }
+
 }
 </style>

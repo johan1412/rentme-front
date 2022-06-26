@@ -554,7 +554,7 @@ export default {
 }
 
 .card-deck .card-header {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(50, 50, 50, 0.2);
   width: 300px;
   height: 200px;
   padding: 0px;
@@ -564,7 +564,7 @@ export default {
 }
 
 .card-deck .card .image-bloc {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(50, 50, 50, 0.2);
   width: 100%;
   height: 300px;
   padding: 0px;
