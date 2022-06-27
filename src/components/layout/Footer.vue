@@ -63,12 +63,17 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0px;
+    padding: 10px 0px 20px 0px;
   }
 
   .footer-box ul {
     margin: 10px 0px;
+    padding: 0px;
     text-align: center;
+  }
+
+  .footer-box .footer-title {
+    font-size: 18px;
   }
 
 }

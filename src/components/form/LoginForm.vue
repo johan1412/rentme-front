@@ -169,4 +169,36 @@ export default {
   margin-left: -30px;
   cursor: pointer;
 }
+
+@media screen and (max-width: 576px) {
+
+  .form-frame {
+    width: 100%;
+    margin: 0px;
+    border: none;
+    box-shadow: none;
+    background-color: #f0f0f0;
+    padding-bottom: 40px;
+  }
+
+  .form-top .b-icon {
+    display: none;
+  }
+
+  .container {
+    padding: 0px;
+  }
+
+  .form-data .form-group input {
+    font-size: 14px;
+  }
+
+  .form-data .form-group .form-error {
+    font-size: 10px;
+  }
+
+}
+
+
+
 </style>
