@@ -65,3 +65,14 @@ export default {
   },
 };
 </script>
+
+<style>
+@media screen and (max-width: 768px) {
+
+  .vue-map-container {
+    width: 100% !important;
+    height: 200px !important;
+  }
+
+}
+</style>

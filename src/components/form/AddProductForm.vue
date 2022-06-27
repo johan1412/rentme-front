@@ -80,7 +80,7 @@
             </ValidationProvider>
           </div>
         </div>
-        <div class="row">
+        <div class="row bloc-category">
           <div class="col-md-6">
             <label for="category">Catégorie principale</label>
             <ValidationProvider rules="required" v-slot="{ errors }">
@@ -114,12 +114,11 @@
               ref="file"
               @change="uploadFile"
               :class="`is-${failed}`"
-              multiple
             />
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
-        <button type="submit" class="btn btn-success submit-button-create-product mt-5">Valider</button>
+        <div class="mt-5 d-flex justify-content-center"><button type="submit" class="btn btn-success submit-button-create-product">Valider</button></div>
       </form>
     </ValidationObserver>
   </div>
@@ -180,7 +179,7 @@ export default {
   }),
   methods: {
     uploadFile() {
-      this.images = this.$refs.file.files;
+      this.images = this.$refs.file.files[0];
     },
     getSubCategories: function() {
       let choosenCategory = this.category;
@@ -201,14 +200,10 @@ export default {
         });
         return;
       }
-      let files = []
       const formData = new FormData();
-      for(let i=0; i< this.images.length ; i++){
-        formData.append('file', this.images[i]);
-        let image = await AuthService.postImage(formData,localStorage.getItem('token'));
-        files.push({path: image.data.contentUrl})
-      }
-      if(files.length > 0){
+      formData.append('file', this.images);
+      let image = await AuthService.postImage(formData,localStorage.getItem('token'));
+      if(image.data.contentUrl){
         this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         const response = await AuthService.postProduct({
           name: this.name,
@@ -218,7 +213,9 @@ export default {
           caution: parseInt(this.caution),
           category: "/categories/"+this.subCategory,
           user: "/users/"+this.$store.getters.user["id"],
-          files: files
+          files: [
+            {path : image.data.contentUrl}
+          ]
         },localStorage.getItem('token'));
         this.$store.dispatch('user',{...this.$store.getters.user, products:[...this.$store.getters.user.products, response.data]})
         localStorage.setItem('successMessage', 'Votre produit a bien été ajouté');
