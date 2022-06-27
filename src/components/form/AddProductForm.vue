@@ -127,7 +127,6 @@
 <script>
 import AuthService from "../../services/AuthService";
 import RegionService from "../../services/RegionService";
-import {mapGetters} from "vuex";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, integer, size } from 'vee-validate/dist/rules';
 
@@ -176,6 +175,7 @@ export default {
     caution: "",
     images: null,
     allCategories: [],
+    parentCategories: [],
   }),
   methods: {
     uploadFile() {
@@ -223,12 +223,12 @@ export default {
       }
     },
   },
-  computed:{
-    ...mapGetters(['parentCategories']),
-  },
   created() {
     AuthService.getCategories().then(response => {
       this.allCategories = response.data['hydra:member'];
+      this.parentCategories = this.allCategories.filter(function(category) {
+        return category.parent == null;
+      });
       this.$store.dispatch('categories', response.data['hydra:member'])
     }).catch(e => console.log(e))
     RegionService.getRegions().then(response => {
