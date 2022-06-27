@@ -114,6 +114,7 @@
               ref="file"
               @change="uploadFile"
               :class="`is-${failed}`"
+              multiple
             />
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -179,7 +180,7 @@ export default {
   }),
   methods: {
     uploadFile() {
-      this.images = this.$refs.file.files[0];
+      this.images = this.$refs.file.files;
     },
     getSubCategories: function() {
       let choosenCategory = this.category;
@@ -200,10 +201,14 @@ export default {
         });
         return;
       }
+      let files = []
       const formData = new FormData();
-      formData.append('file', this.images);
-      let image = await AuthService.postImage(formData,localStorage.getItem('token'));
-      if(image.data.contentUrl){
+      for(let i=0; i< this.images.length ; i++){
+        formData.append('file', this.images[i]);
+        let image = await AuthService.postImage(formData,localStorage.getItem('token'));
+        files.push({path: image.data.contentUrl})
+      }
+      if(files.length > 0){
         this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         const response = await AuthService.postProduct({
           name: this.name,
@@ -213,9 +218,7 @@ export default {
           caution: parseInt(this.caution),
           category: "/categories/"+this.subCategory,
           user: "/users/"+this.$store.getters.user["id"],
-          files: [
-            {path : image.data.contentUrl}
-          ]
+          files: files
         },localStorage.getItem('token'));
         this.$store.dispatch('user',{...this.$store.getters.user, products:[...this.$store.getters.user.products, response.data]})
         localStorage.setItem('successMessage', 'Votre produit a bien été ajouté');
