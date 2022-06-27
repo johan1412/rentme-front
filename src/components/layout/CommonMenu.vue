@@ -1,33 +1,23 @@
 <template>
-	<div>
+	<div class="bloc-menu sticky-top" @mouseleave="mouseLeave()">
 		<div class="common-menu">
       <div class="icon arrow-left" @click="handleClickPrev(0)">&lsaquo;</div>
 			<ul>
-        <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
+        <li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)">
           <router-link :to="'/search?category=' + category.name.toLowerCase()">{{ category.name }}</router-link>
-          <ul v-if="activeCategory == index" @click="activeCategory = null">
-            <li v-for="subCategory in category.children" :key="subCategory.id">
-              <router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link>
-            </li>
-          </ul>
         </li>
       </ul>
       <div class="icon arrow-right" @click="handleClickNext(0)">&rsaquo;</div>
     </div>
-		<div class="common-menu" v-bind:class="{ 'fixed-top': isFixed, 'd-none': !isFixed }">
-      <div class="icon arrow-left" @click="handleClickPrev(1)">&lsaquo;</div>
-			<ul>
-				<li v-for="(category, index) in categories" :key="category.id" @mouseover="mouseOver(index)" @mouseleave="mouseLeave()">
-					<router-link :to="'/search?category=' + category.name.toLowerCase()">{{ category.name }}</router-link>
-					<ul v-if="activeCategory == index" @click="activeCategory = null">
-						<li v-for="subCategory in category.children" :key="subCategory.id">
-							<router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link>
-						</li>
-					</ul>
-				</li>
-			</ul>
-      <div class="icon arrow-right" @click="handleClickNext(1)">&rsaquo;</div>
-		</div>
+    <div class="sub-common-menu">
+      <div v-for="(category, index) in categories" :key="category.id">
+        <ul v-if="activeCategory == index" @click="activeCategory = null" class="sub-list">
+          <li v-for="subCategory in category.children" :key="subCategory.id">
+            <router-link :to="'/search?category=' + subCategory.name.toLowerCase()">{{ subCategory.name }}</router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
 	</div>
 </template>
 
@@ -56,20 +46,7 @@ export default {
 	computed: {
 		...mapGetters(["categories"]),
 	},
-	mounted() {
-		window.addEventListener("scroll", this.handleScroll);
-	},
-	destroyed() {
-		window.removeEventListener("scroll", this.handleScroll);
-	},
 	methods: {
-		handleScroll() {
-			if (window.scrollY >= 117) {
-				this.isFixed = true;
-			} else {
-				this.isFixed = false;
-			}
-		},
 		mouseOver(index) {
 			this.activeCategory = index;
 		},
@@ -89,17 +66,17 @@ export default {
 </script>
 
 <style>
-.fixed-top {
-	margin-top: 0px !important;
-}
-
-.common-menu {
-	background-color: #ffffff;
+.bloc-menu {
+  background-color: #ffffff;
 	width: 95%;
 	max-width: 1800px;
 	margin: 30px auto;
 	border-radius: 10px;
+}
+
+.common-menu {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -156,23 +133,78 @@ export default {
 	transition: width 0.3s;
 }
 
-.common-menu > ul > li > a:hover::after {
+.common-menu > ul > li > a.underline::after {
 	width: 100%;
 	transition: width 0.3s;
 }
 
-.common-menu ul li ul {
-	display: block;
-	position: absolute;
-	left: 0px;
-	top: 61px;
-	margin: 0px;
-	padding: 0px;
-	width: 100%;
-	z-index: 1;
+.sub-common-menu .sub-list {
+    display: flex;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 0px;
+    width: 100%;
+    background-color: #ffffff;
 }
 
-.common-menu ul li ul li:hover {
-	background-color: #f0f0f0;
+.sub-common-menu ul li a {
+  color: #000000;
+  display: block;
+  padding: 20px;
+  text-decoration: none;
+}
+
+.sub-common-menu ul li a:hover {
+    background-color: #f0f0f0;
+}
+
+@media screen and (max-width: 992px) {
+
+  .common-menu {
+    font-size: 14px;
+  }
+
+  .common-menu > ul > li > a {
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: normal;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+
+  .common-menu > ul > li > a {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .common-menu .icon {
+    padding: 0px 25px;
+    font-size: 25px;
+  }
+
+  .sub-common-menu * {
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+
+  .common-menu > ul > li > a {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+
+  .common-menu .icon {
+    padding: 0px 20px;
+    font-size: 20px;
+  }
+
+  .sub-common-menu * {
+    font-size: 12px;
+  }
+
 }
 </style>

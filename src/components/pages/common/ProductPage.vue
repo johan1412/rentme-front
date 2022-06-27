@@ -15,7 +15,7 @@
             <span>Note moyenne:</span>
             <div class="averageRatings-details mx-5">
               <h3>{{ product.averageRatings ? Math.round(product.averageRatings * 10) / 10 : '-' }} / 5</h3>
-              <small class="ml-3">({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} évaluations)</small>
+              <small class="ml-3">({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</small>
             </div>
           </div>
           <div class="ratings my-1">
@@ -163,8 +163,6 @@ export default {
     }
   },
   mounted() {
-    console.log('user',this.user)
-    console.log('product',this.product)
     if(this.$store.getters.user) {
       this.showNote = true;
     }
