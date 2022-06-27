@@ -113,4 +113,20 @@ export default {
   }
 
 }
+
+@media screen and (max-width: 768px) {
+
+  .nav-item .nav-link a {
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+
+  .navbar-collapse ul {
+    text-align: center;
+  }
+
+}
 </style>
