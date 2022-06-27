@@ -15,3 +15,47 @@ export default {
   name: "AddProductPage"
 };
 </script>
+
+<style>
+@media screen and (max-width: 768px) {
+
+    .container {
+        width: 100%;
+        max-width: 100% !important;
+        padding: 0px 0px 40px 0px;
+    }
+
+    .container h1 {
+      font-size: 20px;
+      margin-top: 0px !important;
+    }
+
+    .frame-address-form-input {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start  !important;
+    }
+
+    .frame-address-form-input span {
+      margin-top: 5px;
+    }
+
+}
+
+@media screen and (max-width: 576px) {
+
+  .bloc-category label,
+  .bloc-category select {
+    font-size: 12px;
+  }
+
+  .bloc-category .form-error {
+    font-size: 10px;
+  }
+
+  .submit-button-create-product {
+    font-size: 12px !important;
+  }
+
+}
+</style>
