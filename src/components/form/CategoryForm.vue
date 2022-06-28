@@ -40,7 +40,7 @@
                 </template>
               </b-form-select>
           </div>
-          <button type="submit" class="btn text-light submit-button mt-5">Ajouter</button>
+          <div class="mt-5 d-flex justify-content-center"><button type="submit" class="btn text-light submit-button">Ajouter</button></div>
         </form>
       </ValidationObserver>
     </div>
@@ -81,17 +81,19 @@ export default {
     parent: null,
     name:"",
     image: null,
+    parentCategories: [],
   })
 
   ,
   computed:{
-    ...mapGetters(['categories','parentCategories'])
+    ...mapGetters(['categories'])
   },
-    mounted(){
-      const adminPermission = this.$store.getters.adminPermission
-      if(!adminPermission){
-          this.$router.push('/')
-      }
+  mounted() {
+    const adminPermission = this.$store.getters.adminPermission
+    if(!adminPermission){
+        this.$router.push('/')
+    }
+    this.parentCategories = this.categories.filter(category => category.parent === null);
   },
   methods: {
     uploadFile() {
@@ -151,5 +153,23 @@ export default {
   background-color: #ffffff !important;
   color: black !important;
   border: 1px solid #333333 !important;
+}
+
+@media screen and (max-width: 576px) {
+
+  .form-group label,
+  .form-group input,
+  .form-group select {
+    font-size: 12px;
+  }
+
+  .form-group .form-error {
+    font-size: 10px;
+  }
+
+  .submit-button {
+    font-size: 12px !important;
+  }
+
 }
 </style>

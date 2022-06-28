@@ -228,7 +228,6 @@ export default {
       this.$router.push('/')
     }
     if(this.$store.getters.user) {
-      console.log('user',this.user)
       this.$store.getters.user.roles.includes("ROLE_RENTER") ? this.roleRenter = true : this.roleRenter = false;
     }
     RegionService.getRegions(localStorage.getItem('token')).then(response => {
@@ -323,5 +322,13 @@ export default {
 .role-button {
   width: fit-content;
   cursor: pointer;
+}
+
+@media screen and (max-width: 576px) {
+
+  .table-informations td {
+    padding: 5px 10px !important;
+  }
+  
 }
 </style>
