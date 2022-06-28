@@ -2,7 +2,15 @@
 <div class="dqs main-frame">
 	<div class="main-content row mx-0 justify-content-between">
 		<div class="products-list col-md-8 offset-md-4">
-			<SearchBar />
+      <div class="searchbar-products">
+        <form id="searchInputForm" >
+          <b-form inline>
+            <label for="inline-form-input">Rechercher : </label>
+            <b-form-input id="inline-form-input" v-model="searchInput" name="words"></b-form-input>
+            <b-button @click="handleSubmit" variant="transparent"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
+          </b-form>
+        </form>
+      </div>
 		</div>
 	</div>
 	<div class="container m-0 p-0 mw-100">
@@ -115,7 +123,7 @@
 </template>
 
 <script>
-import SearchBar from '../../layout/CommonSearchBar.vue';
+//import SearchBar from '../../layout/CommonSearchBar.vue';
 import Comments from '../../layout/Comments.vue';
 import SimilarAds from '../../layout/SimilarAds.vue';
 import FormContact from '../../layout/FormContact.vue';
@@ -143,7 +151,7 @@ extend('required', {
 
 export default {
   components: {
-    SearchBar,
+    //SearchBar,
     Comments,
     SimilarAds,
     FormContact,
@@ -160,6 +168,7 @@ export default {
       showNote: false,
       publishedDate: null,
       reason: null,
+      searchInput: null,
     }
   },
   mounted() {
@@ -225,6 +234,9 @@ export default {
     ...mapGetters(['product','user'])
   },
   methods: {
+    handleSubmit() {
+      this.$router.push('/search?words=' + (this.searchInput !== null ? this.searchInput : ''));
+    },
     handleSubmitNote() {
       if (this.$store.getters.user) {
         let commentExist = this.user.comments.filter(comment => comment.product.id === this.product.id);
