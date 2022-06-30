@@ -94,8 +94,8 @@ export default {
   methods: {
     handleSubmit: async function () {
       this.isLoading = true
-      const response =  await AuthService.login({ email: this.email, password: this.password })
-      if(response){
+      AuthService.login({ email: this.email, password: this.password })
+      .then(response =>{
           localStorage.setItem("token",response.data.token)
           localStorage.setItem("userId",response.data.data.id)
           authService.getUser(response.data.data.id,localStorage.getItem('token'))
@@ -106,7 +106,19 @@ export default {
           }
         this.isLoading = false
         this.$router.push('/')
-      }
+      })
+      .catch((e) => {
+          let message = e.response.data.message;
+          if(message === "Invalid credentials."){
+            this.$bvToast.toast("L'email ou le mode de passe est un invalide", {
+              title: 'Attention !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 3000,
+            });
+          }
+      })
     }
   },
 };

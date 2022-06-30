@@ -242,14 +242,27 @@ export default {
       if(this.roleRenter) {
         this.user.roles.unshift(newRole);
         role = this.user.roles;
+        this.$bvToast.toast('Votre nouveau role loueur a été enregistré avec succès', {
+          title: 'Merci !',
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
       } else {
         role = this.user.roles.filter((value) => { return value != "ROLE_RENTER" });
         if(role.length == 0) role.push("ROLE_USER");
+        this.$bvToast.toast('Votre role loueur a été enlevé avec succès', {
+          title: 'Merci !',
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
       }
       AuthService.updateUser(this.user.id, {roles: role},localStorage.getItem('token')).then(response => {
         this.$store.dispatch('user',response.data);
       }).catch(
-        e => console.log(e)
       ).finally(() => {
         this.$bvModal.hide('modalEditRole')
         this.isLoading = false;
@@ -282,25 +295,53 @@ export default {
       this.showModal = false;
     },
     handleEditUser() {
-      //address: { ...this.user.address, streetName: this.user.streetName, city: this.user.city, region: {'@id':'regions/' +this.region} }
       AuthService.updateUser(this.user.id, { firstName: this.user.firstName, lastName: this.user.lastName, email: this.user.email},localStorage.getItem('token'))
         .then((response) => {
-          localStorage.setItem("successMessage", "Vos informations ont été modifiées avec succès");
+          this.$bvToast.toast('Vos informations a été enregistré avec succès', {
+            title: 'Merci !',
+            variant: 'success',
+            solid: true,
+            toaster: 'b-toaster-top-full',
+            autoHideDelay: 3000
+          })
           this.$store.dispatch('user',response.data)
-        })
-        .catch((e) => {
-          console.log(e);
-        }).finally(() => this.$bvModal.hide('modalEditUser'));
+        }).catch(e => {
+            console.log(e)
+            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+              title: 'Oups !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+              autoHideDelay: 3000
+            })
+          })
+          .finally(() => this.$bvModal.hide('modalEditUser'));
     },
     handleEditAddress() {
       AuthService.updateAddress(this.user.address.id, {...this.user.address, streetName: this.user.address.streetName, city: this.user.address.city, region: 'regions/' +this.region},localStorage.getItem('token'))
           .then((response) => {
-            localStorage.setItem("successMessage", "L'adresse a été modifiée avec succès");
             this.$store.dispatch('user', {...this.user,address:response.data})
+            this.$bvToast.toast('Votre adresse a été enregistré avec succès', {
+              title: 'Merci !',
+              variant: 'success',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 3000
+            })
           })
-          .catch((e) => {
-            console.log(e);
-          }).finally(() => this.$bvModal.hide('modalEditAddress'));
+          .catch(e => {
+            console.log(e)
+            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+              title: 'Oups !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+              autoHideDelay: 3000
+            })
+          })
+          .finally(() => this.$bvModal.hide('modalEditAddress'));
     }
   }
 }

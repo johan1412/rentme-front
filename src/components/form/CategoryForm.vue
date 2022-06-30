@@ -124,7 +124,7 @@ export default {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 5000,
+          autoHideDelay: 3000,
           title: 'Succès'
         });
       } catch(e) {
@@ -133,7 +133,7 @@ export default {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 5000,
+          autoHideDelay: 3000,
           title: 'Erreur'
         });
       }

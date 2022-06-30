@@ -61,7 +61,13 @@ export default {
         text : this.text,
         productId : null
       },localStorage.getItem('token'))
-      localStorage.setItem("successMessage", "Votre compte a bien été créé");
+      this.$bvToast.toast('Votre demande a été enregistré avec succès', {
+        title: 'Merci !',
+        variant: 'success',
+        solid: true,
+        toaster: 'b-toaster-top-full',
+        autoHideDelay: 3000
+      })
       this.text = "Bonjour"
     },
   },

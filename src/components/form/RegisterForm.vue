@@ -196,7 +196,7 @@ export default {
         this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
           .then(() => {
-            localStorage.setItem("successMessage", "Votre compte a bien été créé");
+            localStorage.setItem("successMessage", "Une confirmation d'email a été envoyée à votre boite mail");
             this.$router.push('/login')
           })
           .catch((e) => {
