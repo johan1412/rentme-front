@@ -260,7 +260,24 @@ export default {
               localStorage.getItem('token')
           ).then(response => {
             this.$store.dispatch('product',{...this.product,averageRatings:response.data.averageRatings})
-          }).catch(e => console.log(e))
+            this.$bvToast.toast('Votre note a été enregistré avec succès', {
+              title: 'Merci !',
+              variant: 'success',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 3000
+            })
+          }).catch(e => {
+            console.log(e)
+            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+              title: 'Oups !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+              autoHideDelay: 3000
+            })
+          })
         } else {
           CommentService.postComment({
             text: '',
@@ -270,8 +287,25 @@ export default {
           },localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
-              this.$store.dispatch('product',{...this.product,comments:[...this.product.comments,response.data]})
-            }).catch(e => console.log(e))
+            this.$store.dispatch('product',{...this.product,comments:[...this.product.comments,response.data]})
+            this.$bvToast.toast('Votre note a été enregistré avec succès', {
+              title: 'Merci !',
+              variant: 'success',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 3000
+            })
+            }).catch(e => {
+            console.log(e)
+            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+              title: 'Oups !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+              autoHideDelay: 3000
+            })
+          })
 
           AuthService.updateProduct(
               this.product.id,
@@ -298,7 +332,7 @@ export default {
             variant: 'success',
             solid: true,
             toaster: 'b-toaster-top-full',
-            noAutoHide: true,
+            autoHideDelay: 3000
           })
         }).catch(e => {
           console.log(e)
@@ -308,6 +342,7 @@ export default {
             solid: true,
             toaster: 'b-toaster-top-full',
             noAutoHide: true,
+            autoHideDelay: 3000
           })
         })
       }

@@ -79,15 +79,50 @@ export default {
       AuthService.updateProduct(product.id,{isValid:true},localStorage.getItem('token')).then(response => {
         this.$store.commit('products',this.$store.getters.products.filter(product => !(product.id === response.data.id)))
         this.$store.dispatch('numberOfProductsNotValid',this.$store.getters.numberOfProductsNotValid-1)
-      }).catch(e => console.log(e))
-      console.log(product)
+        this.$bvToast.toast("L'annonce a été validée avec succès", {
+          title: 'Merci !',
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
+      }).catch(e => {
+        console.log(e)
+        this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+          title: 'Oups !',
+          variant: 'danger',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          noAutoHide: true,
+          autoHideDelay: 3000
+        })
+      })
     },
     toDelete(product){
       AuthService.deleteProduct(product.id,localStorage.getItem('token')).then(() => {
         this.$store.commit('products',this.$store.getters.products.filter(prod => !(prod.id === product.id)))
         this.$store.dispatch('numberOfProductsNotValid',this.$store.getters.numberOfProductsNotValid-1)
-      }).catch(e => console.log(e))
+        this.$bvToast.toast("L'annonce a été supprimée avec succès", {
+          title: 'Merci !',
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
+
+      })
       .finally(() => this.$bvModal.hide('modalAlert'))
+          .catch(e =>{
+            console.log(e);
+            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+              title: 'Oups !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              noAutoHide: true,
+              autoHideDelay: 3000
+            })
+          })
       console.log(product)
     }
   },

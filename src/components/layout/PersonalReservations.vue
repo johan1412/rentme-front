@@ -71,6 +71,7 @@
 
 import AuthService from "@/services/AuthService";
 import GoogleMap from './GoogleMap.vue';
+import {mapGetters} from "vuex";
 
 export default {
   components: {
@@ -80,19 +81,19 @@ export default {
   data: () => ({
     informationsTabActive: true,
     reservationsTabActive: false,
-    reservations: [],
   }),
-  created() {
-    AuthService.getReservations(localStorage.getItem('token')).then(response => {
-          this.$store.dispatch('reservations',response.data['hydra:member'])
-        }
-    ).catch(e => console.log(e))
+  computed:{
+    ...mapGetters(['reservations'])
   },
   mounted() {
     const userPermission = this.$store.getters.userPermission
     if(!userPermission){
       this.$router.push('/')
     }
+    AuthService.getReservations(localStorage.getItem('token')).then(response => {
+          this.$store.dispatch('reservations',response.data['hydra:member'])
+        }
+    ).catch(e => console.log(e))
   },
   methods: {
     myMethod: function myMethod(reservation) {

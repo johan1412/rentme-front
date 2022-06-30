@@ -92,7 +92,7 @@ export default {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          noAutoHide: true,
+          autoHideDelay: 3000,
         });
       }).catch(e => {
         this.$bvToast.toast("Une erreur est survenue lors de la suppression du signalement", {
@@ -100,7 +100,7 @@ export default {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          noAutoHide: true,
+          autoHideDelay: 3000,
         });
         console.log(e)
       }).finally(() => this.$bvModal.hide('modalDeleteReporting'))
@@ -113,7 +113,7 @@ export default {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          noAutoHide: true,
+          autoHideDelay: 3000,
         });
       }).catch(e => {
         this.$bvToast.toast("Une erreur est survenue lors de la suppression de l'annonce", {
@@ -121,7 +121,7 @@ export default {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          noAutoHide: true,
+          autoHideDelay: 3000,
         });
         console.log(e)
       })

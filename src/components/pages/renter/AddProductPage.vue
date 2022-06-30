@@ -12,7 +12,14 @@ export default {
     components: { 
         AddProductForm
     },
-  name: "AddProductPage"
+  name: "AddProductPage",
+  mounted() {
+    const renterPermission = this.$store.getters.renterPermission
+    if(!renterPermission){
+      this.$router.push('/login')
+    }
+  },
+
 };
 </script>
 

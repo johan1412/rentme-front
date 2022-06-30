@@ -68,7 +68,7 @@ export default {
               variant: 'success',
               solid: true,
               toaster: 'b-toaster-top-full',
-              noAutoHide: true,
+              autoHideDelay: 3000,
             });
             localStorage.removeItem("successMessage");
           }
@@ -77,7 +77,7 @@ export default {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              noAutoHide: true,
+              autoHideDelay: 3000,
             });
             localStorage.removeItem("errorMessage");
           }
@@ -87,7 +87,7 @@ export default {
               variant: 'success',
               solid: true,
               toaster: 'b-toaster-top-full',
-              noAutoHide: true,
+              autoHideDelay: 3000,
             });
             localStorage.removeItem("successMessage");
           }
@@ -96,7 +96,7 @@ export default {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 2500,
+              autoHideDelay: 3000,
               title: 'Succès'
             });
             localStorage.removeItem("errorMessage");

@@ -69,7 +69,24 @@ export default {
             .then((response) => {
               this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
               this.$store.dispatch('product',{...this.product,comments:[...this.product.comments,response.data]})
-            })
+              this.$bvToast.toast('Votre commentaire a été enregistré avec succès', {
+                title: 'Merci !',
+                variant: 'success',
+                solid: true,
+                toaster: 'b-toaster-top-full',
+                autoHideDelay: 3000
+              })
+            }).catch(e => {
+                  console.log(e)
+                  this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+                    title: 'Oups !',
+                    variant: 'danger',
+                    solid: true,
+                    toaster: 'b-toaster-top-full',
+                    noAutoHide: true,
+                    autoHideDelay: 3000
+                  })
+                })
           }else{
             CommentService.updateComment({
               text: this.newComment,
@@ -77,7 +94,24 @@ export default {
                 .then(response => {
                   this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === this.idComment ? {...comment,text:response.data.text} : comment)})
                   this.$store.dispatch('product',{...this.product,comments:this.product.comments.map(comment => comment.id === this.idComment ? {...comment,text:response.data.text} : comment)})
-                }).catch(e => console.log(e))
+                  this.$bvToast.toast('Votre commentaire a été enregistré avec succès', {
+                    title: 'Merci !',
+                    variant: 'success',
+                    solid: true,
+                    toaster: 'b-toaster-top-full',
+                    autoHideDelay: 3000
+                  })
+                }).catch(e => {
+                  console.log(e)
+                  this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+                    title: 'Oups !',
+                    variant: 'danger',
+                    solid: true,
+                    toaster: 'b-toaster-top-full',
+                    noAutoHide: true,
+                    autoHideDelay: 3000
+                  })
+                })
           }
         }
     }
