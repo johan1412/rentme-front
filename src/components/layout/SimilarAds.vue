@@ -93,6 +93,12 @@ export default {
   text-align: left;
 }
 
+.VueCarousel-slide {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding: 10px 2px !important;
+}
+
 .main-offers .VueCarousel-dot {
   height: 15px !important;
   width: 15px !important;
@@ -161,6 +167,15 @@ export default {
 
 .VueCarousel .card-body .address-bloc {
   font-size: 90%;
+}
+
+@media screen and (max-width: 992px) {
+  
+  .main-offers .VueCarousel-slide {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  
 }
 
 @media screen and (max-width: 768px) {
