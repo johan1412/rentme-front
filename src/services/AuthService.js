@@ -74,8 +74,17 @@ const getProductsValid = async () => {
 const getProduct = async (id) => {
   return await axios.get(url+`/products/${id}`);
 };
+
+const getProductsBySubCategory = async (id) => {
+  return await axios.get(url+`/products/sub-category/${id}`);
+};
+
 const getCategories = async () => {
   return await axios.get(url+"/categories");
+};
+
+const getCategory = async (id) => {
+  return await axios.get(url+`/categories/${id}`);
 };
 
 const getProductsNotValid = async (token) => {
@@ -186,6 +195,7 @@ export default {
   parentCategories,
   postCategory,
   getProducts,
+  getProductsBySubCategory,
   getProductsSearch,
   updateProduct,
   deleteProduct,
@@ -194,6 +204,7 @@ export default {
   getReservations,
   updateReservation,
   getCategories,
+  getCategory,
   getProduct,
   getSessionIdPayment,
   postImage,

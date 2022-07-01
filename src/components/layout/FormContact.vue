@@ -16,7 +16,7 @@
             :class="`is-${failed}`"
           ></textarea>
         </ValidationProvider>
-        <button class="submit-button">ENVOYER LE MESSAGE</button>
+        <button class="submit-button">ENVOYER</button>
       </form>
     </ValidationObserver>
   </div>
@@ -108,5 +108,31 @@ export default {
   font-weight: bold;
   font-size: 90%;
   border: 1px solid #dddddd;
+}
+
+@media screen and (max-width: 992px) {
+
+  .frame-form-contact-user h4 {
+    font-size: 20px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .frame-form-contact-user {
+    margin: 20px 0px;
+    padding: 30px 30px;
+    border-radius: 0px;
+  }
+  
+  .frame-form-contact-user .submit-button {
+    width: 100%;
+    text-align: center;
+    border-radius: 25px !important;
+    padding: 8px;
+    margin: 40px 0px 0px 0px;
+  }
+  
 }
 </style>
