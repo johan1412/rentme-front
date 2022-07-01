@@ -166,6 +166,7 @@ export default {
 
   .banner-text-box {
     border-radius: 0px;
+    margin-top: 60px;
   }
 
   .banner-text-big {

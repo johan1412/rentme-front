@@ -190,4 +190,47 @@ export default {
     padding: 5px 10px;
 }
 
+@media screen and (max-width: 992px) {
+
+  .comments-section-header h4 {
+    font-size: 20px !important;
+  }
+
+  .button-new-comment {
+    padding: 7px;
+    font-size: 14px;
+  }
+
+  .button-new-comment .b-icon.bi {
+    height: 15px !important;
+    width: 15px !important;
+    vertical-align: -3px !important;
+  }
+
+  .comments-list p {
+    font-size: 14px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .comments-section-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .comments-section-header h4 {
+    font-size: 18px !important;
+  }
+
+  .button-new-comment {
+    padding: 7px;
+    font-size: 12px;
+  }
+  
+}
+
 </style>

@@ -262,9 +262,19 @@ export default {
     margin-top: 30px;
   }
 
+  .frame-carousel {
+    padding: 0px;
+  }
+
   .VueCarousel-inner {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  .VueCarousel-slide {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 10px 2px !important;
   }
 
   .main-offers .VueCarousel-dot {

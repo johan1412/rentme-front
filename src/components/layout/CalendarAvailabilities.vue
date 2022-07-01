@@ -162,4 +162,39 @@ export default {
     border: 1px solid #dddddd;
     cursor:pointer
 }
+
+@media screen and (max-width: 992px) {
+
+  .frame-calendar h4 {
+    font-size: 20px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .frame-calendar {
+    margin: 40px 0px 60px 0px;
+    padding: 30px 30px;
+    width: 100%;
+    border-radius: 0px;
+  }
+
+  .frame-calendar .title-form {
+    margin-bottom: 20px;
+  }
+
+  .frame-calendar .submit-button {
+    width: 100%;
+    text-align: center;
+    border-radius: 25px !important;
+    padding: 8px;
+    margin: 40px 0px 0px 0px;
+  }
+
+  .frame-calendar .date-picker-price {
+    font-size: 12px;
+  }
+  
+}
 </style>

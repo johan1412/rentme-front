@@ -6,7 +6,7 @@
         <form id="searchInputForm" >
           <b-form inline>
             <label for="inline-form-input">Rechercher : </label>
-            <b-form-input id="inline-form-input" v-model="searchInput" name="words"></b-form-input>
+            <b-form-input id="inline-form-input" v-model="searchInput" name="words" placeholder="Rechercher un produit par mots-clés"></b-form-input>
             <b-button @click="handleSubmit" variant="transparent"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
           </b-form>
         </form>
@@ -14,36 +14,42 @@
 		</div>
 	</div>
 	<div class="container m-0 p-0 mw-100">
-		<div class="row mt-5">
-			<div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
+		<div class="row mt-5 mx-0">
+			<div class="bloc-product col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
 				<div class="product-details">
           <h2>{{ product.name }}</h2>
-					<div>Annonce publiée le {{ publishedDate }} par <router-link :to="'/user/' + this.product.user.id" class="user-link">{{ product.user.lastName }} {{ product.user.firstName }}</router-link></div>
-          <div class="ratings averageRatings my-1">
-            <span>Note moyenne:</span>
-            <div class="averageRatings-details mx-5">
-              <h3>{{ product.averageRatings ? Math.round(product.averageRatings * 10) / 10 : '-' }} / 5</h3>
-              <small class="ml-3">({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</small>
+					<div class="date-product">Annonce publiée le {{ publishedDate }} par <router-link :to="'/user/' + this.product.user.id" class="user-link">{{ product.user.lastName }} {{ product.user.firstName }}</router-link></div>
+          <div v-show="mobile" class="product-price-mobile">{{ product.price }} €<span> / jour</span></div>
+          <div class="frame-ratings">
+            <div class="ratings averageRatings my-1">
+              <span>Note moyenne:</span>
+              <div class="averageRatings-details mx-5">
+                <h3>{{ product.averageRatings ? Math.round(product.averageRatings * 10) / 10 : '-' }} / 5</h3>
+                <small class="ml-3">({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</small>
+              </div>
             </div>
-          </div>
-          <div class="ratings my-1">
-            <span>Noter le produit:</span>
-            <div v-show="showNote" class="rating-stars" @click="handleSubmitNote">
-              <span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
-              <span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
-              <span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
-              <b-icon :icon="currentNote < 0.5 ? 'star' : (currentNote > 0.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 0.5" aria-hidden="true"></b-icon>
-              <span class="star-selection" @mouseover="currentNote = 1">&nbsp;</span>
-              <b-icon :icon="currentNote < 1.5 ? 'star' : (currentNote > 1.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 1.5" aria-hidden="true"></b-icon>
-              <span class="star-selection" @mouseover="currentNote = 2">&nbsp;</span>
-              <b-icon :icon="currentNote < 2.5 ? 'star' : (currentNote > 2.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 2.5" aria-hidden="true"></b-icon>
-              <span class="star-selection" @mouseover="currentNote = 3">&nbsp;</span>
-              <b-icon :icon="currentNote < 3.5 ? 'star' : (currentNote > 3.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 3.5" aria-hidden="true"></b-icon>
-              <span class="star-selection" @mouseover="currentNote = 4">&nbsp;</span>
-              <b-icon :icon="currentNote < 4.5 ? 'star' : (currentNote > 4.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 4.5" aria-hidden="true"></b-icon>
-              <span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
-              <span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
-              <span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+            <div class="ratings my-1">
+              <span>Noter le produit:</span>
+              <div v-show="showNote" class="rating-stars" @click="handleSubmitNote">
+                <span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
+                <span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
+                <span class="star-selection" @mouseover="currentNote = 0">&nbsp;</span>
+                <b-icon :icon="currentNote < 0.5 ? 'star' : (currentNote > 0.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 0.5" aria-hidden="true"></b-icon>
+                <span class="star-selection" @mouseover="currentNote = 1">&nbsp;</span>
+                <b-icon :icon="currentNote < 1.5 ? 'star' : (currentNote > 1.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 1.5" aria-hidden="true"></b-icon>
+                <span class="star-selection" @mouseover="currentNote = 2">&nbsp;</span>
+                <b-icon :icon="currentNote < 2.5 ? 'star' : (currentNote > 2.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 2.5" aria-hidden="true"></b-icon>
+                <span class="star-selection" @mouseover="currentNote = 3">&nbsp;</span>
+                <b-icon :icon="currentNote < 3.5 ? 'star' : (currentNote > 3.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 3.5" aria-hidden="true"></b-icon>
+                <span class="star-selection" @mouseover="currentNote = 4">&nbsp;</span>
+                <b-icon :icon="currentNote < 4.5 ? 'star' : (currentNote > 4.5 ? 'star-fill' : 'star-half')" @mouseover="currentNote = 4.5" aria-hidden="true"></b-icon>
+                <span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+                <span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+                <span class="star-selection" @mouseover="currentNote = 5">&nbsp;</span>
+              </div>
+              <div v-show="mobile">
+                <b-form-select v-model="noteSelected" :options="noteOptions" size="sm" @change="handleSubmitNote"></b-form-select>
+              </div>
             </div>
           </div>
           <div class="row product-main-presentation">
@@ -57,7 +63,7 @@
 							<div class="toggle-button-line">
 								<button class="toggle-button" @click="buttonDescriptionToggle = !buttonDescriptionToggle">{{ buttonDescriptionToggle ? 'Masquer' : 'Voir plus' }}</button>
 							</div>
-							<div class="product-price">{{ product.price }} €<span> / jour</span></div>
+							<div v-show="showNote" class="product-price">{{ product.price }} €<span> / jour</span></div>
 						</div>
 					</div>
 				</div>
@@ -70,7 +76,7 @@
 					<Comments />
 				</div>
 			</div>
-			<div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="bloc-forms col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="report">
           <div class="report-link" v-b-modal.modalReporting><b-icon icon="flag-fill" aria-hidden="true"></b-icon><span class="ml-1">Signaler cette annonce</span></div>
         </div>
@@ -111,7 +117,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row bloc-similar-ads">
 			<div class="similar-ads">
 				<h4>Annonces similaires</h4>
 				<hr>
@@ -166,14 +172,37 @@ export default {
       buttonDescriptionToggle: false,
       currentNote: 0,
       showNote: false,
+      noteSelected: null,
+      noteOptions: [
+        { value: null, text: '- selectionner -', disabled: true },
+        { value: 0, text: '0 sur 5' },
+        { value: 0.5, text: '0.5 sur 5' },
+        { value: 1, text: '1 sur 5' },
+        { value: 1.5, text: '1.5 sur 5' },
+        { value: 2, text: '2 sur 5' },
+        { value: 2.5, text: '2.5 sur 5' },
+        { value: 3, text: '3 sur 5' },
+        { value: 3.5, text: '3.5 sur 5' },
+        { value: 4, text: '4 sur 5' },
+        { value: 4.5, text: '4.5 sur 5' },
+        { value: 5, text: '5 sur 5' },
+      ],
       publishedDate: null,
       reason: null,
       searchInput: null,
+      mobile: false,
     }
   },
   mounted() {
     if(this.$store.getters.user) {
-      this.showNote = true;
+      let width = window.innerWidth;
+      if(width < 576) {
+        this.showNote = false;
+        this.mobile = true;
+      } else {
+        this.showNote = true;
+        this.mobile = false;
+      }
     }
     AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
       this.$store.dispatch('product',response.data)
@@ -229,6 +258,11 @@ export default {
       let year = dateFormated.getFullYear();
       this.publishedDate = day + ' ' + month + ' ' + year;
     }).catch(e => console.log(e))
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize);
   },
   computed:{
     ...mapGetters(['product','user'])
@@ -347,6 +381,16 @@ export default {
         })
       }
     },
+    handleResize() {
+      let width = window.innerWidth;
+      if(width < 576) {
+        this.showNote = false;
+        this.mobile = true;
+      } else {
+        this.showNote = true;
+        this.mobile = false;
+      }
+    }
   },
 };
 </script>
@@ -390,6 +434,10 @@ export default {
 	font-size: 120%;
 }
 
+.searchbar-products .form-inline input::placeholder {
+  color: #ffffff;
+}
+
 .searchbar-products form .btn {
 	border: none;
 	outline: none;
@@ -406,11 +454,14 @@ export default {
 }
 
 .report {
-  text-align: right;
+  padding: 10px 0px;
 }
 
 .report .report-link {
   text-decoration: underline;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: 0px;
 }
 
 #modalReporting textarea {
@@ -546,6 +597,187 @@ export default {
 	margin-top: 60px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+@media screen and (max-width: 992px) {
+
+  .product-details h2 {
+    font-size: 22px !important;
+  }
+
+  .searchbar-products label,
+  .searchbar-products input {
+    font-size: 16px !important;
+  }
+
+  .product-details .date-product,
+  .product-details .ratings {
+    font-size: 14px !important;
+  }
+
+  .product-details .ratings {
+    padding: 5px 10px;
+  }
+
+  .product-details .ratings h3 {
+    font-size: 20px;
+  }
+
+  .product-description h4 {
+    font-size: 20px;
+  }
+
+  .product-description p,
+  .product-description button {
+    font-size: 14px;
+  }
+
+  .product-description .product-price {
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  .localisation h4 {
+    font-size: 20px;
+  }
+
+  .comments {
+    margin-bottom: 50px;
+  }
+
+  .similar-ads h4 {
+    font-size: 20px;
+  }
+  
+}
+
+@media screen and (max-width: 768px) {
+
+  .product-description {
+    margin-top: 40px;
+  }
+  
+  .bloc-similar-ads {
+    margin: 0px !important;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .searchbar-products {
+    padding: 5px 20px;
+  }
+
+  .searchbar-products .form-inline {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .searchbar-products .form-inline label {
+    display: none;
+  }
+
+  .searchbar-products .form-inline input {
+    margin: 0px 10px;
+    border-bottom: 1px solid #999999;
+  }
+
+  .searchbar-products .form-inline input::placeholder {
+    font-size: 12px;
+    color: #999999;
+  }
+
+  .searchbar-products .form-inline button {
+    font-size: 14px;
+  }
+
+  .bloc-product,
+  .bloc-forms {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+
+  .product-details h2 {
+    font-size: 16px !important;
+  }
+  
+  .product-details .date-product,
+  .product-details .ratings {
+    font-size: 12px !important;
+  }
+
+  .frame-ratings {
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+  }
+  
+  .product-details .ratings {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    flex: 0 0 50%;
+    max-width: 50%;
+    background-color: transparent;
+  }
+
+  .product-details .ratings h3 {
+    font-size: 18px;
+  }
+
+  .product-details .averageRatings-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-details .averageRatings-details h3,
+  .product-details .averageRatings-details small {
+    margin: 0px !important;
+  }
+
+  .product-details .ratings .rating-stars .b-icon.bi {
+    height: 18px !important;
+    width: 18px !important;
+  }
+
+  .product-price-mobile {
+    margin-top: 10px;
+    color: #34AC9E;
+    font-weight: bold;
+  }
+  
+  .product-description h4 {
+    font-size: 18px;
+  }
+  
+  .product-description p,
+  .product-description button {
+    font-size: 12px;
+  }
+  
+  .product-description .product-price {
+    font-size: 16px;
+    padding: 10px;
+  }
+  
+  .localisation h4 {
+    font-size: 18px;
+  }
+  
+  .comments {
+    margin-bottom: 40px;
+  }
+  
+  .similar-ads h4 {
+    font-size: 18px;
+  }
+  
 }
 
 </style>
