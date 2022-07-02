@@ -93,7 +93,6 @@ export default {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          noAutoHide: true,
           autoHideDelay: 3000
         })
       })
@@ -119,7 +118,6 @@ export default {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              noAutoHide: true,
               autoHideDelay: 3000
             })
           })

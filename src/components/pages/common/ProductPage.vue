@@ -275,25 +275,13 @@ export default {
       if (this.$store.getters.user) {
         let commentExist = this.user.comments.filter(comment => comment.product.id === this.product.id);
         if (commentExist.length > 0) {
-          let oldRatings = commentExist[0].rating;
           CommentService.updateComment({
             rating : this.currentNote,
           }, commentExist[0].id,localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
-            this.$store.dispatch('product',{...this.product,comments:this.product.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
-          })
-          let newAverageRatings = this.product.averageRatings;
-            newAverageRatings = ((this.product.averageRatings * this.product.numbersOfRatings) - oldRatings + this.currentNote) / (this.product.numbersOfRatings);
-
-          AuthService.updateProduct(
-            this.product.id,
-            {
-            averageRatings: newAverageRatings,
-            },
-              localStorage.getItem('token')
-          ).then(response => {
-            this.$store.dispatch('product',{...this.product,averageRatings:response.data.averageRatings})
+            AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
+              this.$store.dispatch('product',response.data)})
             this.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
               variant: 'success',
@@ -302,16 +290,15 @@ export default {
               autoHideDelay: 3000
             })
           }).catch(e => {
-            console.log(e)
-            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
-              title: 'Oups !',
-              variant: 'danger',
-              solid: true,
-              toaster: 'b-toaster-top-full',
-              noAutoHide: true,
-              autoHideDelay: 3000
-            })
-          })
+                console.log(e)
+                this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+                  title: 'Oups !',
+                  variant: 'danger',
+                  solid: true,
+                  toaster: 'b-toaster-top-full',
+                  autoHideDelay: 3000
+                })
+              })
         } else {
           CommentService.postComment({
             text: '',
@@ -321,7 +308,8 @@ export default {
           },localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
-            this.$store.dispatch('product',{...this.product,comments:[...this.product.comments,response.data]})
+            AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
+              this.$store.dispatch('product',response.data)})
             this.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
               variant: 'success',
@@ -336,20 +324,8 @@ export default {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              noAutoHide: true,
               autoHideDelay: 3000
             })
-          })
-
-          AuthService.updateProduct(
-              this.product.id,
-              {
-                averageRatings: ((this.product.averageRatings ?  this.product.averageRatings : 0) + this.currentNote) / ((this.product.numbersOfRatings ? this.product.numbersOfRatings : 0)  + 1),
-                numbersOfRatings: (this.product.numbersOfRatings ? this.product.numbersOfRatings : 0) + 1,
-              },
-              localStorage.getItem('token')
-          ).then(response => {
-            this.$store.dispatch('product',{...this.product,numbersOfRatings:response.data.numbersOfRatings,averageRatings:response.data.averageRatings})
           })
         }
         }
@@ -375,7 +351,6 @@ export default {
             variant: 'danger',
             solid: true,
             toaster: 'b-toaster-top-full',
-            noAutoHide: true,
             autoHideDelay: 3000
           })
         })
