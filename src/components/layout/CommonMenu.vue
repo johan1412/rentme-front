@@ -192,6 +192,10 @@ export default {
 
 @media screen and (max-width: 576px) {
 
+  .bloc-menu {
+    margin: 15px auto;
+  }
+
   .common-menu > ul > li > a {
     padding: 10px 15px;
     font-size: 12px;

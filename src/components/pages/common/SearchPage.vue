@@ -1,7 +1,13 @@
 <template>
 <div class="dqs main-frame">
+  <div class="spinner-loading">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 	<div class="main-content row mx-0 justify-content-between">
-		<div class="filters-box col-md-3">
+    <!-- IF DESKTOP -->
+		<div v-if="showFilters && !mobile" class="filters-box col-xl-3 col-lg-4">
 			<h2>Filtres</h2>
 			<hr class="main-hr">
 			<div class="filters-categories">
@@ -11,7 +17,6 @@
 						<b-icon v-if="filter1Visible" icon="chevron-down" aria-hidden="true"></b-icon>
 						<b-icon v-else icon="chevron-right" aria-hidden="true"></b-icon>
 					</b-list-group-item>
-					<!-- <b-collapse visible id="collapse-1"> -->
 					<b-collapse id="collapse-1">
 						<ul>
 							<li v-for="(category, index) in categories" :key="category.id">
@@ -108,14 +113,124 @@
 					</b-collapse>
 				</b-list-group>
 			</div>
-		</div>
-		<div class="col-md-1"></div>
-		<div class="products-list col-md-8">
+    </div>
+    <!-- END DESKTOP FILTERS -->
+    <!-- MOBILE FILTERS -->
+    <b-sidebar v-else id="sidebar-filters" backdrop-variant="dark" backdrop shadow class="filters-box col-xl-3 col-lg-4">
+			<h2>Filtres</h2>
+			<hr class="main-hr">
+			<div class="filters-categories">
+				<b-list-group>
+					<b-list-group-item @click="filter1MobileVisible = !filter1MobileVisible" v-b-toggle.collapse-mobile-1 class="d-flex justify-content-between align-items-center">
+						Catégorie de produit
+						<b-icon v-if="filter1MobileVisible" icon="chevron-down" aria-hidden="true"></b-icon>
+						<b-icon v-else icon="chevron-right" aria-hidden="true"></b-icon>
+					</b-list-group-item>
+					<b-collapse id="collapse-mobile-1">
+						<ul>
+							<li v-for="(category, index) in categories" :key="category.id">
+								<input type="checkbox" :value="category.id" :id="'category' + (index + 1)" @change="selectedAllSubCategories(category)" />
+								{{ category.name }}
+								<ul class="">
+									<li v-for="(subCategory, index) in category.children" :key="subCategory.id">
+										<input type="checkbox" :value="subCategory.name.toLowerCase()" :id="'subCategory' + (index + 1)" v-model="selected.categories" />
+										{{ subCategory.name }}
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</b-collapse>
+
+					<b-list-group-item @click="filter2MobileVisible = !filter2MobileVisible" v-b-toggle.collapse-mobile-2 class="d-flex justify-content-between align-items-center">
+						Prix
+						<b-icon v-if="filter2MobileVisible" icon="chevron-down" aria-hidden="true"></b-icon>
+						<b-icon v-else icon="chevron-right" aria-hidden="true"></b-icon>
+					</b-list-group-item>
+					<b-collapse id="collapse-mobile-2">
+						<b-row class="my-1">
+							<b-col lg="6">
+								<label for="input-none">Min:</label>
+								<b-form-input v-model="minPrice" type="number"></b-form-input>
+							</b-col>
+							<b-col lg="6">
+								<label for="input-none">Max:</label>
+								<b-form-input v-model="maxPrice" type="number"></b-form-input>
+							</b-col>
+						</b-row>
+					</b-collapse>
+
+					<b-list-group-item @click="filter3MobileVisible = !filter3MobileVisible" v-b-toggle.collapse-mobile-3 class="d-flex justify-content-between align-items-center">
+						Localisation
+						<b-icon v-if="filter3MobileVisible" icon="chevron-down" aria-hidden="true"></b-icon>
+						<b-icon v-else icon="chevron-right" aria-hidden="true"></b-icon>
+					</b-list-group-item>
+					<b-collapse id="collapse-mobile-3">
+						<ul>
+							<li v-for="(region, index) in regions" :key="region.id">
+								<input type="checkbox" :value="region.name.toLowerCase()" :id="'region' + (index + 1)" v-model="selected.locations"/>
+								{{ region.name }} ({{ region.number }})
+							</li>
+						</ul>
+					</b-collapse>
+
+					<b-list-group-item @click="filter4MobileVisible = !filter4MobileVisible" v-b-toggle.collapse-mobile-4 class="d-flex justify-content-between align-items-center">
+						Notes
+						<b-icon v-if="filter4MobileVisible" icon="chevron-down" aria-hidden="true"></b-icon>
+						<b-icon v-else icon="chevron-right" aria-hidden="true"></b-icon>
+					</b-list-group-item>
+					<b-collapse id="collapse-mobile-4">
+						<div class="collapse-notes">
+							<input type="radio" value="4" id="4plus" v-model="selected.notes"/>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<span>4 étoiles ou plus</span>
+						</div>
+						<div class="collapse-notes">
+							<input type="radio" value="3" id="3plus" v-model="selected.notes"/>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<span>3 étoiles ou plus</span>
+						</div>
+						<div class="collapse-notes">
+							<input type="radio" value="2" id="2plus" v-model="selected.notes"/>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<span>2 étoiles ou plus</span>
+						</div>
+						<div class="collapse-notes">
+							<input type="radio" value="1" id="1plus" v-model="selected.notes"/>
+							<b-icon icon="star-fill" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<b-icon icon="star" aria-hidden="true"></b-icon>
+							<span>1 étoile ou plus</span>
+						</div>
+						<div class="collapse-notes">
+							<input type="radio" value="0" id="0plus" v-model="selected.notes" />
+							<span>toutes les notes</span>
+						</div>
+					</b-collapse>
+				</b-list-group>
+			</div>
+    </b-sidebar>
+    <!-- END FILTERS MOBILE -->
+		<div class="bloc-space col-xl-1"></div>
+		<div class="products-list col-xl-8 col-lg-8">
       <div class="searchbar-products">
         <form id="searchInputForm" >
           <b-form inline>
             <label for="inline-form-input">Rechercher : </label>
-            <b-form-input id="inline-form-input" v-model="searchInput" name="words"></b-form-input>
+            <b-form-input id="inline-form-input" v-model="searchInput" name="words" placeholder="Rechercher un produit par mots-clés"></b-form-input>
             <b-button @click="getProductsByKeWord" variant="transparent"><b-icon icon="search" aria-hidden="true"></b-icon></b-button>
           </b-form>
         </form>
@@ -137,14 +252,17 @@
 					<h4>{{ totalProducts }} annonce{{ totalProducts > 1 ? "s " : "" }} disponible{{ totalProducts > 1 ? "s " : "" }}</h4>
 				</div>
 				<div class="orderby-element">
-					<p>Trier par : </p>
 					<b-form-select v-model="selected.orderBy" :options="options" size="sm"></b-form-select>
 					<b-button variant="light" @click="deckGrid = true"><b-icon icon="grid-fill" aria-hidden="true"></b-icon></b-button>
 					<b-button variant="light" @click="deckGrid = false"><b-icon icon="list-ul" aria-hidden="true"></b-icon></b-button>
 				</div>
 			</div>
       <hr>
-      <div>résultats {{ 1 + ((currentPage - 1) * perPage) }} - {{ ((currentPage - 1) * perPage) + nbResults }} sur {{ totalProducts }}</div>
+      <!--<div v-b-toggle.sidebar-filters class="filters-button" @click="showFilters = true">-->
+      <div v-b-toggle.sidebar-filters class="filters-button">
+        <b-button variant="light"><b-icon icon="filter-left" aria-hidden="true"></b-icon>Filtres</b-button>
+      </div>
+      <div class="results-details-number">résultats {{ 1 + ((currentPage - 1) * perPage) }} - {{ ((currentPage - 1) * perPage) + nbResults }} sur {{ totalProducts }}</div>
 			<b-card-group deck v-bind:class="[deckGrid ? 'card-deck-custom-grid' : 'card-deck-custom-list']">
 				<router-link v-for="product in products" :key="product._source.id" :to="'/products/' + product._source.id" :per-page="perPage" :current-page="currentPage">
 					<b-card v-if="deckGrid" class="product-card">
@@ -237,6 +355,10 @@ export default {
       filter2Visible: false,
       filter3Visible: false,
       filter4Visible: false,
+      filter1MobileVisible: false,
+      filter2MobileVisible: false,
+      filter3MobileVisible: false,
+      filter4MobileVisible: false,
       deckGrid: true,
       selected: {
         categories: [],
@@ -245,7 +367,7 @@ export default {
         notes: "0",
       },
       options: [
-        { value: null, text: '' },
+        { value: null, text: '- Trier par -' },
         { value: ['average_ratings','asc'], text: 'note croissante' },
         { value: ['average_ratings','desc'], text: 'note décroissante' },
         { value: ['price','asc'], text: 'prix croissant' },
@@ -257,6 +379,8 @@ export default {
       minPrice: 0,
       maxPrice: 0,
       totalProducts: 0,
+      showFilters: false,
+      mobile: false,
     }
   },
   created() {
@@ -268,6 +392,14 @@ export default {
     }).catch(e => console.log(e))
   },
   mounted() {
+    let width = window.innerWidth;
+    if(width < 992) {
+      this.showFilters = false;
+      this.mobile = true;
+    } else {
+      this.showFilters = true;
+      this.mobile = false;
+    }
     let category = this.$route.query.category;
       if(category && this.categories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
       this.paramCategory = category.toLowerCase();
@@ -280,6 +412,11 @@ export default {
       this.paramWords = words;
       this.searchInput = words;
     }
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize);
   },
   watch: {
     'minPrice': {
@@ -333,6 +470,7 @@ export default {
       }).catch(e => console.log(e))
     },
     updateProducts() {
+      document.getElementsByClassName('spinner-loading')[0].style.display = 'flex';
       AuthService.getProductsByKeyWord({
         page: this.currentPage,
         sort: this.selected.orderBy,
@@ -344,8 +482,11 @@ export default {
       }).then(response => {
         this.products = response.data.hits.hits;
         this.nbResults = this.products.length;
-        this.totalProducts = response.data.totalProducts;
+        this.totalProducts = response.data.hits.total.value;
       }).catch(e => console.log(e))
+      .finally(() => {
+        document.getElementsByClassName('spinner-loading')[0].style.display = 'none';
+      })
     },
     onPageChanged(page) {
       this.currentPage = page;
@@ -379,6 +520,16 @@ export default {
       let index = this.categories.map(function(elt) { return elt.name.toLowerCase() }).indexOf(category) + 1;
       document.getElementById('category' + index).checked = true;
       this.selectedAllSubCategories(category);
+    },
+    handleResize() {
+      let width = window.innerWidth;
+      if(width < 992) {
+        this.showFilters = false;
+        this.mobile = true;
+      } else {
+        this.showFilters = true;
+        this.mobile = false;
+      }
     }
   },
   computed: {
@@ -388,6 +539,20 @@ export default {
 </script>
 
 <style>
+.spinner-loading {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9000;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
 .main-frame {
 	width: 95%;
 	max-width: 1800px;
@@ -484,6 +649,10 @@ export default {
 	font-size: 120%;
 }
 
+.searchbar-products .form-inline input::placeholder {
+  color: #ffffff;
+}
+
 .searchbar-products form .btn {
 	border: none;
 	outline: none;
@@ -515,22 +684,67 @@ export default {
 	padding: 5px;
 }
 
+.filters-button {
+  display: none;
+  width: fit-content;
+}
+
 .card-deck-custom-list {
 	display: block !important;
 }
 
+/*********************** */
+/* card deck custom grid */
+/*********************** */
+
 .card-deck-custom-grid {
-	display: flex;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.card-deck-custom-grid > a,
-.card-deck-custom-list > a {
-	margin-top: 40px;
+.card-deck-custom-grid a {
+  flex: 0 0 33%;
+  max-width: 33%;
+  padding: 10px 2px !important;
+  margin-top: 40px;
 }
 
 .card-deck-custom-grid .card {
-	flex: none;
+  margin-bottom: 10px;
+  width: auto !important;
+  flex: none;
 	transition: all .2s ease-in-out;
+}
+
+.card-deck-custom-grid .card:hover {
+	transform: scale(1.05);
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.card-deck-custom-grid .card-header {
+  width: 100%;
+  height: 200px;
+  background-color: rgba(50, 50, 50, 0.2);
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-deck-custom-grid .card img {
+	width: auto;
+	height: auto;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+
+/*********************** */
+/* card deck custom list */
+/*********************** */
+
+.card-deck-custom-list > a {
+	margin-top: 40px;
 }
 
 .card-deck-custom-list .card {
@@ -548,12 +762,7 @@ export default {
 	text-decoration: none !important;
 }
 
-.card-deck-custom-grid .card:hover {
-	transform: scale(1.05);
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.card-deck .card-header {
+.card-deck-custom-list .card-header {
   background-color: rgba(50, 50, 50, 0.2);
   width: 300px;
   height: 200px;
@@ -571,13 +780,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.card-deck-custom-grid .card img {
-	max-width: 300px;
-	max-height: 200px;
-  width: auto;
-  height: auto;
 }
 
 .card-deck-custom-list .card img {
@@ -606,7 +808,7 @@ export default {
 	background-color: #ffffff;
 }
 
-.card-deck .product-card {
+.card-deck-custom-list .product-card {
   width: 300px !important;
 }
 
@@ -669,6 +871,211 @@ export default {
 
 .products-list .pagination {
 	margin: 70px 0px;
+}
+
+@media screen and (max-width: 1400px) {
+
+  .filters-box h2 {
+    font-size: 24px;
+    border-bottom: 1px solid #bbbbbb;
+    margin: 0px auto;
+    padding: 20px 20px 10px 20px;
+    width: fit-content;
+  }
+
+  .filters-box .main-hr {
+    width: 0%;
+  }
+
+  .filters-box .list-group-item {
+    font-size: 14px;
+  }
+
+  .filters-box .collapse {
+    font-size: 14px;
+  }
+
+  .bloc-space {
+    display: flex;
+    flex: 0 0 0%;
+    padding: 0px !important;
+    margin: 0px !important;
+    width: 0px !important;
+  }
+
+  .card-deck-custom-grid a {
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin: 0px;
+  }
+
+  .orderby-box {
+    margin-bottom: 20px;
+  }
+
+  .orderby-box h4 {
+    font-size: 20px;
+    margin: 0px !important;
+  }
+
+  .results-details-number {
+    display: none;
+  }
+
+  .card-deck {
+    margin-top: 40px;
+  }
+  
+}
+
+@media screen and (max-width: 992px) {
+
+  .main-content {
+    position: relative;
+  }
+
+  #sidebar-filters {
+    width: 75%;
+    z-index: 9999;
+  }
+
+  #sidebar-filters .close .bi-x {
+    height: 50px;
+    width: 50px;
+  }
+
+  #sidebar-filters h2 {
+    font-size: 32px;
+  }
+
+  .filters-box .list-group-item {
+    font-size: 18px;
+  }
+
+  .filters-box .collapse {
+    font-size: 18px;
+  }
+
+  #sidebar-filters #collapse-mobile-2 .row {
+    margin: 0px !important;
+    padding: 0px 30px !important;
+  }
+
+  #sidebar-filters #collapse-mobile-2 .row input {
+    margin-bottom: 20px;
+  }
+
+  .searchbar-products label,
+  .searchbar-products input {
+    font-size: 16px !important;
+  }
+
+  .filters-button {
+    display: flex;
+    margin: 20px 0px;
+  }
+
+  .filters-button button {
+    border-radius: 25px;
+    font-size: 18px;
+    border: 1px solid #999999 !important;
+  }
+
+  .filters-button .b-icon.bi {
+    height: 24px !important;
+    width: 24px !important;
+  }
+
+  .card-deck {
+    margin-top: 0px;
+  }
+
+  .card-deck-custom-grid a {
+    flex: 0 0 33%;
+    max-width: 33%;
+    margin: 0px;
+  }
+  
+}
+
+@media screen and (max-width: 768px) {
+
+  .card-deck-custom-grid a {
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin: 0px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  #sidebar-filters {
+    width: 100%;
+  }
+
+  .searchbar-products {
+    padding: 5px 20px;
+  }
+
+  .searchbar-products .form-inline {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .searchbar-products .form-inline label {
+    display: none;
+  }
+
+  .searchbar-products .form-inline input {
+    margin: 0px 10px;
+    border-bottom: 1px solid #999999;
+  }
+
+  .searchbar-products .form-inline input::placeholder {
+    font-size: 12px;
+    color: #999999;
+  }
+
+  .searchbar-products .form-inline button {
+    font-size: 14px;
+  }
+
+  .orderby-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 20px 0px 10px 0px;
+  }
+
+  .orderby-box h4 {
+    font-size: 16px;
+    margin: 0px !important;
+  }
+
+  .orderby-box .orderby-element {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px 0px 0px 0px;
+    width: 100%;
+  }
+
+  .orderby-box .orderby-element select {
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .orderby-box .orderby-element button {
+    display: none !important;
+  }
+
+  .orderby-box .b-icon.bi {
+    height: 15px !important;
+    width: 15px !important;
+  }
+  
 }
 
 </style>
