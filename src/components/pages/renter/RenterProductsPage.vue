@@ -36,6 +36,12 @@ export default {
   computed:{
     ...mapGetters(['user'])
   },
+  mounted() {
+    const renterPermission = this.$store.getters.renterPermission
+    if(!renterPermission){
+      this.$router.push('/')
+    }
+  }
 };
 </script>
 

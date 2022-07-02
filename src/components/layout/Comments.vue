@@ -53,6 +53,10 @@ export default {
   },
     methods: {
         validateComment() {
+          const allPermission = this.$store.getters.allPermission
+          if(!allPermission){
+            this.$router.push('/login')
+          }
           if (this.user.comments.length !== 0){
             if(this.user.comments.filter(comment => comment.product.id === this.product.id).length !== 0){
               const comment = this.user.comments.filter(comment => comment.product.id === this.product.id)[0]
@@ -87,6 +91,10 @@ export default {
                   })
                 })
           }else{
+            const allPermission = this.$store.getters.allPermission
+            if(!allPermission){
+              this.$router.push('/login')
+            }
             CommentService.updateComment({
               text: this.newComment,
             },this.idComment,localStorage.getItem('token'))

@@ -211,6 +211,7 @@ export default {
           this.currentNote = this.user.comments.filter(comment => comment.product.id === response.data.id)[0].rating
         }
       }
+
       let dateFormated = new Date(response.data.publishedAt);
       let day = dateFormated.getDate() < 10 ? '0' + dateFormated.getDate() : dateFormated.getDate();
       let month = dateFormated.getMonth() < 10 ? '0' + dateFormated.getMonth() : dateFormated.getMonth();
@@ -271,6 +272,10 @@ export default {
       this.$router.push('/search?words=' + (this.searchInput !== null ? this.searchInput : ''));
     },
     handleSubmitNote() {
+      const allPermission = this.$store.getters.allPermission
+      if(!allPermission){
+        this.$router.push('/login')
+      }
       if (this.$store.getters.user) {
         let commentExist = this.user.comments.filter(comment => comment.product.id === this.product.id);
         if (commentExist.length > 0) {
@@ -330,6 +335,10 @@ export default {
         }
     },
     handleClickReport() {
+      const allPermission = this.$store.getters.allPermission
+      if(!allPermission){
+        this.$router.push('/login')
+      }
       if (this.$store.getters.user) {
         MessagesService.postReport({
           sender: 'users/' + this.user.id,
