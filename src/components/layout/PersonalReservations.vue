@@ -24,9 +24,9 @@
           <div class="localisation">
             <h5>Localisation du produit</h5>
             <hr>
-            {{reservation.product.address}}
+            {{reservation.product.address.streetName+' '+reservation.product.address.city+' '+reservation.product.address.region.name+' '+reservation.product.address.region.number}}
             <div class="bloc-geolocalisation">
-              <GoogleMap v-bind:address="reservation.product.address"/>
+              <GoogleMap v-bind:address="reservation.product.address.streetName+' '+reservation.product.address.city+' '+reservation.product.address.region.name+' '+reservation.product.address.region.number"/>
             </div>
           </div>
           <div class="row px-3">
