@@ -129,7 +129,6 @@
 </template>
 
 <script>
-//import SearchBar from '../../layout/CommonSearchBar.vue';
 import Comments from '../../layout/Comments.vue';
 import SimilarAds from '../../layout/SimilarAds.vue';
 import FormContact from '../../layout/FormContact.vue';
@@ -204,7 +203,7 @@ export default {
         this.mobile = false;
       }
     }
-    AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
+    AuthService.getProduct(this.$route.params.productId).then(response => {
       this.$store.dispatch('product',response.data)
       this.currentNote = 0
       if (this.user.comments.length !== 0){
@@ -280,7 +279,7 @@ export default {
           }, commentExist[0].id,localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
-            AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
+            AuthService.getProduct(this.$route.params.productId).then(response => {
               this.$store.dispatch('product',response.data)})
             this.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
@@ -308,7 +307,7 @@ export default {
           },localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
-            AuthService.getProduct(this.$route.params.productId,localStorage.getItem('token')).then(response => {
+            AuthService.getProduct(this.$route.params.productId).then(response => {
               this.$store.dispatch('product',response.data)})
             this.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
