@@ -41,12 +41,12 @@ Vue.use(IconsPlugin)
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyBF0i4DOu1KSee4xm2LSnWMF_wEysCB4GA',
+    key: process.env.VUE_APP_GOOGLE_MAPS,
     libraries: 'places',
   }
 });
 
-Vue.prototype.$apiKey = 'AIzaSyBF0i4DOu1KSee4xm2LSnWMF_wEysCB4GA';
+Vue.prototype.$apiKey = process.env.VUE_APP_GOOGLE_MAPS;
 
 Vue.config.productionTip = false;
 

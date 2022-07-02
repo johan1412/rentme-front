@@ -70,7 +70,7 @@
 				<div class="localisation">
 					<h4>Localisation du produit</h4>
 					<hr>
-					<GoogleMap v-bind:address="product.address"/>
+					<GoogleMap v-bind:address="product.address.streetName+' '+product.address.city+' '+product.address.region.name+' '+product.address.region.number"/>
 				</div>
 				<div class="comments">
 					<Comments />
