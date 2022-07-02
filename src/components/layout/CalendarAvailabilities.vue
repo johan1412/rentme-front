@@ -88,6 +88,10 @@ export default {
             elt[1].innerHTML = 'Fin';
         },
       submit () {
+        const allPermission = this.$store.getters.allPermission
+        if(!allPermission){
+          this.$router.push('/login')
+        }
         AuthService.getSessionIdPayment(this.product.id,this.$store.getters.user.id,{price:this.totalPrice+this.product.caution},localStorage.getItem('token'))
             .then(response => {
               this.sessionId = response.data.checkout_session.id
@@ -109,10 +113,6 @@ export default {
       },
     },
     mounted() {
-        const userPermission = this.$store.getters.userPermission
-        if(!userPermission){
-          this.$router.push('/')
-        }
         let elt = document.getElementsByClassName('vhd__datepicker__input');
         elt[0].innerHTML = 'Début';
         elt[1].innerHTML = 'Fin';

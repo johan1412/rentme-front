@@ -11,6 +11,12 @@ import CategoryForm from '../../form/CategoryForm.vue';
 export default {
   components: { CategoryForm },
   name: "CategoryPage",
+  mounted() {
+    const adminPermission = this.$store.getters.adminPermission
+    if(!adminPermission){
+      this.$router.push('/')
+    }
+  }
 };
 </script>
 

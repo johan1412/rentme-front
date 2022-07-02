@@ -16,7 +16,7 @@ export default {
   mounted() {
     const renterPermission = this.$store.getters.renterPermission
     if(!renterPermission){
-      this.$router.push('/login')
+      this.$router.push('/')
     }
   },
 

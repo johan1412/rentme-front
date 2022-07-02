@@ -49,6 +49,10 @@ export default {
 		};
 	},
 	mounted() {
+    const renterPermission = this.$store.getters.renterPermission
+    if(!renterPermission){
+      this.$router.push('/')
+    }
 		MessagesService.getConversations(
 			this.$store.getters.user["@id"].split("/")[2],localStorage.getItem('token')
 		)

@@ -35,6 +35,12 @@ export default {
     informationsSelected: true,
     reservationsSelected: false,
   }),
+  mounted() {
+    const allPermission = this.$store.getters.allPermission
+    if(!allPermission){
+      this.$router.push('/')
+    }
+  },
   methods: {
     subMenuHandler(clicked) {
       if(clicked == 'info') {

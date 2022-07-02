@@ -55,6 +55,10 @@ export default {
   }),
   methods: {
     handleSubmit: function () {
+      const allPermission = this.$store.getters.allPermission
+      if(!allPermission){
+        this.$router.push('/login')
+      }
       MessagesService.postMessage({
         sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
         reciever: "users/" + this.user.id,
