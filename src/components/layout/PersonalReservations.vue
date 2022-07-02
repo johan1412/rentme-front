@@ -1,78 +1,77 @@
 <template>
   <div class="container p-5">
-    <div class="container-fluid my-5 d-sm-flex justify-content-center">
-      <div class="d-flex flex-column">
-        <div class="p-2" v-for="reservation in reservations" :key="reservation.id">
-          <div class="card px-2">
-            <div class="card-header bg-white">
-              <div class="row justify-content-between">
-                <div class="col">
-                  <h4 class="text-muted"> ID de produit : <span class="font-weight-bold text-dark">{{ reservation.product.id }}</span></h4>
-                  <div class="localisation">
-                    <h4>Localisation du produit</h4>
-                    <hr>
-                    <GoogleMap v-bind:address="reservation.product.address"/>
-                    {{reservation.product.address}}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="media flex-column flex-sm-row">
-                <div class="media-body ">
-                  <h5 class="bold">{{ reservation.product.name }}</h5>
-                  <p class="text-muted"> Prix de caution {{reservation.product.caution}}€</p>
-                  <p class="text-muted"> Prix de produit par unité {{reservation.product.price}}€</p>
-                  <p class="text-muted"> Prix payé en total avec caution :</p>
-                  <h4 class="mt-3 mb-4 bold"> <span class="mt-5">&#x20B9;</span> {{ reservation.price }} €</h4>
-                </div><img class="align-self-center img-fluid" src='https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png' width="180 " height="180">
-              </div>
-            </div>
-            <div class="row px-3">
+    <div class="d-flex flex-column">
+        <div class="card p-3 m-5" v-for="reservation in reservations" :key="reservation.id">
+          <div class="card-header bg-white">
+            <div class="row justify-content-between">
               <div class="col">
-                <ul id="progressbar" v-if="reservation.state === 'payed'">
-                  <li class="step0 active" id="step1">Payer le {{reservation.createdAt}}</li>
-                  <li class="step0 text-center" id="step2">Récupérer le {{reservation.rentalBeginDate}} </li>
-                  <li class="step0 text-muted text-right" id="step3">Rendre le {{reservation.rentalEndDate}}</li>
-                </ul>
-                <ul id="progressbar" v-if="reservation.state === 'retrieved'">
-                  <li class="step0 active" id="step1">Payer le {{reservation.createdAt}}</li>
-                  <li class="step0 text-center active" id="step2">Récupérer le {{reservation.rentalBeginDate}} </li>
-                  <li class="step0 text-muted text-right" id="step3">Rendre le {{reservation.rentalEndDate}}</li>
-                </ul>
-                <ul id="progressbar" v-if="reservation.state === 'restored'">
-                  <li class="step0 active" id="step1">Payer le {{reservation.createdAt}}</li>
-                  <li class="step0 text-center active" id="step2">Récupérer le {{reservation.rentalBeginDate}} </li>
-                  <li class="step0 text-muted text-right active" id="step3">Rendre le {{reservation.rentalEndDate}}</li>
-                </ul>
+                <h5 class="bold">{{ reservation.product.name }}</h5>
+                
               </div>
             </div>
-            <div class="card-footer bg-white px-sm-3 pt-sm-4 px-0">
-              <div class="row text-center ">
-                <div class="col my-auto">
-                  <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Récupérer le produit</button>
-                  <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Rendre le produit</button>
-                  <h5 v-on:click="myMethod(reservation)" v-if="reservation.state === 'restored'">
-                    <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé, veuillez vérifier vote boite mail</p>
-                  </h5>
-                </div>
+          </div>
+          <div class="card-body">
+            <div class="media row align-items-center">
+              <div class="media-body">
+                <p class="text-muted"> Prix de caution {{reservation.product.caution}}€</p>
+                <p class="text-muted"> Prix de produit par unité {{reservation.product.price}}€</p>
+                <p class="text-muted"> Prix payé en total avec caution :</p>
+                <h5 class="mt-3 mb-4">{{ reservation.price }} €</h5>
+              </div>
+              <img class="align-self-center" src='https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'>
+            </div>
+          </div>
+          <div class="localisation">
+            <h5>Localisation du produit</h5>
+            <hr>
+            {{reservation.product.address}}
+            <div class="bloc-geolocalisation">
+              <GoogleMap v-bind:address="reservation.product.address"/>
+            </div>
+          </div>
+          <div class="row px-3">
+            <div class="col">
+              <ul id="progressbar" v-if="reservation.state === 'payed'">
+                <li class="step0 active" id="step1">Payer le {{reservation.createdAt}}</li>
+                <li class="step0 text-center" id="step2">Récupérer le {{reservation.rentalBeginDate}} </li>
+                <li class="step0 text-muted text-right" id="step3">Rendre le {{reservation.rentalEndDate}}</li>
+              </ul>
+              <ul id="progressbar" v-if="reservation.state === 'retrieved'">
+                <li class="step0 active" id="step1">Payer le {{reservation.createdAt}}</li>
+                <li class="step0 text-center active" id="step2">Récupérer le {{reservation.rentalBeginDate}} </li>
+                <li class="step0 text-muted text-right" id="step3">Rendre le {{reservation.rentalEndDate}}</li>
+              </ul>
+              <ul id="progressbar" v-if="reservation.state === 'restored'">
+                <li class="step0 active" id="step1">Payer le {{reservation.createdAt}}</li>
+                <li class="step0 text-center active" id="step2">Récupérer le {{reservation.rentalBeginDate}} </li>
+                <li class="step0 text-muted text-right active" id="step3">Rendre le {{reservation.rentalEndDate}}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-footer bg-white px-sm-3 pt-sm-4 px-0">
+            <div class="row text-center ">
+              <div class="col my-auto">
+                <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Produit récupéré</button>
+                <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Produit rendu</button>
+                <h5 v-on:click="myMethod(reservation)" v-if="reservation.state === 'restored'">
+                  <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé, veuillez vérifier vote boite mail</p>
+                </h5>
               </div>
             </div>
           </div>
         </div>
-        <div v-if="reservations.length == 0">
-          <div>Vous n'avez aucune réservation</div>
-        </div>
       </div>
-    </div>
+      <div v-if="reservations.length == 0">
+        <div>Vous n'avez aucune réservation</div>
+      </div>
   </div>
 </template>
 
 <script>
 
 import AuthService from "@/services/AuthService";
-import {mapGetters} from "vuex";
 import GoogleMap from './GoogleMap.vue';
+import {mapGetters} from "vuex";
 
 export default {
   components: {
@@ -83,12 +82,6 @@ export default {
     informationsTabActive: true,
     reservationsTabActive: false,
   }),
-  created() {
-    AuthService.getReservations().then(response => {
-          this.$store.dispatch('reservations',response.data['hydra:member'])
-        }
-    ).catch(e => console.log(e))
-  },
   computed:{
     ...mapGetters(['reservations'])
   },
@@ -97,16 +90,18 @@ export default {
     if(!userPermission){
       this.$router.push('/')
     }
+    AuthService.getReservations(localStorage.getItem('token')).then(response => {
+          this.$store.dispatch('reservations',response.data['hydra:member'])
+        }
+    ).catch(e => console.log(e))
   },
   methods: {
     myMethod: function myMethod(reservation) {
       this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === reservation.id ? {...elem,state:reservation.state === 'payed' ? 'retrieved' : 'restored'} : elem))
-      AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'}).then(response => {
-            console.log(response)
-      }
-      ).catch(e => console.log(e))
+      AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
+      .catch(e => console.log(e))
       if (reservation.state === 'retrieved'){
-        AuthService.refund({id:reservation.id})
+        AuthService.refund({id:reservation.id},localStorage.getItem('token'))
             .then(response => {
               console.log(response)
             }
@@ -123,11 +118,6 @@ body {
   letter-spacing: 0.8px;
   background: linear-gradient(0deg, #fff, 50%, #74a0ff);
   background-repeat: no-repeat
-}
-
-.container-fluid {
-  margin-top: 80px !important;
-  margin-bottom: 80px !important
 }
 
 p {
@@ -276,6 +266,13 @@ small {
   border-right: 1px solid rgb(226, 206, 226)
 }
 
+.card-body .media img {
+  max-height: 200px;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
 .card-footer img {
   opacity: 0.3
 }
@@ -288,6 +285,70 @@ small {
 
 .localisation {
   margin-top: 20px;
+}
+
+.bloc-geolocalisation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+
+  .container {
+    padding: 10px !important;
+    background-color: #f0f0f0;
+  }
+
+  .card {
+    box-shadow: none;
+    border-radius: 0px;
+    border: none;
+    margin: 10px !important;
+  }
+
+  .card h5 {
+    font-size: 16px;
+  }
+
+  .card .card-body p {
+    font-size: 12px;
+  }
+
+  .bloc-geolocalisation {
+    display: block;
+    width: 100%;
+  }
+  
+}
+
+@media screen and (max-width: 500px) {
+
+  .sub-menu-content .container {
+    padding: 10px 0px !important;
+  }
+
+  .sub-menu-content .card {
+    margin: 10px 0px 20px 0px !important;
+    padding: 0px !important;
+  }
+
+  .sub-menu-content .card .media {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .sub-menu-content .localisation {
+    padding: 10px;
+  }
+
+  .card h5 {
+    font-size: 14px;
+  }
+
 }
 
 </style>

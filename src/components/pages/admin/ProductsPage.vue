@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <h3 class="mt-5 text-center">Annonce en attente de validation ({{ numberOfProductsNotValid }})</h3>
+    <h3 class="mt-5 text-left">Annonces en attente de validation</h3>
     <hr>
     <div v-if="numberOfProductsNotValid > 0">
       <b-card-group deck class="card-deck-custom-list my-5">
-        <div v-for="product in products" :key="product.id" class="d-flex align-items-center">
-          <router-link :to="'/products/' + product.id" class="mt-3">
+        <div v-for="product in products" :key="product.id" class="d-flex align-items-center w-100">
+          <router-link :to="'/products/' + product.id" class="mt-3 w-100">
             <b-card no-body class="overflow-hidden">
               <b-row no-gutters class="h-100">
                 <b-col md="4">
@@ -31,7 +31,19 @@
               <button type="button" class="btn btn-success"  @click="toValid(product)">VALIDER</button>
             </div>
             <div class="p-2">
-              <button type="button" class="btn btn-danger" @click="toDelete(product)">REFUSER</button>
+              <b-modal id="modalAlert">
+                <div class="modal-body container m-auto">
+                  <p class="my-4">Êtes-vous sûr de vouloir vous supprimer l'annonce sur le site ?</p>
+                </div>
+                <template #modal-footer="{ }">
+                  <div class="mx-auto">
+                    <b-button class="rounded-0 mr-1" @click="$bvModal.hide('modalAlert')">Annuler</b-button>
+                    <b-button class="rounded-0 ml-1" @click="toDelete(product)" variant="success">Valider</b-button>
+                  </div>
+                </template>
+              </b-modal>
+              <br>
+              <button type="button" class="btn btn-danger" @click="$bvModal.show('modalAlert')">REFUSER</button>
             </div>
           </div>
         </div>
@@ -49,35 +61,66 @@ import AuthService from "../../../services/AuthService";
 
 export default {
   name: "ProductsPage",
-  created() {
-    AuthService.getProductsNotValid().then(response => {
-          this.$store.dispatch('products',response.data['hydra:member'])
-    }
-    ).catch(e => console.log(e))
-  },
   computed:{
     ...mapGetters(['numberOfProductsNotValid','products'])
   },
   mounted() {
-      const adminPermission = this.$store.getters.adminPermission
-      if(!adminPermission){
-          this.$router.push('/')
-      }
+    const adminPermission = this.$store.getters.adminPermission
+    if(!adminPermission){
+      this.$router.push('/')
+    }
+    AuthService.getProductsNotValid(localStorage.getItem('token')).then(response => {
+          this.$store.dispatch('products',response.data['hydra:member'])
+        }
+    ).catch(e => console.log(e))
   },
    methods:{
     toValid(product){
-      AuthService.updateProduct(product.id,{isValid:true}).then(response => {
-        console.log(response.data)
+      AuthService.updateProduct(product.id,{isValid:true},localStorage.getItem('token')).then(response => {
         this.$store.commit('products',this.$store.getters.products.filter(product => !(product.id === response.data.id)))
         this.$store.dispatch('numberOfProductsNotValid',this.$store.getters.numberOfProductsNotValid-1)
-      }).catch(e => console.log(e))
-      console.log(product)
+        this.$bvToast.toast("L'annonce a été validée avec succès", {
+          title: 'Merci !',
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
+      }).catch(e => {
+        console.log(e)
+        this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+          title: 'Oups !',
+          variant: 'danger',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
+      })
     },
     toDelete(product){
-      AuthService.deleteProduct(product.id).then(() => {
+      AuthService.deleteProduct(product.id,localStorage.getItem('token')).then(() => {
         this.$store.commit('products',this.$store.getters.products.filter(prod => !(prod.id === product.id)))
         this.$store.dispatch('numberOfProductsNotValid',this.$store.getters.numberOfProductsNotValid-1)
-      }).catch(e => console.log(e))
+        this.$bvToast.toast("L'annonce a été supprimée avec succès", {
+          title: 'Merci !',
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000
+        })
+
+      })
+      .finally(() => this.$bvModal.hide('modalAlert'))
+          .catch(e =>{
+            console.log(e);
+            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+              title: 'Oups !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 3000
+            })
+          })
       console.log(product)
     }
   },

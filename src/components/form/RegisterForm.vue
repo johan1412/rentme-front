@@ -196,7 +196,7 @@ export default {
         this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         AuthService.register({ firstName: this.firstName, lastName: this.lastName, address: this.address, email: this.email, password: this.password, roles: this.role === "accepted" ? ["ROLE_RENTER"] : ["ROLE_USER"]})
           .then(() => {
-            localStorage.setItem("successMessage", "Votre compte a bien été créé");
+            localStorage.setItem("successMessage", "Une confirmation d'email a été envoyée à votre boite mail");
             this.$router.push('/login')
           })
           .catch((e) => {
@@ -288,6 +288,35 @@ export default {
 .eye-icon {
   margin-left: -30px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 576px) {
+
+  .form-frame {
+    width: 100%;
+    margin: 0px;
+    border: none;
+    box-shadow: none;
+    background-color: #f0f0f0;
+    padding-bottom: 40px;
+  }
+
+  .form-top .b-icon {
+    display: none;
+  }
+
+  .container {
+    padding: 0px;
+  }
+
+  .form-data .form-group input {
+    font-size: 14px;
+  }
+
+  .form-data .form-group .form-error {
+    font-size: 10px;
+  }
+
 }
 
 </style>

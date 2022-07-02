@@ -33,6 +33,18 @@
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
+        <div class="form-group">
+          <label for="caution">Caution (€)</label>
+          <ValidationProvider rules="required|integer|minmax:1,10" v-slot="{ errors,failed }">
+            <input
+                type="number"
+                class="form-control"
+                v-model="caution" id="caution"
+                :class="`is-${failed}`"
+            />
+            <span class="form-error">{{ errors[0] }}</span>
+          </ValidationProvider>
+        </div>
         <div class="form-group address-form mt-4">
           <label for="address">Adresse de retrait du produit</label>
           <div class="frame-address-form-input">
@@ -68,7 +80,7 @@
             </ValidationProvider>
           </div>
         </div>
-        <div class="row">
+        <div class="row bloc-category">
           <div class="col-md-6">
             <label for="category">Catégorie principale</label>
             <ValidationProvider rules="required" v-slot="{ errors }">
@@ -106,7 +118,7 @@
             <span class="form-error">{{ errors[0] }}</span>
           </ValidationProvider>
         </div>
-        <button type="submit" class="btn btn-success submit-button-create-product mt-5">Valider</button>
+        <div class="mt-5 d-flex justify-content-center"><button type="submit" class="btn btn-success submit-button-create-product">Valider</button></div>
       </form>
     </ValidationObserver>
   </div>
@@ -115,7 +127,6 @@
 <script>
 import AuthService from "../../services/AuthService";
 import RegionService from "../../services/RegionService";
-import {mapGetters} from "vuex";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, integer, size } from 'vee-validate/dist/rules';
 
@@ -161,8 +172,10 @@ export default {
     address: {},
     optionsRegion: [],
     price: "",
+    caution: "",
     images: null,
     allCategories: [],
+    parentCategories: [],
   }),
   methods: {
     uploadFile() {
@@ -183,13 +196,13 @@ export default {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          noAutoHide: true,
+          autoHideDelay: 3000,
         });
         return;
       }
       const formData = new FormData();
       formData.append('file', this.images);
-      let image = await AuthService.postImage(formData);
+      let image = await AuthService.postImage(formData,localStorage.getItem('token'));
       if(image.data.contentUrl){
         this.address = { streetName: this.addressStreet, city: this.addressCity, region: 'regions/' + this.addressRegion };
         const response = await AuthService.postProduct({
@@ -197,24 +210,26 @@ export default {
           description: this.description,
           address: this.address,
           price: parseInt(this.price),
-          category: "/categories/"+this.subCategory.id,
+          caution: parseInt(this.caution),
+          category: "/categories/"+this.subCategory,
           user: "/users/"+this.$store.getters.user["id"],
           files: [
             {path : image.data.contentUrl}
           ]
-        });
+        },localStorage.getItem('token'));
         this.$store.dispatch('user',{...this.$store.getters.user, products:[...this.$store.getters.user.products, response.data]})
-        this.$router.push("/");
+        localStorage.setItem('successMessage', 'Votre produit a bien été ajouté');
+        this.$router.push("/products");
       }
     },
   },
-  computed:{
-    ...mapGetters(['parentCategories']),
-  },
   created() {
-    AuthService.parentCategories().then(response => {
+    AuthService.getCategories().then(response => {
       this.allCategories = response.data['hydra:member'];
-      this.$store.dispatch('parentCategories', response.data['hydra:member'].filter(category => category.parent == null))
+      this.parentCategories = this.allCategories.filter(function(category) {
+        return category.parent == null;
+      });
+      this.$store.dispatch('categories', response.data['hydra:member'])
     }).catch(e => console.log(e))
     RegionService.getRegions().then(response => {
       this.optionsRegion = response.data['hydra:member'];

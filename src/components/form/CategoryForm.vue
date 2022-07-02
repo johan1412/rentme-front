@@ -40,7 +40,7 @@
                 </template>
               </b-form-select>
           </div>
-          <button type="submit" class="btn text-light submit-button mt-5">Ajouter</button>
+          <div class="mt-5 d-flex justify-content-center"><button type="submit" class="btn text-light submit-button">Ajouter</button></div>
         </form>
       </ValidationObserver>
     </div>
@@ -81,21 +81,19 @@ export default {
     parent: null,
     name:"",
     image: null,
-  }),
-  created() {
-    AuthService.parentCategories().then(response => {
-      this.$store.dispatch('parentCategories',response.data['hydra:member'].filter(category => !category?.parent))
-    }).catch(e => console.log(e))
-    }
+    parentCategories: [],
+  })
+
   ,
   computed:{
-    ...mapGetters(['parentCategories'])
+    ...mapGetters(['categories'])
   },
-    mounted(){
-      const adminPermission = this.$store.getters.adminPermission
-      if(!adminPermission){
-          this.$router.push('/')
-      }
+  mounted() {
+    const adminPermission = this.$store.getters.adminPermission
+    if(!adminPermission){
+        this.$router.push('/')
+    }
+    this.parentCategories = this.categories.filter(category => category.parent === null);
   },
   methods: {
     uploadFile() {
@@ -107,19 +105,37 @@ export default {
         if(this.image) {
           const formData = new FormData();
           formData.append('file', this.image);
-          let img = await AuthService.postImage(formData);
+          let img = await AuthService.postImage(formData,localStorage.getItem('token'));
           file = img.data.contentUrl ? { path : img.data.contentUrl } : null
         }
         let parent = this.parent ? "/categories/" + this.parent : null;
         let name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
-        await AuthService.postCategory({ name: name, parent: parent, img: file });
-        //this.$store.dispatch('parentCategories',[...this.$store.getters.parentCategories,response.data])
-        this.$router.go();
+        const response = await AuthService.postCategory({ name: name, parent: parent, img: file },localStorage.getItem('token'));
+       if(parent == null){
+         this.$store.dispatch('categories',[...this.categories,response.data])
+       }else{
+         this.$store.dispatch('categories',[...this.categories.map(
+             category => category.id === this.parent ? {...category,children:[...category.children, response.data]} : category
+         )])
+       }
         this.name = "";
         this.parent = null;
-        localStorage.setItem("successMessage", "La catégorie a bien été créée");
+        this.$bvToast.toast('La catégorie a bien été créée', {
+          variant: 'success',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000,
+          title: 'Succès'
+        });
       } catch(e) {
-        console.log(e);
+        console.log(e)
+        this.$bvToast.toast('Erreur lors de la création de la catégorie', {
+          variant: 'danger',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000,
+          title: 'Erreur'
+        });
       }
     },
   },
@@ -137,5 +153,23 @@ export default {
   background-color: #ffffff !important;
   color: black !important;
   border: 1px solid #333333 !important;
+}
+
+@media screen and (max-width: 576px) {
+
+  .form-group label,
+  .form-group input,
+  .form-group select {
+    font-size: 12px;
+  }
+
+  .form-group .form-error {
+    font-size: 10px;
+  }
+
+  .submit-button {
+    font-size: 12px !important;
+  }
+
 }
 </style>

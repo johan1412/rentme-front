@@ -21,16 +21,30 @@
         <b-container>
           <b-row>
             <b-col cols="12">
-              <carousel :perPage="4">
-                <slide v-for="post in posts" :key="post.id" class="p-2">
-                  <router-link :to="'/products/' + post.id" class="card-link">
-                    <b-card :img-src="post.files" img-alt="Image" img-top tag="article">
-                      <b-card-text>
-                        {{ post.name }}
-                      </b-card-text>
-                      <template #footer>
-                        <small class="text-muted">{{ post.price }}€ / jour</small>
+              <carousel :perPage="productsPerPage">
+                <slide v-for="product in products" :key="product.id" class="p-2">
+                  <router-link :to="'/products/' + product.id" class="card-link">
+                    <b-card class="product-card">
+                      <template #header>
+                        <div>
+                          <img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                        </div>
                       </template>
+                      <b-card-text class="d-flex flex-column justify-content-between">
+                        <div class="product-card-text">{{ product.name }}</div>
+                        <div class="text-muted">
+                          <div class="price-bloc">{{ product.price }}€ / jour</div>
+                          <div class="ratings-bloc">
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 0.2) ? 'star' : (product.averageRatings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 1.2) ? 'star' : (product.averageRatings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 2.2) ? 'star' : (product.averageRatings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 3.2) ? 'star' : (product.averageRatings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 4.2) ? 'star' : (product.averageRatings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <span> ({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</span>
+                          </div>
+                          <div class="address-bloc">{{ product.city }} &bull; {{ product.regionName }} ({{ product.region }})</div>
+                        </div>
+                      </b-card-text>
                     </b-card>
                   </router-link>
                 </slide>
@@ -61,31 +75,39 @@ export default {
       slide: 0,
       sliding: null,
       categories: [],
-      posts: [
-        {id:1, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:30, files:'https://picsum.photos/300/200/?image=41'},
-        {id:2, name:'chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player, chelsea is the best club in the world and chelsea has a great player chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the worldchelsea is the best chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world  chelsea is the best club in the world club in the world chelsea is the best club in the world  chelsea is the best club in the world  and chelsea has a great player', price:60, files:'https://picsum.photos/300/200/?image=41'},
-        {id:3, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:54, files:'https://picsum.photos/300/400/?image=41'},
-        {id:4, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:25, files:'https://picsum.photos/500/200/?image=41'},
-        {id:5, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:31, files:'https://picsum.photos/300/200/?image=41'},
-        {id:6, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:40, files:'https://picsum.photos/300/200/?image=41'},
-        {id:7, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:54, files:'https://picsum.photos/300/200/?image=41'},
-        {id:8, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:55, files:'https://picsum.photos/300/200/?image=41'},
-        {id:9, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:81, files:'https://picsum.photos/300/200/?image=41'},
-        {id:10, name:'chelsea is the best club in the world and chelsea has a great player', description:'chelsea is the best club in the world and chelsea has a great player', price:28, files:'https://picsum.photos/300/200/?image=41'},
-      ],
+      products: [],
+      productsPerPage: 4,
     }
   },
   mounted() {
     AuthService.getCategories().then(response => {
-      this.categories = response.data['hydra:member'];
+      this.categories = response.data['hydra:member'].filter(category => !category?.parent);
     }).catch(e => console.log(e))
+    AuthService.getProductsValid().then(response => {
+      this.products = response.data['hydra:member'].sort((p1, p2) => { p1.averageRatings - p2.averageRatings }).slice(0, 10);
+    })
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize);
+  },  
   methods: {
     onSlideStart() {
         this.sliding = true
     },
     onSlideEnd() {
         this.sliding = false
+    },
+    handleResize() {
+      let width = window.innerWidth;
+      if(width > 992) {
+        this.productsPerPage = 4;
+      } else if(width > 576) {
+        this.productsPerPage = 2;
+      } else {
+        this.productsPerPage = 2;
+      }
     }
   },
 };
@@ -126,6 +148,23 @@ export default {
   flex: 0 0 16.66666%;
 }
 
+.main-categories .icon-category {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.main-categories ul li p {
+  text-align: center;
+  padding-top: 10px;
+  text-decoration: none;
+  color: #000000;
+  font-size: 120%;
+}
+
 .main-offers .VueCarousel-dot {
   height: 15px !important;
   width: 15px !important;
@@ -146,7 +185,6 @@ export default {
 }
 
 .main-offers .card {
-  height: 350px;
   transition: all .2s ease-in-out;
 }
 
@@ -154,47 +192,111 @@ export default {
   transform: scale(1.05);
 }
 
-.main-offers .card-img-top {
-  width: 100%;
-  height: 180px;
-}
-
-.main-offers .card-body {
+.VueCarousel .card-header {
+  background-color: rgba(50, 50, 50, 0.2);
+  height: 200px;
   padding: 0px;
-  margin: 20px;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.VueCarousel .card img {
+	max-width: 100%;
+	max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+.VueCarousel .card .card-body .product-card-text {
+  display: -webkit-box;
+  overflow : hidden;
   text-overflow: ellipsis;
-}
-
-.main-offers .card-body .card-text {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.5rem;
+  height: 4.5rem;
   color: #000000;
-  height: 100%;
-  text-overflow: ellipsis;
 }
 
-.main-offers .card-footer {
-  text-align: center;
-  font-size: 150%;
+.VueCarousel .card-body .price-bloc {
+  background-color: #4499AD;
+  color: #ffffff;
+  padding: 5px 10px;
+  margin: 10px 0px;
+  width: fit-content;
 }
 
-.main-offers .card-footer small {
-  font-weight: bold;
+.VueCarousel .card-body .ratings-bloc {
+  color: #4499AD;
 }
 
-.main-categories .icon-category {
-  height: 150px;
-  width: 150px;
-  border-radius: 50%;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+.VueCarousel .card-body .address-bloc {
+  font-size: 90%;
 }
 
-.main-categories ul li p {
-  text-align: center;
-  padding-top: 10px;
-  text-decoration: none;
-  color: #000000;
-  font-size: 120%;
+@media screen and (max-width: 1400px) {
+
+  .main-content h1,
+  .main-content hr {
+    margin: 0px 20px;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  
+  .main-categories ul li {
+    padding: 0px 5px;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+
+  .main-content h1 {
+    font-size: 18px;
+  }
+
+  .main-categories {
+    margin-top: 30px;
+  }
+
+  .frame-carousel {
+    padding: 0px;
+  }
+
+  .VueCarousel-inner {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .VueCarousel-slide {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 10px 2px !important;
+  }
+
+  .main-offers .VueCarousel-dot {
+    display: none;
+  }
+
+  .main-offers .card {
+    font-size: 12px;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+
+  .main-categories .icon-category {
+    height: 80px;
+    width: 80px;
+  }
+
+  .main-categories ul li p {
+    font-size: 12px;
+  }
+
 }
 </style>

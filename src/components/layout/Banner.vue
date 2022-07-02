@@ -94,12 +94,12 @@ export default {
 }
 
 .banner-text-big {
-  font-size: 3em;
+  font-size: 36px;
   font-weight: bold;
 }
 
 .banner-text-small {
-  font-size: 1.8em;
+  font-size: 26px;
 }
 
 #banner .searchForm {
@@ -144,5 +144,71 @@ export default {
   background-color: rgba(250 , 250, 250, 0.8);
   color: #000000;
   margin: 10px 0px;
+}
+
+@media screen and (max-width: 992px) {
+  
+  .banner-text-big {
+    font-size: 25px;  
+  }
+
+  .banner-text-small {
+    font-size: 20px;
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+
+  #banner {
+    height: 400px;
+  }
+
+  .banner-text-box {
+    border-radius: 0px;
+    margin-top: 60px;
+  }
+
+  .banner-text-big {
+    font-size: 18px;  
+  }
+
+  .banner-text-small {
+    font-size: 14px;
+  }
+
+  #banner .searchForm {
+    margin-top: 50px;
+  }
+
+  #banner .searchForm form > span {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #banner .searchForm input {
+    padding: 10px;
+    font-size: 16px;
+    min-width: 100px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+
+  #banner .searchForm .btn {
+    padding: 10px;
+    font-size: 16px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-top: 10px;
+  }
+
+  .welcome-message {
+    padding: 10px 30px;
+    margin: 10px 0px;
+    font-size: 14px;
+  }
+
 }
 </style>

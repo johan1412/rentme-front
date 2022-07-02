@@ -44,6 +44,7 @@
             </b-card-text>
             <button type="submit" class="btn btn-submit mb-3">Se connecter</button>
             <a href="https://localhost:8443/reset-password" class="btn"><u>Mot de passe oublié ?</u></a>
+            <router-link class="btn text-dark" to="/register"><u>Créer un compte ?</u></router-link>
           </b-card>
         </form>
      </ValidationObserver>
@@ -54,6 +55,7 @@
 import AuthService from "../../services/AuthService";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
+import authService from "@/services/AuthService";
 
 extend('minmax', {
   validate(value, { min, max }) {
@@ -93,17 +95,31 @@ export default {
   methods: {
     handleSubmit: async function () {
       this.isLoading = true
-      const response =  await AuthService.login({ email: this.email, password: this.password })
-      if(response){
-        localStorage.setItem("token",response.data.token)
+      AuthService.login({ email: this.email, password: this.password })
+      .then(response =>{
+          localStorage.setItem("token",response.data.token)
           localStorage.setItem("userId",response.data.data.id)
-          this.$store.dispatch('user',response.data.data)
+          authService.getUser(response.data.data.id,localStorage.getItem('token'))
+            .then(response => this.$store.dispatch('user',response.data))
           if (response.data.data.roles.includes("ROLE_ADMIN")){
             this.$store.dispatch('numberOfProductsNotValid',response.data.data.numberOfProductsNotValid)
+            this.$store.dispatch('numberOfProductsReported',response.data.data.numberOfProductsReported)
           }
         this.isLoading = false
-        this.$router.push(this.$route.query.redirect || '/')
-      }
+        this.$router.push('/')
+      })
+      .catch((e) => {
+          let message = e.response.data.message;
+          if(message === "Invalid credentials."){
+            this.$bvToast.toast("L'email ou le mode de passe est un invalide", {
+              title: 'Attention !',
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 3000,
+            });
+          }
+      })
     }
   },
 };
@@ -166,4 +182,36 @@ export default {
   margin-left: -30px;
   cursor: pointer;
 }
+
+@media screen and (max-width: 576px) {
+
+  .form-frame {
+    width: 100%;
+    margin: 0px;
+    border: none;
+    box-shadow: none;
+    background-color: #f0f0f0;
+    padding-bottom: 40px;
+  }
+
+  .form-top .b-icon {
+    display: none;
+  }
+
+  .container {
+    padding: 0px;
+  }
+
+  .form-data .form-group input {
+    font-size: 14px;
+  }
+
+  .form-data .form-group .form-error {
+    font-size: 10px;
+  }
+
+}
+
+
+
 </style>

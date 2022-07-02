@@ -54,4 +54,27 @@ footer {
   color: #555555;
   text-decoration: none;
 }
+
+@media screen and (max-width: 768px) {
+
+  .footer-box {
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px 20px 0px;
+  }
+
+  .footer-box ul {
+    margin: 10px 0px;
+    padding: 0px;
+    text-align: center;
+  }
+
+  .footer-box .footer-title {
+    font-size: 18px;
+  }
+
+}
 </style>

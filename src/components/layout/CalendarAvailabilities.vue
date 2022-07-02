@@ -88,7 +88,11 @@ export default {
             elt[1].innerHTML = 'Fin';
         },
       submit () {
-        AuthService.getSessionIdPayment(this.product.id,this.$store.getters.user.id,{price:this.totalPrice+this.product.caution})
+        const allPermission = this.$store.getters.allPermission
+        if(!allPermission){
+          this.$router.push('/login')
+        }
+        AuthService.getSessionIdPayment(this.product.id,this.$store.getters.user.id,{price:this.totalPrice+this.product.caution},localStorage.getItem('token'))
             .then(response => {
               this.sessionId = response.data.checkout_session.id
               console.log(response.data.checkout_session.payment_intent)
@@ -102,17 +106,13 @@ export default {
                 renter:'/users/'+this.product.user.id,
                 tenant:'/users/'+this.$store.getters.user.id,
                 paymentIntent: response.data.checkout_session.payment_intent
-              }).then(res => console.log(res.data))
+              },localStorage.getItem('token')).then(res => console.log(res.data))
             })
             .catch(e => console.log(e))
             .finally(()=> this.$refs.checkoutRef.redirectToCheckout())
       },
     },
     mounted() {
-        const userPermission = this.$store.getters.userPermission
-        if(!userPermission){
-          this.$router.push('/')
-        }
         let elt = document.getElementsByClassName('vhd__datepicker__input');
         elt[0].innerHTML = 'Début';
         elt[1].innerHTML = 'Fin';
@@ -130,7 +130,7 @@ export default {
 
 <style>
 .frame-calendar {
-    margin: 50px 0px 50px 50px;
+  margin: 20px 0px;
     padding: 40px 50px;
     min-width: 350px;
     background-color: #ffffff;
@@ -140,6 +140,10 @@ export default {
 .form-calendar {
     display: flex;
     flex-direction: column;
+}
+
+.form-calendar .vhd__datepicker {
+  right: 0px;
 }
 
 .title-form {
@@ -157,5 +161,40 @@ export default {
     font-size: 90%;
     border: 1px solid #dddddd;
     cursor:pointer
+}
+
+@media screen and (max-width: 992px) {
+
+  .frame-calendar h4 {
+    font-size: 20px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .frame-calendar {
+    margin: 40px 0px 60px 0px;
+    padding: 30px 30px;
+    width: 100%;
+    border-radius: 0px;
+  }
+
+  .frame-calendar .title-form {
+    margin-bottom: 20px;
+  }
+
+  .frame-calendar .submit-button {
+    width: 100%;
+    text-align: center;
+    border-radius: 25px !important;
+    padding: 8px;
+    margin: 40px 0px 0px 0px;
+  }
+
+  .frame-calendar .date-picker-price {
+    font-size: 12px;
+  }
+  
 }
 </style>

@@ -2,24 +2,40 @@
 <div class="dqs main-frame">
 	<div class="container m-0 p-0 mw-100">
 		<div class="row mt-5">
-			<div class="col-md-8">
+			<div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
 				<div class="user-details">
-					<h2>{{ user.firstName }} {{ user.lastName }}</h2><h2 class="title-separator"> | </h2><h4 class="user-details-note">{{ user.note }}/5 <small> (0 note)</small></h4>
-					<div>Habite à <strong>{{ addressCity }} ({{ addressRegion }})</strong></div>
+					<h2>{{ user.firstName }} {{ user.lastName }}</h2><h2 class="title-separator"> | </h2><h4 class="user-details-note">{{ user.note ? user.note : '-' }} / 5 <small> (0 note)</small></h4>
+					<div class="user-address">Habite à <strong>{{ addressCity }} ({{ addressRegion }})</strong></div>
 					<div class="row user-products">
 						<div class="col-md-12">
 							<h4>Annonces de ce loueur <small> ({{ products.length }})</small></h4>
 							<hr>
 							<div v-if="paginatedProducts.length > 0" class="">
                 <b-card-group deck class="card-deck-custom-grid">
-                    <router-link v-for="product in paginatedProducts" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
-                        <b-card class="product-card" :img-src="product.files" img-alt="Image" img-top>
-                            <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
-                            <template #footer>
-                                <small class="text-muted">{{ product.price }}€ / jour</small>
-                            </template>
-                        </b-card>
-                    </router-link>
+                  <router-link v-for="product in paginatedProducts" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
+                    <b-card class="product-card">
+                      <template #header>
+                        <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+                          <img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                        </div>
+                      </template>
+                      <b-card-text class="d-flex flex-column justify-content-between">
+                        <div class="product-card-text">{{ product.name }}</div>
+                        <div class="text-muted">
+                          <div class="price-bloc">{{ product.price }}€ / jour</div>
+                          <div class="ratings-bloc">
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 0.2) ? 'star' : (product.averageRatings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 1.2) ? 'star' : (product.averageRatings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 2.2) ? 'star' : (product.averageRatings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 3.2) ? 'star' : (product.averageRatings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 4.2) ? 'star' : (product.averageRatings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <span> ({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</span>
+                          </div>
+                          <div class="address-bloc">{{ product.address.city }} &bull; {{ product.address.region.name }} ({{ product.address.region.number }})</div>
+                        </div>
+                      </b-card-text>
+                    </b-card>
+                  </router-link>
                 </b-card-group>
                 <b-pagination
                     pills
@@ -40,7 +56,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
 				<div class="contact-form">
 					<FormContact v-bind:user="user"/>
 				</div>
@@ -52,6 +68,7 @@
 
 <script>
 import FormContact from '../../layout/FormContact.vue';
+import authService from "@/services/AuthService";
 
 export default {
   components: {
@@ -61,55 +78,28 @@ export default {
   data() {
     return {
       user: {},
-      perPage: 8,
+      perPage: 12,
       currentPage: 1,
       paginatedProducts: [],
       nbResults: 0,
       products: [],
       addressCity: '',
       addressRegion: '',
+      url: process.env.VUE_APP_URL
     }
   },
-  mounted() {
-	let userId = this.$route.params.userId;
-	if (userId) {
-		/*let user = fetch(blablabla + userId)
-    let addressUser = user.address.split('///&///&///&///&');
-    this.addressCity = addressUser[1].charAt(0).toUpperCase() + addressUser[1].slice(1);
-    this.addressRegion = addressUser[2];*/
-    ///////////////////////////////
-    this.addressCity = 'paris'.charAt(0).toUpperCase() + 'paris'.slice(1);
-    this.addressRegion = '75';
-    ///////////////////////////////
-		let user = {
-			id: 2,
-			firstName: 'julien',
-			lastName: 'Etienne',
-			address: 'avenue des champs elysées///&///&///&///&, paris///&///&///&, 75',
-			note: '1.6',
-			products: [
-				{ id: 1, region: 'Ain', name: 'nom du produit test', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 24, note: '3', files: 'https://picsum.photos/300/300', category: {id:1, name:'sub item 222', parent:'Bricolage'}, },
-        { id: 2, region: 'test1', name: 'nom du produit', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 28, note: '4', files: 'https://picsum.photos/500/300', category: {id:1, name:'Perceuse', parent:'Bricolage'}, },
-        { id: 3, region: 'test2', name: 'nom du produittest', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 54, note: '5', files: 'https://picsum.photos/300/300', category: {id:1, name:'sub item 222', parent:'Bricolage'}, },
-        { id: 4, region: 'test3', name: ' test fou', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 39, note: '1', files: 'https://picsum.photos/300/300', category: {id:1, name:'sub item 222', parent:'Bricolage'}, },
-        { id: 5, region: 'Ain', name: 'nom du produit', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 33, note: '2', files: 'https://picsum.photos/300/300', category: {id:1, name:'Perceuse', parent:'Bricolage'}, },
-        { id: 21, region: 'Ain', name: 'nom du test', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 45, note: '2', files: 'https://picsum.photos/300/300', category: {id:1, name:'Perceuse', parent:'Bricolage'}, },
-        { id: 22, region: 'Ain', name: 'nom du produit', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 63, note: '2', files: 'https://picsum.photos/300/300', category: {id:1, name:'Perceuse', parent:'Bricolage'}, },
-        { id: 23, region: 'Ain', name: 'nom du produit', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 85, note: '4', files: 'https://picsum.photos/300/300', category: {id:1, name:'Perceuse', parent:'Bricolage'}, },
-        { id: 24, region: 'Ain', name: 'nom du produit', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 145, note: '3', files: 'https://picsum.photos/300/300', category: {id:1, name:'sub item 222', parent:'Bricolage'}, },
-        { id: 25, region: 'Ain', name: 'nom du produit', description: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.', address: 'adresse du loueur', price: 10, note: '3', files: 'https://picsum.photos/300/300', category: {id:1, name:'Perceuse', parent:'Bricolage'}, },
-      ],
-			comments: [
-				{ id: 1, text: 'blobloblo', createdAt: '01/01/2022', rating: '2.8', user: { id: 24, firstName: 'emile', lastName: 'Roux'}},
-                { id: 2, text: 'bliblibli', createdAt: '05/01/2022', rating: '3.7', user: { id: 21, firstName: 'stephane', lastName: 'Martin'}},
-                { id: 3, text: 'blablabla', createdAt: '02/01/2022', rating: '1', user: { id: 37, firstName: 'amelie', lastName: 'Audart'}},
-			]
-		};
-		this.user = user;
-    this.products = user.products;
-    this.nbResults = this.user.products.length;
-    this.paginate(this.perPage, 0);
-	}
+  async mounted() {
+    let userId = this.$route.params.userId;
+    if (userId) {
+      let user = await authService.getUser(userId,localStorage.getItem('token'))
+      user = user.data
+      this.addressCity = user.address.city
+      this.addressRegion = user.address.region.name
+      this.user = user;
+      this.products = user.products.filter(product => product.isValid === true);
+      this.nbResults = this.user.products.length;
+      this.paginate(this.perPage, 0);
+    }
   },
   methods: {
     paginate(page_size, page_number) {
@@ -153,14 +143,107 @@ export default {
 	margin: 20px 20px 20px 0px;
 }
 
-.card-deck .card {
-    margin-top: 10px;
-    margin-bottom: 30px;
+.card-deck-custom-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-deck-custom-grid a {
+  flex: 0 0 33%;
+  max-width: 33%;
+  padding: 10px 2px !important;
+}
+
+.card-deck-custom-grid .card {
+    margin-bottom: 10px;
+    width: auto !important;
+}
+
+.card-deck-custom-grid .card-header {
+  width: 100%;
+  height: 200px;
 }
 
 .card-deck-custom-grid .card img {
-	width: 250px;
-	height: 200px;
+	width: auto;
+	height: auto;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.contact-form {
+  position: sticky !important;
+  top: 100px;
+}
+
+@media screen and (max-width: 1200px) {
+
+  .contact-form {
+    position: static !important;
+  }
+  
+}
+
+@media screen and (max-width: 992px) {
+
+  .card-deck-custom-grid a {
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin: 0px;
+  }
+  
+}
+
+@media screen and (max-width: 768px) {
+
+  .contact-form {
+    margin-bottom: 60px;
+  }
+
+  .user-details h2 {
+    font-size: 24px;
+  }
+
+  .user-details .user-details-note {
+    font-size: 20px;
+  }
+
+  .user-details .user-address {
+    font-size: 16px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .user-details h2 {
+    font-size: 20px;
+  }
+
+  .user-details .user-details-note {
+    font-size: 16px;
+  }
+
+  .user-details .user-address {
+    font-size: 14px;
+  }
+
+  .user-products h4 {
+    font-size: 16px;
+  }
+
+  .container .row.mt-5 {
+    margin-top: 0px !important;
+  }
+
+  .card-deck-custom-grid .card-text {
+    font-size: 12px;
+  }
+
+  .card-deck-custom-grid .card-text .address-bloc {
+    font-size: 10px;
+  }
+  
 }
 
 </style>

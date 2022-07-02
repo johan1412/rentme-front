@@ -3,10 +3,11 @@
     <ValidationObserver v-slot="{ validate }">
       <form class="form-contact-user" @submit.prevent="validate().then(handleSubmit)">
         <h4 class="title-form">Demande d'informations</h4>
-        <div>
+        <div class="mb-3">
           Message pour <strong>{{ user.firstName }} {{ user.lastName }}</strong>
         </div>
         <ValidationProvider rules="required|minmax:1,1000" v-slot="{ errors,failed }">
+          <span class="form-error">{{ errors[0] }}</span>
           <textarea
             class="input-message"
             type="text"
@@ -14,9 +15,8 @@
             v-model="text"
             :class="`is-${failed}`"
           ></textarea>
-          <span class="form-error">{{ errors[0] }}</span>
         </ValidationProvider>
-        <button class="submit-button">ENVOYER LE MESSAGE</button>
+        <button class="submit-button">ENVOYER</button>
       </form>
     </ValidationObserver>
   </div>
@@ -55,12 +55,24 @@ export default {
   }),
   methods: {
     handleSubmit: function () {
+      const allPermission = this.$store.getters.allPermission
+      if(!allPermission){
+        this.$router.push('/login')
+      }
       MessagesService.postMessage({
-          senderId : parseInt(this.user.id),
-          recieverId : parseInt(this.$store.getters.user["@id"].split("/")[2]),
-          text : this.text,
-          productId : parseInt(this.product.id)
+        sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
+        reciever: "users/" + this.user.id,
+        text : this.text,
+        productId : null
+      },localStorage.getItem('token'))
+      this.$bvToast.toast('Votre demande a été enregistré avec succès', {
+        title: 'Merci !',
+        variant: 'success',
+        solid: true,
+        toaster: 'b-toaster-top-full',
+        autoHideDelay: 3000
       })
+      this.text = "Bonjour"
     },
   },
 };
@@ -68,7 +80,7 @@ export default {
 
 <style scoped>
 .frame-form-contact-user {
-  margin: 50px 0px 50px 50px;
+  margin: 20px 0px;
   padding: 40px 50px;
   background-color: #ffffff;
   border-radius: 25px;
@@ -85,9 +97,9 @@ export default {
 }
 
 .input-message {
-  margin-top: 20px;
   margin-bottom: 40px;
   height: 300px;
+  width: 100%;
   border: 1px solid #cccccc;
 }
 
@@ -100,5 +112,31 @@ export default {
   font-weight: bold;
   font-size: 90%;
   border: 1px solid #dddddd;
+}
+
+@media screen and (max-width: 992px) {
+
+  .frame-form-contact-user h4 {
+    font-size: 20px;
+  }
+  
+}
+
+@media screen and (max-width: 576px) {
+
+  .frame-form-contact-user {
+    margin: 20px 0px;
+    padding: 30px 30px;
+    border-radius: 0px;
+  }
+  
+  .frame-form-contact-user .submit-button {
+    width: 100%;
+    text-align: center;
+    border-radius: 25px !important;
+    padding: 8px;
+    margin: 40px 0px 0px 0px;
+  }
+  
 }
 </style>

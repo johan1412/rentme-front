@@ -35,6 +35,12 @@ export default {
     informationsSelected: true,
     reservationsSelected: false,
   }),
+  mounted() {
+    const allPermission = this.$store.getters.allPermission
+    if(!allPermission){
+      this.$router.push('/')
+    }
+  },
   methods: {
     subMenuHandler(clicked) {
       if(clicked == 'info') {
@@ -71,6 +77,30 @@ export default {
 .sub-menu-account .sub-menu-item {
   padding: 15px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+
+  .sub-menu-account .sub-menu-item {
+    font-size: 14px;
+  }
+
+  .sub-menu-content {
+    font-size: 12px;
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+
+  .sub-menu-account .sub-menu-item {
+    font-size: 13px;
+  }
+
+  .sub-menu-content {
+    font-size: 12px;
+  }
+
 }
 
 </style>
