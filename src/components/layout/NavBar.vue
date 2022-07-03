@@ -13,12 +13,16 @@
         <b-nav-item v-if="!user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/messages">Mes messages</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/reportings">Signalements ({{numberOfProductsReported}})</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/products">Annonces en attente ({{numberOfProductsNotValid}})</router-link></b-nav-item>
-        <b-nav-item-dropdown v-if="user.roles.includes('ROLE_ADMIN')" text="Actions">
-          <b-dropdown-item><router-link to="/admin/categories">Ajouter une catégorie</router-link></b-dropdown-item>
-          <b-dropdown-item><router-link to="/admin/categories-list">Liste des catégories</router-link></b-dropdown-item>
-          <b-dropdown-item><router-link to="/admin/regions">Ajouter un département</router-link></b-dropdown-item>
-          <b-dropdown-item><router-link to="/admin/regions-list">Liste des départements</router-link></b-dropdown-item>
-        </b-nav-item-dropdown>
+        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')" @click="showActionsMenu = !showActionsMenu" class="bloc-dropdown"><div class="btn text-dark">Actions<b-icon class="dropdown-icon" icon="triangle-fill"></b-icon></div>
+          <div v-show="showActionsMenu" class="dropdown-actions-list">
+            <ul>
+              <li><router-link class="dropdown-link" to="/admin/categories">Ajouter une catégorie</router-link></li>
+              <li><router-link to="/admin/categories-list">Liste des catégories</router-link></li>
+              <li><router-link to="/admin/regions">Ajouter un département</router-link></li>
+              <li><router-link to="/admin/regions-list">Liste des départements</router-link></li>
+            </ul>
+          </div>
+        </b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/publish">Publier une annonce</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/products">Mes annonces</router-link></b-nav-item>
         <b-nav-item><router-link class="btn text-dark" to="/account">Mon compte</router-link></b-nav-item>
@@ -51,7 +55,8 @@ export default {
   data() {
     return {
       modalShow: false,
-      isLoading : false
+      isLoading : false,
+      showActionsMenu: false,
     }
   },
   methods: {
@@ -100,6 +105,45 @@ export default {
   background-color: #ffffff !important;
   color: #000000 !important;
   border: 1px solid #000000 !important;
+}
+
+.bloc-dropdown {
+  position: relative;
+}
+
+.dropdown-actions-list {
+  z-index: 9999;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  width: 200px;
+}
+
+.dropdown-actions-list ul {
+  list-style: none;
+  padding: 0px;
+}
+
+.dropdown-actions-list ul li {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dropdown-actions-list ul li:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-actions-list ul li a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.dropdown-icon {
+  width: 8px;
+  margin-left: 5px;
+  transform: rotate(180deg);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 @media screen and (max-width: 1400px) {

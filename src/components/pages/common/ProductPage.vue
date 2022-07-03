@@ -117,20 +117,12 @@
 				</div>
 			</div>
 		</div>
-		<div class="row bloc-similar-ads">
-			<div class="similar-ads">
-				<h4>Annonces similaires</h4>
-				<hr>
-				<SimilarAds v-bind:subCategory="product.category"/>
-			</div>
-		</div>
 	</div>
 </div>
 </template>
 
 <script>
 import Comments from '../../layout/Comments.vue';
-import SimilarAds from '../../layout/SimilarAds.vue';
 import FormContact from '../../layout/FormContact.vue';
 import CalendarAvailabilities from '../../layout/CalendarAvailabilities.vue';
 import GoogleMap from '../../layout/GoogleMap.vue';
@@ -158,7 +150,6 @@ export default {
   components: {
     //SearchBar,
     Comments,
-    SimilarAds,
     FormContact,
     CalendarAvailabilities,
     GoogleMap,
@@ -576,12 +567,6 @@ export default {
 	margin-top: 60px;
 }
 
-.similar-ads {
-	margin-top: 60px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
 @media screen and (max-width: 992px) {
 
   .product-details h2 {
@@ -628,20 +613,12 @@ export default {
     margin-bottom: 50px;
   }
 
-  .similar-ads h4 {
-    font-size: 20px;
-  }
-  
 }
 
 @media screen and (max-width: 768px) {
 
   .product-description {
     margin-top: 40px;
-  }
-  
-  .bloc-similar-ads {
-    margin: 0px !important;
   }
   
 }
@@ -756,11 +733,7 @@ export default {
   .comments {
     margin-bottom: 40px;
   }
-  
-  .similar-ads h4 {
-    font-size: 18px;
-  }
-  
+
 }
 
 </style>
