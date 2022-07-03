@@ -18,7 +18,7 @@
                 <p class="text-muted"> Prix payé en total avec caution :</p>
                 <h5 class="mt-3 mb-4">{{ reservation.price }} €</h5>
               </div>
-              <img class="align-self-center" src='https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'>
+              <img :src="reservation.product.files.length !== 0 ? 'https://localhost:8443/media'+reservation.product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" width="100%"/>
             </div>
           </div>
           <div class="localisation">
@@ -49,14 +49,28 @@
             </div>
           </div>
           <div class="card-footer bg-white px-sm-3 pt-sm-4 px-0">
-            <div class="row text-center ">
+            <div class="row text-center">
               <div class="col my-auto">
                 <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Produit récupéré</button>
-                <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Produit rendu</button>
-                <h5 v-on:click="myMethod(reservation)" v-if="reservation.state === 'restored'">
+                <button @click="modalFunction(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Produit rendu</button>
+                <h5 v-if="reservation.state === 'restored' && reservation.paymentIntent === 'success'">
                   <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé, veuillez vérifier vote boite mail</p>
                 </h5>
+                  <h5 v-if="reservation.state === 'restored' && reservation.paymentIntent !== 'success'">
+                  <p>Votre caution de {{reservation.product.caution}}€ ne va pas être remboursé, car vous avez dépassez la date de limite</p>
+                </h5>
               </div>
+              <b-modal id="modalRefund" title="Êtes-vous sûr de vouloir rendre le produit ?">
+                <div class="modal-body container m-auto">
+                  <p  class="my-4">Si le produit n'a pas été rendu à l'heure ou avant la date de limite, votre caution ne sera pas remboursé</p>
+                </div>
+                <template #modal-footer="{ }">
+                  <div class="mx-auto">
+                    <b-button class="rounded-0 mr-1" @click="$bvModal.hide('modalRefund')">Annuler</b-button>
+                    <b-button class="rounded-0 ml-1" @click="myMethod(currentReservation)" variant="success">Valider</b-button>
+                  </div>
+                </template>
+              </b-modal>
             </div>
           </div>
         </div>
@@ -81,6 +95,7 @@ export default {
   data: () => ({
     informationsTabActive: true,
     reservationsTabActive: false,
+    currentReservation: null,
   }),
   computed:{
     ...mapGetters(['reservations'])
@@ -96,17 +111,75 @@ export default {
     ).catch(e => console.log(e))
   },
   methods: {
+    modalFunction(reservation){
+      this.currentReservation = reservation
+      this.$bvModal.show('modalRefund')
+    },
     myMethod: function myMethod(reservation) {
-      this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === reservation.id ? {...elem,state:reservation.state === 'payed' ? 'retrieved' : 'restored'} : elem))
-      AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
-      .catch(e => console.log(e))
+      console.log(reservation.state)
       if (reservation.state === 'retrieved'){
         AuthService.refund({id:reservation.id},localStorage.getItem('token'))
             .then(response => {
-              console.log(response)
+              if(response.data.message === "Refund is failed"){
+                this.$bvToast.toast('Votre remboursement a échoué', {
+                  title: 'Oups !',
+                  variant: 'danger',
+                  solid: true,
+                  toaster: 'b-toaster-top-full',
+                  autoHideDelay: 3000
+                })
+                this.$bvModal.hide('modalRefund')
+              }
+              if(response.data.message === "Refund not possible"){
+                AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
+                    .then(response => {
+                      this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
+                      this.$bvToast.toast('Votre remboursement a échoué et votre caution ne sera pas remboursée, car vous avez dépassé la limite de date du rendu', {
+                        title: 'Merci !',
+                        variant: 'success',
+                        solid: true,
+                        toaster: 'b-toaster-top-full',
+                        autoHideDelay: 5000
+                      })
+                      })
+                    .catch(e => console.log(e))
+                    .finally(() => this.$bvModal.hide('modalRefund'))
+
+              }
+              if(response.data.message === "Refund is successfully completed"){
+                AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored',paymentIntent:"success"},localStorage.getItem('token'))
+                    .then(response => {
+                      this.$store.dispatch('reservations', this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
+                      this.$bvToast.toast('Votre remboursement a été effectué avec succès !', {
+                        title: 'Merci !',
+                        variant: 'success',
+                        solid: true,
+                        toaster: 'b-toaster-top-full',
+                        autoHideDelay: 3000
+                      })
+                    })
+                    .catch(e => console.log(e))
+                    .finally(() => this.$bvModal.hide('modalRefund'))
+              }
             }
         ).catch(e => console.log(e))
+        .finally(() => this.$bvModal.hide('modalRefund'))
       }
+      else{
+        AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
+            .then(response => {
+              this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
+              this.$bvToast.toast("Veuillez récupérer le produit à l'adresse indiqué sur l'annonce", {
+                title: 'Merci !',
+                variant: 'success',
+                solid: true,
+                toaster: 'b-toaster-top-full',
+                autoHideDelay: 5000
+              })
+            })
+            .catch(e => console.log(e))
+      }
+      this.currentReservation = null
     }
   },
 }
