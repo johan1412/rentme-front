@@ -4,13 +4,13 @@
         <form @submit.prevent="validate().then(handleSubmit)">
           <div class="row">
             <div class="form-group col-md-5">
-              <label>Nom de la catégorie</label>
+              <label>Nom du département</label>
               <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors,failed }">
                 <input
                   type="text"
                   v-model="name"
                   class="form-control"
-                  placeholder="Entrez le nom de la catégorie"
+                  placeholder="Entrez le nom du département"
                   required
                   :class="`is-${failed}`"
                 />
@@ -18,27 +18,19 @@
               </ValidationProvider>
             </div>
             <div class="form-group col-md-5">
-              <label for="photos">Photo d'illustration</label>
-              <ValidationProvider rules="size:2000" v-slot="{ errors,failed }">
+              <label>Numéro du département</label>
+              <ValidationProvider rules="required" v-slot="{ errors,failed }">
                 <input
-                  type="file"
+                  type="number"
+                  v-model="number"
                   class="form-control"
-                  id="photo"
-                  ref="file"
-                  @change="uploadFile"
+                  placeholder="Entrez le numéro du département"
+                  required
                   :class="`is-${failed}`"
                 />
                 <span class="form-error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
-          </div>
-          <div class="form-group">
-            <label>Catégorie parente :</label>
-              <b-form-select v-model="parent" :options="parentCategories" value-field="id" text-field="name">
-                <template #first>
-                  <b-form-select-option :value="null" enabled>Pas de parent</b-form-select-option>
-                </template>
-              </b-form-select>
           </div>
           <div class="mt-5 d-flex justify-content-center"><button type="submit" class="btn text-light submit-button">Ajouter</button></div>
         </form>
@@ -47,10 +39,10 @@
 </template>
 
 <script>
-import AuthService from "../../services/AuthService";
+import RegionService from "../../services/RegionService";
 import {mapGetters} from "vuex";
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, size } from 'vee-validate/dist/rules';
+import { required } from 'vee-validate/dist/rules';
 
 extend('minmax', {
   validate(value, { min, max }) {
@@ -65,72 +57,43 @@ extend('required', {
     message: 'Ce champs est obligatoire',
 });
 
-extend('size', {
-  ...size,
-  message: 'Le fichier ne doit pas faire plus de {_size_}Kb',
-  params: ['size']
-});
-
 export default {
-  name: "CategoryForm",
+  name: "RegionForm",
   components: {
     ValidationProvider,
     ValidationObserver,
   },
   data: () => ({
-    parent: null,
-    name:"",
-    image: null,
-    parentCategories: [],
-  })
-
-  ,
+    name: "",
+    number: null,
+  }),
   computed:{
-    ...mapGetters(['categories'])
+    ...mapGetters(['regions'])
   },
   mounted() {
     const adminPermission = this.$store.getters.adminPermission
     if(!adminPermission){
         this.$router.push('/')
     }
-    this.parentCategories = this.categories.filter(category => category.parent === null);
   },
   methods: {
-    uploadFile() {
-      this.image = this.$refs.file.files[0];
-    },
     handleSubmit:  async function () {
-      let file = null;
-      let exist = this.categories.some(category => category.name === this.name);
-      if(exist) {
-        this.$bvToast.toast('Cette catégorie existe déjà', {
-          title: 'Erreur',
-          variant: 'danger',
-          solid: true,
-          autoHideDelay: 5000,
-        });
-        return;
-      }
       try {
-        if(this.image) {
-          const formData = new FormData();
-          formData.append('file', this.image);
-          let img = await AuthService.postImage(formData,localStorage.getItem('token'));
-          file = img.data.contentUrl ? { path : img.data.contentUrl } : null
+        let exist = this.regions.some(region => (region.name === this.name || region.number === this.number));
+        if(exist) {
+          this.$bvToast.toast('Ce département existe déjà', {
+            title: 'Erreur',
+            variant: 'danger',
+            solid: true,
+            autoHideDelay: 5000,
+          });
+          return;
         }
-        let parent = this.parent ? "/categories/" + this.parent : null;
-        let name = this.name.charAt(0).toUpperCase() + this.name.slice(1);
-        const response = await AuthService.postCategory({ name: name, parent: parent, img: file },localStorage.getItem('token'));
-        if(parent == null){
-          this.$store.dispatch('categories',[...this.categories,response.data])
-        } else {
-          this.$store.dispatch('categories',[...this.categories.map(
-              category => category.id === this.parent ? {...category,children:[...category.children, response.data]} : category
-          )])
-        }
+        const response = await RegionService.postRegion({ name: this.name, number: this.number }, localStorage.getItem('token'));
+        this.$store.dispatch('regions',[...this.categories,response.data])
         this.name = "";
         this.parent = null;
-        this.$bvToast.toast('La catégorie a bien été créée', {
+        this.$bvToast.toast('Le département a bien été créé', {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
@@ -139,7 +102,7 @@ export default {
         });
       } catch(e) {
         console.log(e)
-        this.$bvToast.toast('Erreur lors de la création de la catégorie', {
+        this.$bvToast.toast('Erreur lors de la création du département', {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',

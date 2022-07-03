@@ -4,6 +4,9 @@ import VueRouter from 'vue-router'
 import LoginPage from './components/pages/common/auth/LoginPage.vue'
 import RegisterPage from './components/pages/common/auth/RegisterPage.vue'
 import CategoryPage from './components/pages/admin/CategoryPage.vue'
+import ListCategoriesPage from './components/pages/admin/ListCategoriesPage.vue'
+import RegionPage from './components/pages/admin/RegionPage.vue'
+import ListRegionsPage from './components/pages/admin/ListRegionsPage.vue'
 import ProductsPage from './components/pages/admin/ProductsPage.vue'
 import ReportingsPage from './components/pages/admin/ReportingsPage.vue'
 import ProductPage from './components/pages/common/ProductPage.vue'
@@ -58,7 +61,10 @@ const routes = [
   { path: '/', component: HomePage },
   { path: '/login', component: LoginPage },
   { path: '/register', component: RegisterPage },
+  { path: '/admin/categories-list', component: ListCategoriesPage },
   { path: '/admin/categories', component: CategoryPage },
+  { path: '/admin/regions-list', component: ListRegionsPage },
+  { path: '/admin/regions', component: RegionPage },
   { path: '/admin/products', component: ProductsPage },
   { path: '/admin/reportings', component: ReportingsPage },
   { path: '/search', component: SearchPage },

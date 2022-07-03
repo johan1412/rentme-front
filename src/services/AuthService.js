@@ -2,9 +2,7 @@ import axios from "axios";
 
 axios.defaults.baseURL = process.env.VUE_APP_URL
 
- 
 const url = process.env.VUE_APP_URL
-
 
 
 const login = async (data) => {
@@ -85,6 +83,22 @@ const getCategories = async () => {
 
 const getCategory = async (id) => {
   return await axios.get(url+`/categories/${id}`);
+};
+
+const editCategory = async (id,data,token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.patch(url+`/categories/${id}`,data, {headers});
+};
+
+const deleteCategory = async (id,token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.delete(url+`/categories/${id}`, {headers});
 };
 
 const getProductsNotValid = async (token) => {
@@ -205,6 +219,8 @@ export default {
   updateReservation,
   getCategories,
   getCategory,
+  editCategory,
+  deleteCategory,
   getProduct,
   getSessionIdPayment,
   postImage,
