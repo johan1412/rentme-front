@@ -13,7 +13,12 @@
         <b-nav-item v-if="!user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/messages">Mes messages</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/reportings">Signalements ({{numberOfProductsReported}})</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/products">Annonces en attente ({{numberOfProductsNotValid}})</router-link></b-nav-item>
-        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/categories">Nouvelle catégorie</router-link></b-nav-item>
+        <b-nav-item-dropdown v-if="user.roles.includes('ROLE_ADMIN')" text="Actions">
+          <b-dropdown-item><router-link to="/admin/categories">Ajouter une catégorie</router-link></b-dropdown-item>
+          <b-dropdown-item><router-link to="/admin/categories-list">Liste des catégories</router-link></b-dropdown-item>
+          <b-dropdown-item><router-link to="/admin/regions">Ajouter un département</router-link></b-dropdown-item>
+          <b-dropdown-item><router-link to="/admin/regions-list">Liste des départements</router-link></b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/publish">Publier une annonce</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_RENTER')"><router-link class="btn text-dark" to="/products">Mes annonces</router-link></b-nav-item>
         <b-nav-item><router-link class="btn text-dark" to="/account">Mon compte</router-link></b-nav-item>
