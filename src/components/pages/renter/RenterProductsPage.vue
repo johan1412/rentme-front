@@ -67,27 +67,38 @@ export default {
       this.deleteProductSelected = product;
     },
     deleteProductConfirm() {
-      AuthService.deleteProduct(this.deleteProductSelected.id, localStorage.getItem('token'))
-        .then((res) => {
-          console.log(res)
-          this.$store.dispatch("user", {...this.user,products:this.user.products.filter(product => product.id !== this.deleteProductSelected.id)});
-          this.$bvToast.toast('L\'annonce a bien été supprimée', {
-            variant: 'success',
-            solid: true,
-            toaster: 'b-toaster-top-full',
-            autoHideDelay: 3000,
-          });
-          this.deleteProductSelected = null;
-        })
-        .catch(() => {
-          this.$bvToast.toast('Une erreur est survenue', {
-            variant: 'danger',
-            solid: true,
-            toaster: 'b-toaster-top-full',
-            autoHideDelay: 3000,
-          });
-          this.deleteProductSelected = null;
+      if (this.user.products.filter(product => product.id === this.deleteProductSelected.id)[0].reservations.length === 0){
+        AuthService.deleteProduct(this.deleteProductSelected.id, localStorage.getItem('token'))
+            .then((res) => {
+              console.log(res)
+              this.$store.dispatch("user", {...this.user,products:this.user.products.filter(product => product.id !== this.deleteProductSelected.id)});
+              this.$bvToast.toast('L\'annonce a bien été supprimée', {
+                variant: 'success',
+                solid: true,
+                toaster: 'b-toaster-top-full',
+                autoHideDelay: 3000,
+              });
+              this.deleteProductSelected = null;
+            })
+            .catch(() => {
+              this.$bvToast.toast('Une erreur est survenue', {
+                title: 'Oups !',
+                variant: 'danger',
+                solid: true,
+                toaster: 'b-toaster-top-full',
+                autoHideDelay: 3000,
+              });
+              this.deleteProductSelected = null;
+            });
+      }else {
+        this.$bvToast.toast('Vous ne pouvez pas supprimer ce produit, car il est rattaché aux réservations', {
+          title: 'Oups !',
+          variant: 'danger',
+          solid: true,
+          toaster: 'b-toaster-top-full',
+          autoHideDelay: 3000,
         });
+      }
     },
     deleteProductCancel() {
       this.deleteProductSelected = null;
