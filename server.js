@@ -8,3 +8,8 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log('Listening on port ' + port)
 });
+
+if (process.env.NODE_ENV === 'production') {
+    // Handle SPA
+    app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+}
