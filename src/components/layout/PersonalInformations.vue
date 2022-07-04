@@ -266,6 +266,17 @@ export default {
       ).finally(() => {
         this.$bvModal.hide('modalEditRole')
         this.isLoading = false;
+        localStorage.clear();
+        this.$store.dispatch('user',null)
+        this.$store.dispatch('numberOfProductsNotValid',0)
+        this.$store.dispatch('numberOfProductsReported',0)
+        this.$store.dispatch('parentCategories',[])
+        this.$store.dispatch('reservations',[])
+        if(this.$route.fullPath !== '/') {
+          this.$router.push('/login')
+        } else {
+          this.$router.go()
+        }
       })
       if (this.roleRenter){
         this.user.products.forEach(product => {
@@ -286,6 +297,7 @@ export default {
           )
         })
       }
+
     },
     handleCancelRole() {
       this.roleRenter = !this.roleRenter;
@@ -305,6 +317,18 @@ export default {
             autoHideDelay: 3000
           })
           this.$store.dispatch('user',response.data)
+          localStorage.clear();
+          this.$store.dispatch('user',null)
+          this.$store.dispatch('products',[])
+          this.$store.dispatch('numberOfProductsNotValid',0)
+          this.$store.dispatch('numberOfProductsReported',0)
+          this.$store.dispatch('parentCategories',[])
+          this.$store.dispatch('reservations',[])
+          if(this.$route.fullPath !== '/') {
+            this.$router.push('/login')
+          } else {
+            this.$router.go()
+          }
         }).catch(e => {
             console.log(e)
             this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
