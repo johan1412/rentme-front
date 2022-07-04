@@ -43,7 +43,7 @@
 </template>
 <script>
 import AuthService from '../../../services/AuthService';
-//import {mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
   name: "RenterProductsPage",
@@ -52,9 +52,9 @@ export default {
       deleteProductSelected: null,
     };
   },
-  /*computed:{
+  computed:{
     ...mapGetters(['user'])
-  },*/
+  },
   mounted() {
     const renterPermission = this.$store.getters.renterPermission
     if(!renterPermission){
