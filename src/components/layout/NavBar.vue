@@ -67,7 +67,6 @@ export default {
       this.$store.dispatch('numberOfProductsNotValid',0)
       this.$store.dispatch('numberOfProductsReported',0)
       this.$store.dispatch('parentCategories',[])
-      this.$store.dispatch('categories',[])
       this.$store.dispatch('reservations',[])
       this.$router.push('/login')
     }
