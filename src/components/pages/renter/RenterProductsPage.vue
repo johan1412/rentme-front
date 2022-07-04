@@ -69,7 +69,7 @@ export default {
     deleteProductConfirm() {
       AuthService.deleteProduct(this.deleteProductSelected.id, localStorage.getItem('token'))
         .then(() => {
-          this.$store.dispatch("user", this.user.products.filter(product => product.id !== this.deleteProductSelected.id));
+          this.$store.dispatch("user", {...this.user,products:this.user.products.filter(product => product.id !== this.deleteProductSelected.id)});
           this.$bvToast.toast('L\'annonce a bien été supprimée', {
             variant: 'success',
             solid: true,
