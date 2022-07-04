@@ -77,6 +77,7 @@ export default {
             toaster: 'b-toaster-top-full',
             autoHideDelay: 3000,
           });
+          this.deleteProductSelected = null;
         })
         .catch(() => {
           this.$bvToast.toast('Une erreur est survenue', {
@@ -85,8 +86,8 @@ export default {
             toaster: 'b-toaster-top-full',
             autoHideDelay: 3000,
           });
+          this.deleteProductSelected = null;
         });
-      this.deleteProductSelected = null;
     },
     deleteProductCancel() {
       this.deleteProductSelected = null;
