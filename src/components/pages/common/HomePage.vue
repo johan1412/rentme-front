@@ -89,7 +89,7 @@ export default {
       this.categories = response.data['hydra:member'].filter(category => !category?.parent);
     }).catch(e => console.log(e))
     AuthService.getProductsByKeyWord({
-        page: 0,
+        page: 1,
       }).then(response => {
         this.products = response.data.hits.hits;
       }).catch(e => console.log(e))
