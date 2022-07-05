@@ -16,10 +16,10 @@
             <td scope="row">{{ category.id }}</td>
             <td>
               <div>{{ category.name }}</div>
-              <div class="table-icon" v-b-modal.modalEditCategory @click="editCategory(category)">
+              <div class="table-icon"  @click="editCategory(category)">
                 <b-icon class="text-primary" icon="pencil" aria-hidden="true"></b-icon>
               </div>
-              <div class="table-icon" v-b-modal.modalDeleteCategory @click="deleteCategory(category)">
+              <div class="table-icon" @click="deleteCategory(category)">
                 <b-icon class="text-danger" icon="trash" aria-hidden="true"></b-icon>
               </div>
             </td>
@@ -27,10 +27,10 @@
               <ul class="subcategories-list">
                 <li v-for="subCategory in category.children" :key="subCategory.id">
                   <div>{{ subCategory.name }}</div>
-                  <div class="table-icon" v-b-modal.modalEditCategory @click="editCategory(category)">
+                  <div class="table-icon" @click="editCategory(subCategory)">
                     <b-icon class="text-primary" icon="pencil" aria-hidden="true"></b-icon>
                   </div>
-                  <div class="table-icon" v-b-modal.modalDeleteCategory @click="deleteCategory(subCategory)">
+                  <div class="table-icon"  @click="deleteCategory(subCategory)">
                     <b-icon class="text-danger" icon="trash" aria-hidden="true"></b-icon>
                   </div>
                 </li>
@@ -42,24 +42,13 @@
     </div>
     <b-modal id="modalDeleteCategory" title="Suppression">
       <div class="modal-body container m-auto">
-        <p class="my-4">Êtes-vous sûr de vouloir supprimer la catégorie {{ deleteCategorySelected ? deleteCategorySelected.name : '' }} ?</p>
-        <p>En supprimant cette catégorie, vous supprimerez toutes ses sous-catégories également.</p>
+        <p class="my-4">Êtes-vous sûr de vouloir supprimer la catégorie ou la sous-catégorie {{ deleteCategorySelected ? deleteCategorySelected.name : '' }} ?</p>
+        <p>En supprimant cette catégorie et si une catégorie principale, vous supprimerez toutes ses sous-catégories également.</p>
       </div>
       <template #modal-footer="{ cancel }">
         <div class="mx-auto">
-          <b-button class="rounded-0 mr-1" @click="cancel(deleteCategoryCancel())">Annuler</b-button>
-          <b-button class="rounded-0 ml-1" @click="deleteCategoryConfirm($bvModal.hide('modalDeleteCategory'))" variant="success">Confirmer</b-button>
-        </div>
-      </template>
-    </b-modal>
-    <b-modal id="modalDeleteSubCategory" title="Suppression">
-      <div class="modal-body container m-auto">
-        <p class="my-4">Êtes-vous sûr de vouloir supprimer la catégorie {{ deleteCategorySelected ? deleteCategorySelected.name : '' }} ?</p>
-      </div>
-      <template #modal-footer="{ cancel }">
-        <div class="mx-auto">
-          <b-button class="rounded-0 mr-1" @click="cancel(deleteCategoryCancel())">Annuler</b-button>
-          <b-button class="rounded-0 ml-1" @click="deleteCategoryConfirm($bvModal.hide('modalDeleteCategory'))" variant="success">Confirmer</b-button>
+          <b-button class="rounded-0 mr-1" @click="cancel(deleteCategoryCancel)">Annuler</b-button>
+          <b-button class="rounded-0 ml-1" @click="deleteCategoryConfirm(deleteCategorySelected)" variant="success">Confirmer</b-button>
         </div>
       </template>
     </b-modal>
@@ -71,8 +60,8 @@
                 <label>Nom actuel</label>
                 <input type="text" class="form-control" :value="editCategorySelected ? editCategorySelected.name : ''" readonly/>
               </div>
-              <div class="form-group">
-                <label>Nouveau nom</label>
+              <div class="form-group required">
+                <label class="control-label">Nouveau nom</label>
                 <ValidationProvider rules="required|minmax:1,50" v-slot="{ errors, failed }">
                   <input
                     type="text"
@@ -91,7 +80,7 @@
         <template #modal-footer="{ cancel }">
           <div class="mx-auto">
             <b-button class="rounded-0 mr-1" @click="cancel(editCategoryCancel())">Annuler</b-button>
-            <b-button class="rounded-0 ml-1" @click="editCategoryConfirm($bvModal.hide('modalEditCategory'))" variant="success">Valider</b-button>
+            <b-button class="rounded-0 ml-1" @click="editCategoryConfirm(editCategorySelected)" variant="success">Valider</b-button>
           </div>
         </template>
       </b-modal>
@@ -135,14 +124,6 @@ export default {
     if(!adminPermission){
       this.$router.push('/')
     }
-    AuthService.getCategories()
-      .then((response) => {
-        this.$store.dispatch(
-          "categories",
-          response.data["hydra:member"].filter((category) => !category?.parent)
-        );
-      })
-      .catch((e) => console.log(e));
     },
 	computed: {
 		...mapGetters(["categories"]),
@@ -150,37 +131,57 @@ export default {
   methods: {
     deleteCategory(category) {
       this.deleteCategorySelected = category;
+      this.$bvModal.show('modalDeleteCategory')
     },
-    deleteCategoryConfirm() {
-      AuthService.deleteCategory(this.deleteCategorySelected.id, localStorage.getItem("token"))
-      .then((response) => {
-        this.$store.dispatch("categories", response.data);
+    deleteCategoryConfirm(deleteCategorySelected) {
+      AuthService.deleteCategory(deleteCategorySelected.id, localStorage.getItem("token"))
+      .then(() => {
+        if (deleteCategorySelected.parent !== null){
+          this.$store.dispatch("categories", this.$store.getters.categories
+              .map(category => ({...category,children:category.children.length === 0 ? category.children : category.children.filter(child => child.id !== deleteCategorySelected.id)})));
+        }else {
+
+          this.$store.dispatch("categories", this.categories.filter(category => category.id !== deleteCategorySelected.id ));
+        }
         this.$bvToast.toast('La catégorie a bien été supprimée', {
+          toaster: 'b-toaster-top-full',
           variant: 'success',
           solid: true,
           autoHideDelay: 3000,
         });
       })
       .catch(() => {
-        this.$bvToast.toast('Une erreur est survenue', {
+        this.$bvToast.toast('Vous ne pouvez pas supprimer cette catégorie, car elle est déjà attaché à des annonces', {
+          toaster: 'b-toaster-top-full',
           variant: 'danger',
           solid: true,
           autoHideDelay: 3000,
         });
+      })
+      .finally(() => {
+        this.deleteCategorySelected = null
+        this.$bvModal.hide('modalDeleteCategory')
       });
-      this.deleteCategorySelected = null;
     },
     deleteCategoryCancel() {
       this.deleteCategorySelected = null;
     },
     editCategory(category) {
       this.editCategorySelected = category;
+      this.$bvModal.show('modalEditCategory')
     },
-    editCategoryConfirm() {
-      AuthService.editCategory(this.editCategorySelected.id, {name: this.newNameCategory}, localStorage.getItem("token"))
+    editCategoryConfirm(editCategorySelected) {
+      AuthService.editCategory(editCategorySelected.id, {name: this.newNameCategory}, localStorage.getItem("token"))
         .then((response) => {
-          this.$store.dispatch("categories", response.data);
+          if (response.data.parent !== null){
+            this.$store.dispatch("categories", this.$store.getters.categories
+                .map(category => ({...category,children:category.children.length === 0 ? category.children : category.children.map(child => child.id !== response.data.id ? child : {...child,name:response.data.name})})));
+          }else {
+
+            this.$store.dispatch("categories", this.categories.map(category => category.id !== response.data.id ? category: {...category,name:response.data.name}));
+          }
           this.$bvToast.toast('La catégorie a bien été modifiée', {
+            toaster: 'b-toaster-top-full',
             variant: 'success',
             solid: true,
             autoHideDelay: 3000,
@@ -188,12 +189,17 @@ export default {
         })
         .catch(() => {
           this.$bvToast.toast('Une erreur est survenue', {
+            toaster: 'b-toaster-top-full',
             variant: 'danger',
             solid: true,
             autoHideDelay: 3000,
           });
-        });
-      this.editCategorySelected = null;
+        })
+      .finally(() => {
+        this.editCategorySelected = null;
+        this.newNameCategory = ""
+        this.$bvModal.hide('modalEditCategory')
+    })
     },
     editCategoryCancel() {
       this.editCategorySelected = null;
@@ -203,6 +209,7 @@ export default {
 </script>
 
 <style>
+
 .frame-table {
   width: 100%;
   overflow-x: scroll;
@@ -272,4 +279,6 @@ export default {
   }
 
 }
+
+
 </style>
