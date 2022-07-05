@@ -34,7 +34,7 @@
           </div>
           <div class="form-group">
             <label>Catégorie parente :</label>
-              <b-form-select v-model="parent" :options="parentCategories" value-field="id" text-field="name">
+              <b-form-select v-model="parent" :options="parentCategoriesAdmin" value-field="id" text-field="name">
                 <template #first>
                   <b-form-select-option :value="null" enabled>Pas de parent</b-form-select-option>
                 </template>
@@ -81,19 +81,17 @@ export default {
     parent: null,
     name:"",
     image: null,
-    parentCategories: [],
   })
 
   ,
   computed:{
-    ...mapGetters(['categories'])
+    ...mapGetters(['categories','parentCategoriesAdmin'])
   },
   mounted() {
     const adminPermission = this.$store.getters.adminPermission
     if(!adminPermission){
         this.$router.push('/')
     }
-    this.parentCategories = this.categories.filter(category => category.parent === null);
   },
   methods: {
     uploadFile() {
@@ -130,6 +128,7 @@ export default {
         }
         this.name = "";
         this.parent = null;
+        this.image = null;
         this.$bvToast.toast('La catégorie a bien été créée', {
           variant: 'success',
           solid: true,

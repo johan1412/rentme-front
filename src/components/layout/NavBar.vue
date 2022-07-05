@@ -67,14 +67,16 @@ export default {
       nbMsgsUnread: 0
     }
   },
-   mounted() {
-     this.getUnreadNb()
-     setInterval(this.getUnreadNb, 2000)
+   created() {
+     if(this.user !== null){
+       this.getUnreadNb()
+       setInterval(this.getUnreadNb, 2000)
+     }
   },
   methods: {
     getUnreadNb(){
       MessagesService.getUnread(
-          this.$store.getters.user["@id"].split("/")[2],localStorage.getItem('token')
+          this.$store.getters.user.id,localStorage.getItem('token')
       )
           .then((response) => {
             this.nbMsgsUnread = response.data.nb;
