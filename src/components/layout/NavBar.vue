@@ -10,7 +10,13 @@
         <b-nav-item><router-link class="btn text-dark" to="/login">Se connecter</router-link></b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav v-else class="ml-auto">
-        <b-nav-item v-if="!user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/messages">Mes messages</router-link></b-nav-item>
+        <b-nav-item v-if="!user.roles.includes('ROLE_ADMIN')">
+          <router-link class="btn text-dark" to="/messages">
+            <span v-if="nbMsgsUnread > 0" class="unread-messages">
+              {{ nbMsgsUnread }}
+            </span>
+            Mes messages</router-link>
+        </b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/reportings">Signalements ({{numberOfProductsReported}})</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/products">Annonces en attente ({{numberOfProductsNotValid}})</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')" @click="showActionsMenu = !showActionsMenu" class="bloc-dropdown"><div class="btn text-dark">Actions<b-icon class="dropdown-icon" icon="triangle-fill"></b-icon></div>
@@ -49,6 +55,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import MessagesService from "@/services/MessagesService";
 
 export default {
   name: "NavBar",
@@ -57,9 +64,23 @@ export default {
       modalShow: false,
       isLoading : false,
       showActionsMenu: false,
+      nbMsgsUnread: 0
     }
   },
+   mounted() {
+     this.getUnreadNb()
+     setInterval(this.getUnreadNb, 2000)
+  },
   methods: {
+    getUnreadNb(){
+      MessagesService.getUnread(
+          this.$store.getters.user["@id"].split("/")[2],localStorage.getItem('token')
+      )
+          .then((response) => {
+            this.nbMsgsUnread = response.data.nb;
+          })
+          .catch((e) => console.log(e));
+    },
     logout(){
       localStorage.clear();
       this.$store.dispatch('user',null)
@@ -78,6 +99,32 @@ export default {
 </script>
 
 <style scoped>
+
+.unread-messages{
+  background-color: red;
+  color: white;
+  border: black 1px solid;
+  margin-right: 5px;
+  border-radius: 50%;
+  height: 22px;
+  width: 22px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.80em;
+  line-height: 22px;
+  display: block;
+  float: left;
+  animation-duration: 1.2s;
+  animation-name: clignoter;
+  animation-iteration-count: infinite;
+  transition: none;
+}
+
+@keyframes clignoter {
+  0%   { opacity:1; }
+  40%   {opacity:0; }
+  100% { opacity:1; }
+}
 
 .btn {
   padding: 10px 30px;
