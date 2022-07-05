@@ -89,10 +89,10 @@ export default {
           });
           return;
         }
-        const response = await RegionService.postRegion({ name: this.name, number: this.number }, localStorage.getItem('token'));
-        this.$store.dispatch('regions',[...this.categories,response.data])
+        const response = await RegionService.postRegion({ name: this.name, number: parseInt(this.number) }, localStorage.getItem('token'));
+        this.$store.dispatch('regions',[...this.regions,response.data])
         this.name = "";
-        this.parent = null;
+        this.number = null;
         this.$bvToast.toast('Le département a bien été créé', {
           variant: 'success',
           solid: true,

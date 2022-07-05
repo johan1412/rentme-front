@@ -66,7 +66,7 @@ export default {
   methods: {
     getConversations(){
       MessagesService.getConversations(
-          this.$store.getters.user["@id"].split("/")[2],localStorage.getItem('token')
+          this.$store.getters.user.id,localStorage.getItem('token')
       )
           .then((response) => {
             this.conversations = response.data;
@@ -77,7 +77,7 @@ export default {
         this.conversationSelected = this.conversations[this.productIdSelected][this.otherUserSelected]
         MessagesService.setRead(
             this.userId,
-            this.$store.getters.user["@id"].split("/")[2],
+            this.$store.getters.user.id,
             this.productIdSelected,
             localStorage.getItem('token')
         )
@@ -90,7 +90,7 @@ export default {
               productId: this.conversationSelected[0].productId,
               productName: this.conversationSelected[0].productName,
               reciever: this.otherUserSelected,
-              sender: this.$store.getters.user["@id"].split("/")[2],
+              sender: this.$store.getters.user.id,
               text: text,
               userId: this.userId,
             })
