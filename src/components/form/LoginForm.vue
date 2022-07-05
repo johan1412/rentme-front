@@ -43,7 +43,7 @@
               </div>
             </b-card-text>
             <button type="submit" class="btn btn-submit mb-3">Se connecter</button>
-            <a :href="resetPassword" class="btn"><u>Mot de passe oublié ?</u></a>
+            <a href="https://localhost:8443/reset-password" class="btn"><u>Mot de passe oublié ?</u></a>
             <router-link class="btn text-dark" to="/register"><u>Créer un compte ?</u></router-link>
           </b-card>
         </form>
@@ -90,11 +90,6 @@ export default {
   mounted(){
     if(this.$store.getters.user){
       this.$router.push('/')
-    }
-  },
-  computed: {
-    resetPassword(){
-      return process.env.VUE_APP_URL+'/reset-password'
     }
   },
   methods: {

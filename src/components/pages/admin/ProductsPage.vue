@@ -9,7 +9,7 @@
             <b-card no-body class="overflow-hidden">
               <b-row no-gutters class="h-100">
                 <b-col md="4">
-                  <b-card-img :src="product.files.length !== 0 ? mediaRoot+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="Image" class="rounded-0"></b-card-img>
+                  <b-card-img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="Image" class="rounded-0"></b-card-img>
                 </b-col>
                 <b-col md="8" class="d-flex flex-column justify-content-between">
                   <b-card-body :title="product.name">
@@ -62,10 +62,7 @@ import AuthService from "../../../services/AuthService";
 export default {
   name: "ProductsPage",
   computed:{
-    ...mapGetters(['numberOfProductsNotValid','products']),
-    mediaRoot(){
-      return process.env.VUE_APP_URL+'/media'
-    }
+    ...mapGetters(['numberOfProductsNotValid','products'])
   },
   mounted() {
     const adminPermission = this.$store.getters.adminPermission

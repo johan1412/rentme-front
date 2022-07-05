@@ -21,22 +21,6 @@ const getConversations = async (id,token) => {
   return await axios.get(url+`/conversations/${id}`, {headers});
 };
 
-const setRead = async (senderId, recieverId, productId, token) => {
-    const headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer '+token
-    }
-    return await axios.patch(url+`/messages/setread/${senderId}/${recieverId}/${productId}`, null,{headers});
-}
-
-const getUnread = async (id, token) => {
-    const headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer '+token
-    }
-    return await axios.get(url+`/messages/unread/${id}`,{headers});
-}
-
 const postReport = async (data,token) => {
     const headers = {
         'Content-type': 'application/json',
@@ -49,7 +33,5 @@ const postReport = async (data,token) => {
 export default {
   postMessage,
   getConversations,
-  setRead,
-  getUnread,
   postReport
 };

@@ -7,7 +7,7 @@
         <b-card class="product-card">
           <template #header>
             <div class="bloc-image">
-              <img :src="product.files.length !== 0 ? mediaRoot+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+              <img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
             </div>
           </template>
           <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
@@ -53,12 +53,8 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['user']),
-    mediaRoot(){
-      return process.env.VUE_APP_URL+'/media'
-    }
+    ...mapGetters(['user'])
   },
-
   mounted() {
     const renterPermission = this.$store.getters.renterPermission
     if(!renterPermission){
@@ -71,38 +67,25 @@ export default {
       this.deleteProductSelected = product;
     },
     deleteProductConfirm() {
-      if (this.user.products.filter(product => product.id === this.deleteProductSelected.id)[0].reservations.length === 0){
-        AuthService.deleteProduct(this.deleteProductSelected.id, localStorage.getItem('token'))
-            .then((res) => {
-              console.log(res)
-              this.$store.dispatch("user", {...this.user,products:this.user.products.filter(product => product.id !== this.deleteProductSelected.id)});
-              this.$bvToast.toast('L\'annonce a bien été supprimée', {
-                variant: 'success',
-                solid: true,
-                toaster: 'b-toaster-top-full',
-                autoHideDelay: 3000,
-              });
-              this.deleteProductSelected = null;
-            })
-            .catch(() => {
-              this.$bvToast.toast('Une erreur est survenue', {
-                title: 'Oups !',
-                variant: 'danger',
-                solid: true,
-                toaster: 'b-toaster-top-full',
-                autoHideDelay: 3000,
-              });
-              this.deleteProductSelected = null;
-            });
-      }else {
-        this.$bvToast.toast('Vous ne pouvez pas supprimer ce produit, car il est rattaché aux réservations', {
-          title: 'Oups !',
-          variant: 'danger',
-          solid: true,
-          toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+      AuthService.deleteProduct(this.deleteProductSelected.id, localStorage.getItem('token'))
+        .then(() => {
+          this.$store.dispatch("user", {...this.user,products:this.user.products.filter(product => product.id !== this.deleteProductSelected.id)});
+          this.$bvToast.toast('L\'annonce a bien été supprimée', {
+            variant: 'success',
+            solid: true,
+            toaster: 'b-toaster-top-full',
+            autoHideDelay: 3000,
+          });
+        })
+        .catch(() => {
+          this.$bvToast.toast('Une erreur est survenue', {
+            variant: 'danger',
+            solid: true,
+            toaster: 'b-toaster-top-full',
+            autoHideDelay: 3000,
+          });
         });
-      }
+      this.deleteProductSelected = null;
     },
     deleteProductCancel() {
       this.deleteProductSelected = null;

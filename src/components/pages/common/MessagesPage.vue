@@ -17,16 +17,13 @@
                   <strong><b-icon icon="person-fill"></b-icon> {{ otherUser }}</strong>
                   <p>{{ conversation[0].productName.length > 30 ? conversation[0].productName.substring(0, 29) + "..." : conversation[0].productName }}</p>
                 </div>
-                <span
-                    v-if="conversation.filter((element => !element.isRead && element.reciever == $store.getters.user['@id'].split('/')[2])).length > 0"
-                    class="unread-messages"> {{ conversation.filter((element => !element.isRead && element.reciever == $store.getters.user["@id"].split("/")[2])).length }}</span>
               </div>
             </div>
           </div>
         </div>
         <div class="list-messages col-md-8">
           <div class="back-conversations" @click="handleBackConversations"><b-icon icon="arrow-left" aria-hidden="true"></b-icon></div>
-          <Conversation @refreshConversation="refreshSelectedConversation" :messages="conversationSelected" :productId="productIdSelected" :otherUser="otherUserSelected" :userId="userId"/>
+          <Conversation :messages="conversationSelected" :productId="productIdSelected" :otherUser="otherUserSelected" :userId="userId"/>
         </div>
       </div>
     </div>
@@ -49,54 +46,24 @@ export default {
       productNameSelected: null,
       otherUserSelected: null,
       userId: null,
-      intervalId: null
 		};
 	},
 	mounted() {
-    const allPermission = this.$store.getters.allPermission
-    if(!allPermission){
+    const renterPermission = this.$store.getters.renterPermission
+    if(!renterPermission){
       this.$router.push('/')
     }
-    this.getConversations()
-    this.intervalId = setInterval(this.getConversations, 2000)
-  },
-  beforeDestroy() {
-    clearInterval(this.intervalId)
-  },
+		MessagesService.getConversations(
+			this.$store.getters.user["@id"].split("/")[2],localStorage.getItem('token')
+		)
+    .then((response) => {
+      this.conversations = response.data;
+    })
+    .catch((e) => console.log(e));
+	},
   methods: {
-    getConversations(){
-      MessagesService.getConversations(
-          this.$store.getters.user.id,localStorage.getItem('token')
-      )
-          .then((response) => {
-            this.conversations = response.data;
-          })
-          .catch((e) => console.log(e));
-
-      if(this.conversationSelected.length > 0){
-        this.conversationSelected = this.conversations[this.productIdSelected][this.otherUserSelected]
-        MessagesService.setRead(
-            this.userId,
-            this.$store.getters.user.id,
-            this.productIdSelected,
-            localStorage.getItem('token')
-        )
-      }
-    },
-    refreshSelectedConversation(text){
-       this.conversationSelected.push({
-              firstname: this.conversationSelected[0].firstname,
-              lastname: this.conversationSelected[0].lastname,
-              productId: this.conversationSelected[0].productId,
-              productName: this.conversationSelected[0].productName,
-              reciever: this.otherUserSelected,
-              sender: this.$store.getters.user.id,
-              text: text,
-              userId: this.userId,
-            })
-    },
     handleClickConversation(conversation, productId, otherUser, userId) {
-      this.conversationSelected = conversation
+      this.conversationSelected = conversation;
       this.productIdSelected = productId;
       this.otherUserSelected = otherUser;
       this.userId = userId;
@@ -120,23 +87,6 @@ export default {
 };
 </script>
 <style scoped>
-.unread-messages{
-  background-color: red;
-  color: white;
-  border: black 1px solid;
-  display: block;
-  float: right;
-  margin-top: 3px;
-  margin-left: 3px;
-  border-radius: 50%;
-  height: 25px;
-  width: 25px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 0.85em;
-  line-height: 25px;
-}
-
 .back-conversations {
   display: none;
   cursor: pointer;
@@ -166,7 +116,7 @@ export default {
 
 .list-conversations .item-conversations {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
   border-bottom: 1px solid #e5e5e5;

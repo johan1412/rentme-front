@@ -2,7 +2,7 @@
     <div v-if="user.products.length > 0" class="">
       <b-card-group deck class="card-deck-custom-grid mb-5">
           <router-link v-for="product in products" :key="product.id" :to="'/products/' + product.id" :per-page="perPage" :current-page="currentPage">
-              <b-card class="product-card" :img-src="product.files.length !== 0 ? mediaRoot+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-alt="Image" img-top>
+              <b-card class="product-card" :img-src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" img-alt="Image" img-top>
                   <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
                   <template #footer>
                       <small class="text-muted">{{ product.price }}€ / jour</small>
@@ -58,10 +58,7 @@ export default {
     this.paginate(this.perPage, 0);
   },
   computed:{
-    ...mapGetters(['user']),
-    mediaRoot(){
-      return process.env.VUE_APP_URL+'/media'
-    }
+    ...mapGetters(['user'])
   },
 };
 </script>

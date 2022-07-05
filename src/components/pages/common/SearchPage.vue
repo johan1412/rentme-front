@@ -268,7 +268,7 @@
 					<b-card v-if="deckGrid" class="product-card">
 						<template #header>
               <div>
-                <img :src="product._source.image_path !== 0 ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                <img :src="product._source.image_path !== 0 ? 'https://localhost:8443/media'+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
               </div>
             </template>
             <b-card-text class="product-card-text">{{ product._source.name }}</b-card-text>
@@ -533,10 +533,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['categories']),
-    mediaRoot(){
-      return process.env.VUE_APP_URL+'/media'
-    }
+    ...mapGetters(['categories'])
   }
 };
 </script>

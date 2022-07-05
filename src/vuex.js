@@ -41,9 +41,6 @@ const store = new Vuex.Store({
       userPermission: (state, getters) => {
           return getters.user ? getters.user.roles.includes('ROLE_USER') : false
       },
-      messagePermission: (state, getters) => {
-          return getters.user ? getters.user.roles.includes('ROLE_USER','ROLE_RENTER') : false
-      },
       allPermission: (state, getters) => {
             return getters.user ? getters.user.roles.includes('ROLE_USER','ROLE_ADMIN','ROLE_RENTER') : false
       },
@@ -58,9 +55,6 @@ const store = new Vuex.Store({
       },
       categories: (state) => {
         return state.categories
-      },
-      parentCategoriesAdmin: (state) => {
-        return state.categories.filter((category) => category.parent === null);
       },
       regions: (state) => {
         return state.regions

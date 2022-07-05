@@ -18,10 +18,10 @@
             <td><div>{{ region.name }}</div></td>
             <td><div>{{ region.number }}</div></td>
             <td>
-              <div class="table-icon"  @click="editRegion(region)">
+              <div class="table-icon" v-b-modal.modalEditRegion @click="editRegion(region)">
                 <b-icon class="text-primary" icon="pencil" aria-hidden="true"></b-icon>
               </div>
-              <div class="table-icon" @click="deleteRegion(region)">
+              <div class="table-icon" v-b-modal.modalDeleteRegion @click="deleteRegion(region)">
                 <b-icon class="text-danger" icon="trash" aria-hidden="true"></b-icon>
               </div>
             </td>
@@ -33,10 +33,10 @@
       <div class="modal-body container m-auto">
         <p class="my-4">Êtes-vous sûr de vouloir supprimer le département {{ deleteRegionSelected ? deleteRegionSelected.name : '' }} ?</p>
       </div>
-      <template #modal-footer="{  }">
+      <template #modal-footer="{ cancel }">
         <div class="mx-auto">
-          <b-button class="rounded-0 mr-1" @click="deleteRegionCancel()">Annuler</b-button>
-          <b-button class="rounded-0 ml-1" @click="deleteRegionConfirm(deleteRegionSelected)" variant="success">Confirmer</b-button>
+          <b-button class="rounded-0 mr-1" @click="cancel(deleteRegionCancel())">Annuler</b-button>
+          <b-button class="rounded-0 ml-1" @click="deleteRegionConfirm($bvModal.hide('modalDeleteRegion'))" variant="success">Confirmer</b-button>
         </div>
       </template>
     </b-modal>
@@ -86,7 +86,7 @@
         <template #modal-footer="{ cancel }">
           <div class="mx-auto">
             <b-button class="rounded-0 mr-1" @click="cancel(editRegionCancel())">Annuler</b-button>
-            <b-button class="rounded-0 ml-1" @click="editRegionConfirm(editRegionSelected)" variant="success">Valider</b-button>
+            <b-button class="rounded-0 ml-1" @click="editRegionConfirm($bvModal.hide('modalEditRegion'))" variant="success">Valider</b-button>
           </div>
         </template>
       </b-modal>
@@ -131,6 +131,14 @@ export default {
     if(!adminPermission){
       this.$router.push('/')
     }
+    RegionService.getRegions()
+      .then((response) => {
+        this.$store.dispatch(
+          "regions",
+          response.data["hydra:member"]
+        );
+      })
+      .catch((e) => console.log(e));
     },
 	computed: {
 		...mapGetters(["regions"]),
@@ -138,48 +146,12 @@ export default {
   methods: {
     deleteRegion(region) {
       this.deleteRegionSelected = region;
-      this.$bvModal.show('modalDeleteRegion')
     },
-    deleteRegionConfirm(deleteRegionSelected) {
-      RegionService.deleteRegion(deleteRegionSelected.id, localStorage.getItem("token"))
-        .then(() => {
-          this.$store.dispatch("regions", this.regions.filter(region => region.id !== deleteRegionSelected.id));
-          this.$bvToast.toast('Le département a bien été supprimée', {
-            toaster: 'b-toaster-top-full',
-            variant: 'success',
-            solid: true,
-            autoHideDelay: 3000,
-          });
-        })
-        .catch(() => {
-          this.$bvToast.toast('Vous ne pouvez pas supprimer cette region, car elle est déjà attaché aux autres adresses', {
-            toaster: 'b-toaster-top-full',
-            variant: 'danger',
-            solid: true,
-            autoHideDelay: 3000,
-          });
-        })
-      .finally(() => {
-        this.deleteRegionSelected = null;
-        this.$bvModal.hide('modalDeleteRegion')
-      })
-    },
-    deleteRegionCancel() {
-      this.deleteRegionSelected = null;
-      this.$bvModal.hide('modalDeleteRegion')
-    },
-    editRegion(region) {
-      this.editRegionSelected = region;
-      this.$bvModal.show('modalEditRegion')
-    },
-    editRegionConfirm(editRegionSelected) {
-      let nameToSend = this.newNameRegion != "" ? this.newNameRegion : this.deleteRegionSelected.name;
-      let numberTiSend = this.newNumberRegion != "" ? this.newNumberRegion : this.deleteRegionSelected.number;
-      RegionService.updateRegion(editRegionSelected.id, { name: nameToSend, number: parseInt(numberTiSend) }, localStorage.getItem("token"))
+    deleteRegionConfirm() {
+      RegionService.deleteRegion(this.deleteRegionSelected.id, localStorage.getItem("token"))
         .then((response) => {
-          this.$store.dispatch("regions", this.regions.map(region => region.id !== editRegionSelected.id ? region : {...region,name:response.data.name,number:response.data.number}));
-          this.$bvToast.toast('Le département a bien été modifié', {
-            toaster: 'b-toaster-top-full',
+          this.$store.dispatch("regions", response.data);
+          this.$bvToast.toast('Le département a bien été supprimée', {
             variant: 'success',
             solid: true,
             autoHideDelay: 3000,
@@ -187,20 +159,42 @@ export default {
         })
         .catch(() => {
           this.$bvToast.toast('Une erreur est survenue', {
-            toaster: 'b-toaster-top-full',
             variant: 'danger',
             solid: true,
             autoHideDelay: 3000,
           });
+        });
+      this.deleteRegionSelected = null;
+    },
+    deleteRegionCancel() {
+      this.deleteRegionSelected = null;
+    },
+    editRegion(region) {
+      this.editRegionSelected = region;
+    },
+    editRegionConfirm() {
+      let nameToSend = this.newNameRegion != "" ? this.newNameRegion : this.deleteRegionSelected.name;
+      let numberTiSend = this.newNumberRegion != "" ? this.newNumberRegion : this.deleteRegionSelected.number;
+      RegionService.updateRegion(this.editRegionSelected.id, { name: nameToSend, number: numberTiSend }, localStorage.getItem("token"))
+        .then((response) => {
+          this.$store.dispatch("categories", response.data);
+          this.$bvToast.toast('Le département a bien été modifié', {
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 3000,
+          });
         })
-      .finally(() =>{
-        this.editRegionSelected = null
-        this.$bvModal.hide('modalEditRegion')
-      })
+        .catch(() => {
+          this.$bvToast.toast('Une erreur est survenue', {
+            variant: 'danger',
+            solid: true,
+            autoHideDelay: 3000,
+          });
+        });
+      this.editRegionSelected = null;
     },
     editRegionCancel() {
       this.editRegionSelected = null;
-      this.$bvModal.hide('modalEditRegion')
     },
   },
 };
