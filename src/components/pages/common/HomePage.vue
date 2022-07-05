@@ -8,7 +8,7 @@
       <ul>
         <li v-for="category in categories" :key="category.id">
           <router-link :to="'/search?category=' + category.name">
-            <img :src="category.img" alt="" class="icon-category">
+            <img :src="category.img !== null ? mediaRoot+category.img.path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png' " alt="" class="icon-category">
             <p>{{ category.name }}</p>
           </router-link>
         </li>
@@ -27,22 +27,22 @@
                     <b-card class="product-card">
                       <template #header>
                         <div>
-                          <img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                          <img :src="product._source.image_path !== 0 ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
                         </div>
                       </template>
                       <b-card-text class="d-flex flex-column justify-content-between">
-                        <div class="product-card-text">{{ product.name }}</div>
+                        <div class="product-card-text">{{ product._source.name }}</div>
                         <div class="text-muted">
-                          <div class="price-bloc">{{ product.price }}€ / jour</div>
+                          <div class="price-bloc">{{ product._source.price }}€ / jour</div>
                           <div class="ratings-bloc">
-                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 0.2) ? 'star' : (product.averageRatings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 1.2) ? 'star' : (product.averageRatings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 2.2) ? 'star' : (product.averageRatings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 3.2) ? 'star' : (product.averageRatings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                            <b-icon :icon="(!product.averageRatings || product.averageRatings < 4.2) ? 'star' : (product.averageRatings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
-                            <span> ({{ product.numbersOfRatings ? product.numbersOfRatings : 0 }} avis)</span>
+                            <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 0.2) ? 'star' : (product._source.average_ratings > 0.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 1.2) ? 'star' : (product._source.average_ratings > 1.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 2.2) ? 'star' : (product._source.average_ratings > 2.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 3.2) ? 'star' : (product._source.average_ratings > 3.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <b-icon :icon="(!product._source.average_ratings || product._source.average_ratings < 4.2) ? 'star' : (product._source.average_ratings > 4.8 ? 'star-fill' : 'star-half')" aria-hidden="true"></b-icon>
+                            <span> ({{ product._source.numbers_of_ratings ? product._source.numbers_of_ratings : 0 }} avis)</span>
                           </div>
-                          <div class="address-bloc">{{ product.city }} &bull; {{ product.regionName }} ({{ product.region }})</div>
+                          <div class="address-bloc">{{ product._source.ville }} &bull; {{ product._source.region }} ({{ product._source.region_number }})</div>
                         </div>
                       </b-card-text>
                     </b-card>
@@ -79,13 +79,20 @@ export default {
       productsPerPage: 4,
     }
   },
+  computed:{
+    mediaRoot(){
+      return process.env.VUE_APP_URL+'/media'
+    }
+  },
   mounted() {
     AuthService.getCategories().then(response => {
       this.categories = response.data['hydra:member'].filter(category => !category?.parent);
     }).catch(e => console.log(e))
-    AuthService.getProductsValid().then(response => {
-      this.products = response.data['hydra:member'].sort((p1, p2) => { p1.averageRatings - p2.averageRatings }).slice(0, 10);
-    })
+    AuthService.getProductsByKeyWord({
+        page: 1,
+      }).then(response => {
+        this.products = response.data.hits.hits;
+      }).catch(e => console.log(e))
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
   },

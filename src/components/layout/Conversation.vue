@@ -3,7 +3,8 @@
     <div v-if="messages.length > 0 && productId && otherUser" class="h-100">
       <div class="banner-message d-flex align-items-center">
         <h5><router-link :to="'/users/' + userId">{{ otherUser }}</router-link></h5>
-        <router-link :to="'/products/' + productId" class="product-link">{{ messages[0].productName }}</router-link>
+        <router-link v-if="productId > 0" :to="'/products/' + productId" class="product-link">{{ messages[0].productName }}</router-link>
+        <span v-else>{{ messages[0].productName }}</span>
       </div>
       <div class="bloc-messages-zone">
         <div class="only-messages">
@@ -45,26 +46,35 @@ export default {
   methods: {
 		handleSubmit(productId, userId) {
 			const text = document.getElementById(productId + "-" + userId).value;
-			MessagesService.postMessage({
-				sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
-				reciever: "users/" + this.userId,
-				text: text,
-        product: 'products/' + productId,
-			},localStorage.getItem('token'))
+      let data
+      if(productId > 0){
+        data = {
+          sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
+          reciever: "users/" + this.userId,
+          text: text,
+          product: 'products/' + productId,
+        }
+      }else{
+        data = {
+          sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
+          reciever: "users/" + this.userId,
+          text: text
+        }
+      }
+			MessagesService.postMessage(data,localStorage.getItem('token'))
       .then(() => {
-        MessagesService.getConversations(
-          this.$store.getters.user["@id"].split("/")[2],
-            localStorage.getItem('token')
-        )
-        .then((response) => {
-          this.messagesRecieved = response;
-        })
-        .catch((e) => console.log(e));
+       // this.$emit('refreshConversation',text)
         document.getElementById(productId + "-" + userId).value = "";
       })
       .catch((e) => console.log(e));
 		},
 	},
+  watch: {
+    messages: function () { // watch it
+    },
+    deep: true,
+    immediate: true
+  }
 };
 </script>
 <style scoped>
