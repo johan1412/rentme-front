@@ -7,7 +7,7 @@
         <b-card class="product-card">
           <template #header>
             <div class="bloc-image">
-              <img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+              <img :src="product.files.length !== 0 ? mediaRoot+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
             </div>
           </template>
           <b-card-text class="product-card-text">{{ product.name }}</b-card-text>
@@ -53,8 +53,12 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+    mediaRoot(){
+      return process.env.VUE_APP_URL+'/media'
+    }
   },
+
   mounted() {
     const renterPermission = this.$store.getters.renterPermission
     if(!renterPermission){

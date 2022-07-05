@@ -18,7 +18,7 @@
                 <p class="text-muted"> Prix payé en total avec caution :</p>
                 <h5 class="mt-3 mb-4">{{ reservation.price }} €</h5>
               </div>
-              <img :src="reservation.product.files.length !== 0 ? 'https://localhost:8443/media'+reservation.product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" width="100%"/>
+              <img :src="reservation.product.files.length !== 0 ? mediaRoot+reservation.product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" width="100%"/>
             </div>
           </div>
           <div class="localisation">
@@ -98,7 +98,10 @@ export default {
     currentReservation: null,
   }),
   computed:{
-    ...mapGetters(['reservations'])
+    ...mapGetters(['reservations']),
+    mediaRoot(){
+      return process.env.VUE_APP_URL+'/media'
+    }
   },
   mounted() {
     const userPermission = this.$store.getters.userPermission

@@ -27,7 +27,7 @@
                     <b-card class="product-card">
                       <template #header>
                         <div>
-                          <img :src="product.files.length !== 0 ? 'https://localhost:8443/media'+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                          <img :src="product.files.length !== 0 ? mediaRoot+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
                         </div>
                       </template>
                       <b-card-text class="d-flex flex-column justify-content-between">
@@ -77,6 +77,11 @@ export default {
       categories: [],
       products: [],
       productsPerPage: 4,
+    }
+  },
+  computed:{
+    mediaRoot(){
+      return process.env.VUE_APP_URL+'/media'
     }
   },
   mounted() {
