@@ -27,7 +27,7 @@
                     <b-card class="product-card">
                       <template #header>
                         <div>
-                          <img :src="product._source.image_path !== 0 ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                          <img :src="product._source.image_path ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
                         </div>
                       </template>
                       <b-card-text class="d-flex flex-column justify-content-between">

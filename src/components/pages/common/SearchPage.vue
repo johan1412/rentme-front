@@ -268,7 +268,7 @@
 					<b-card v-if="deckGrid" class="product-card">
 						<template #header>
               <div>
-                <img :src="product._source.image_path !== 0 ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
+                <img :src="product._source.image_path ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
               </div>
             </template>
             <b-card-text class="product-card-text">{{ product._source.name }}</b-card-text>
@@ -289,7 +289,7 @@
 						<b-row no-gutters class="h-100">
 							<b-col xl="4" lg="4" md="12" sm="12">
                 <div class="image-bloc">
-                  <img :src="product._source.image_path !== 0 ? 'https://localhost:8443/media'+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image">
+                  <img :src="product._source.image_path ? 'https://localhost:8443/media'+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image">
                 </div>
               </b-col>
 							<b-col xl="8" lg="8" md="12" sm="12" class="d-flex flex-column justify-content-between">
