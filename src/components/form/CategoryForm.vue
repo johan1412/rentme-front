@@ -101,7 +101,7 @@ export default {
       let file = null;
       let exist = this.categories.some(category => category.name === this.name);
       if(exist) {
-        this.$bvToast.toast('Cette catégorie existe déjà', {
+        this.$root.$bvToast.toast('Cette catégorie existe déjà', {
           title: 'Erreur',
           variant: 'danger',
           solid: true,
@@ -129,20 +129,20 @@ export default {
         this.name = "";
         this.parent = null;
         this.image = null;
-        this.$bvToast.toast('La catégorie a bien été créée', {
+        this.$root.$bvToast.toast('La catégorie a bien été créée', {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
           title: 'Succès'
         });
       } catch(e) {
         console.log(e)
-        this.$bvToast.toast('Erreur lors de la création de la catégorie', {
+        this.$root.$bvToast.toast('Erreur lors de la création de la catégorie', {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
           title: 'Erreur'
         });
       }

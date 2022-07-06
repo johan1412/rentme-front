@@ -144,19 +144,19 @@ export default {
       RegionService.deleteRegion(deleteRegionSelected.id, localStorage.getItem("token"))
         .then(() => {
           this.$store.dispatch("regions", this.regions.filter(region => region.id !== deleteRegionSelected.id));
-          this.$bvToast.toast('Le département a bien été supprimée', {
+          this.$root.$bvToast.toast('Le département a bien été supprimée', {
             toaster: 'b-toaster-top-full',
             variant: 'success',
             solid: true,
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
           });
         })
         .catch(() => {
-          this.$bvToast.toast('Vous ne pouvez pas supprimer cette region, car elle est déjà attaché aux autres adresses', {
+          this.$root.$bvToast.toast('Vous ne pouvez pas supprimer cette region, car elle est déjà attaché aux autres adresses', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             solid: true,
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
           });
         })
       .finally(() => {
@@ -178,19 +178,19 @@ export default {
       RegionService.updateRegion(editRegionSelected.id, { name: nameToSend, number: parseInt(numberTiSend) }, localStorage.getItem("token"))
         .then((response) => {
           this.$store.dispatch("regions", this.regions.map(region => region.id !== editRegionSelected.id ? region : {...region,name:response.data.name,number:response.data.number}));
-          this.$bvToast.toast('Le département a bien été modifié', {
+          this.$root.$bvToast.toast('Le département a bien été modifié', {
             toaster: 'b-toaster-top-full',
             variant: 'success',
             solid: true,
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
           });
         })
         .catch(() => {
-          this.$bvToast.toast('Une erreur est survenue', {
+          this.$root.$bvToast.toast('Une erreur est survenue', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             solid: true,
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
           });
         })
       .finally(() =>{

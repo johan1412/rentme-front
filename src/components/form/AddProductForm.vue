@@ -191,12 +191,12 @@ export default {
     },
     handleSubmit: async function () {
       if(this.images == null) {
-        this.$bvToast.toast('Vous devez ajouter des photos avant de valider le formulaire', {
+        this.$root.$bvToast.toast('Vous devez ajouter des photos avant de valider le formulaire', {
           title: 'Attention !',
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
         return;
       }

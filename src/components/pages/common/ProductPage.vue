@@ -248,7 +248,12 @@ export default {
       }
       let year = dateFormated.getFullYear();
       this.publishedDate = day + ' ' + month + ' ' + year;
-    }).catch(e => console.log(e))
+    }).catch((e) => {
+      if(e.response.data['hydra:description'] == 'Not Found') {
+        this.$router.push('/error-404')
+      }
+    })
+
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
   },
@@ -280,21 +285,21 @@ export default {
             this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
             AuthService.getProduct(this.$route.params.productId).then(response => {
               this.$store.dispatch('product',response.data)})
-            this.$bvToast.toast('Votre note a été enregistré avec succès', {
+            this.$root.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
               variant: 'success',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000
+              autoHideDelay: 5000
             })
           }).catch(e => {
                 console.log(e)
-                this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+                this.$root.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
                   title: 'Oups !',
                   variant: 'danger',
                   solid: true,
                   toaster: 'b-toaster-top-full',
-                  autoHideDelay: 3000
+                  autoHideDelay: 5000
                 })
               })
         } else {
@@ -308,21 +313,21 @@ export default {
             this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
             AuthService.getProduct(this.$route.params.productId).then(response => {
               this.$store.dispatch('product',response.data)})
-            this.$bvToast.toast('Votre note a été enregistré avec succès', {
+            this.$root.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
               variant: 'success',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000
+              autoHideDelay: 5000
             })
             }).catch(e => {
             console.log(e)
-            this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+            this.$root.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
               title: 'Oups !',
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000
+              autoHideDelay: 5000
             })
           })
         }
@@ -339,21 +344,21 @@ export default {
           product: 'products/' + this.product.id,
           reason: this.reason,
         },localStorage.getItem('token')).then(() => {
-          this.$bvToast.toast('Votre signalement a été enregistré avec succès', {
+          this.$root.$bvToast.toast('Votre signalement a été enregistré avec succès', {
             title: 'Merci !',
             variant: 'success',
             solid: true,
             toaster: 'b-toaster-top-full',
-            autoHideDelay: 3000
+            autoHideDelay: 5000
           })
         }).catch(e => {
           console.log(e)
-          this.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
+          this.$root.$bvToast.toast('Une erreur est survenue, veuillez réessayer', {
             title: 'Oups !',
             variant: 'danger',
             solid: true,
             toaster: 'b-toaster-top-full',
-            autoHideDelay: 3000
+            autoHideDelay: 5000
           })
         })
       }

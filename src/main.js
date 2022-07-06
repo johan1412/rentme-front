@@ -22,6 +22,7 @@ import MessagesPage from './components/pages/common/MessagesPage'
 import Success from './components/pages/payment/Sucess'
 import Cancel from './components/pages/payment/Cancel'
 import Refund from './components/pages/payment/Refund'
+import Error404 from "@/components/pages/errors/Error404";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import store from './vuex'
 
@@ -78,7 +79,9 @@ const routes = [
   { path: '/refund', component: Refund },
   { path: '/account', component: AccountPage },
   { path: '/conditions-generales-utilisation', component: Cgu },
-  { path: '/conditions-generales-vente', component: Cgv }
+  { path: '/conditions-generales-vente', component: Cgv },
+  { path: '/error-404', component: Error404},
+  { path: '/*', component: Error404}
 ]
 
 const router = new VueRouter({

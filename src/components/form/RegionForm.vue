@@ -81,7 +81,7 @@ export default {
       try {
         let exist = this.regions.some(region => (region.name === this.name || region.number === this.number));
         if(exist) {
-          this.$bvToast.toast('Ce département existe déjà', {
+          this.$root.$bvToast.toast('Ce département existe déjà', {
             title: 'Erreur',
             variant: 'danger',
             solid: true,
@@ -93,20 +93,20 @@ export default {
         this.$store.dispatch('regions',[...this.regions,response.data])
         this.name = "";
         this.number = null;
-        this.$bvToast.toast('Le département a bien été créé', {
+        this.$root.$bvToast.toast('Le département a bien été créé', {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
           title: 'Succès'
         });
       } catch(e) {
         console.log(e)
-        this.$bvToast.toast('Erreur lors de la création du département', {
+        this.$root.$bvToast.toast('Erreur lors de la création du département', {
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
           title: 'Erreur'
         });
       }

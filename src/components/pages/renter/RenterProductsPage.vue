@@ -76,31 +76,31 @@ export default {
             .then((res) => {
               console.log(res)
               this.$store.dispatch("user", {...this.user,products:this.user.products.filter(product => product.id !== this.deleteProductSelected.id)});
-              this.$bvToast.toast('L\'annonce a bien été supprimée', {
+              this.$root.$bvToast.toast('L\'annonce a bien été supprimée', {
                 variant: 'success',
                 solid: true,
                 toaster: 'b-toaster-top-full',
-                autoHideDelay: 3000,
+                autoHideDelay: 5000,
               });
               this.deleteProductSelected = null;
             })
             .catch(() => {
-              this.$bvToast.toast('Une erreur est survenue', {
+              this.$root.$bvToast.toast('Une erreur est survenue', {
                 title: 'Oups !',
                 variant: 'danger',
                 solid: true,
                 toaster: 'b-toaster-top-full',
-                autoHideDelay: 3000,
+                autoHideDelay: 5000,
               });
               this.deleteProductSelected = null;
             });
       }else {
-        this.$bvToast.toast('Vous ne pouvez pas supprimer ce produit, car il est rattaché aux réservations', {
+        this.$root.$bvToast.toast('Vous ne pouvez pas supprimer ce produit, car il est rattaché aux réservations', {
           title: 'Oups !',
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
       }
     },
