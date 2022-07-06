@@ -124,12 +124,12 @@ export default {
         AuthService.refund({id:reservation.id},localStorage.getItem('token'))
             .then(response => {
               if(response.data.message === "Refund is failed"){
-                this.$bvToast.toast('Votre remboursement a échoué', {
+                this.$root.$bvToast.toast('Votre remboursement a échoué', {
                   title: 'Oups !',
                   variant: 'danger',
                   solid: true,
                   toaster: 'b-toaster-top-full',
-                  autoHideDelay: 3000
+                  autoHideDelay: 5000
                 })
                 this.$bvModal.hide('modalRefund')
               }
@@ -137,7 +137,7 @@ export default {
                 AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
                     .then(response => {
                       this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
-                      this.$bvToast.toast('Votre remboursement a échoué et votre caution ne sera pas remboursée, car vous avez dépassé la limite de date du rendu', {
+                      this.$root.$bvToast.toast('Votre remboursement a échoué et votre caution ne sera pas remboursée, car vous avez dépassé la limite de date du rendu', {
                         title: 'Merci !',
                         variant: 'success',
                         solid: true,
@@ -153,12 +153,12 @@ export default {
                 AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored',paymentIntent:"success"},localStorage.getItem('token'))
                     .then(response => {
                       this.$store.dispatch('reservations', this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
-                      this.$bvToast.toast('Votre remboursement a été effectué avec succès !', {
+                      this.$root.$bvToast.toast('Votre remboursement a été effectué avec succès !', {
                         title: 'Merci !',
                         variant: 'success',
                         solid: true,
                         toaster: 'b-toaster-top-full',
-                        autoHideDelay: 3000
+                        autoHideDelay: 5000
                       })
                     })
                     .catch(e => console.log(e))
@@ -172,7 +172,7 @@ export default {
         AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
             .then(response => {
               this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
-              this.$bvToast.toast("Veuillez récupérer le produit à l'adresse indiqué sur l'annonce", {
+              this.$root.$bvToast.toast("Veuillez récupérer le produit à l'adresse indiqué sur l'annonce", {
                 title: 'Merci !',
                 variant: 'success',
                 solid: true,

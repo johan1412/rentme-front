@@ -143,19 +143,19 @@ export default {
 
           this.$store.dispatch("categories", this.categories.filter(category => category.id !== deleteCategorySelected.id ));
         }
-        this.$bvToast.toast('La catégorie a bien été supprimée', {
+        this.$root.$bvToast.toast('La catégorie a bien été supprimée', {
           toaster: 'b-toaster-top-full',
           variant: 'success',
           solid: true,
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
       })
       .catch(() => {
-        this.$bvToast.toast('Vous ne pouvez pas supprimer cette catégorie, car elle est déjà attaché à des annonces', {
+        this.$root.$bvToast.toast('Vous ne pouvez pas supprimer cette catégorie, car elle est déjà attaché à des annonces', {
           toaster: 'b-toaster-top-full',
           variant: 'danger',
           solid: true,
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
       })
       .finally(() => {
@@ -180,19 +180,19 @@ export default {
 
             this.$store.dispatch("categories", this.categories.map(category => category.id !== response.data.id ? category: {...category,name:response.data.name}));
           }
-          this.$bvToast.toast('La catégorie a bien été modifiée', {
+          this.$root.$bvToast.toast('La catégorie a bien été modifiée', {
             toaster: 'b-toaster-top-full',
             variant: 'success',
             solid: true,
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
           });
         })
         .catch(() => {
-          this.$bvToast.toast('Une erreur est survenue', {
+          this.$root.$bvToast.toast('Une erreur est survenue', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             solid: true,
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
           });
         })
       .finally(() => {

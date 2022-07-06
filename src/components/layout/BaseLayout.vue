@@ -63,39 +63,39 @@ export default {
         this.$route.fullPath == "/" ? this.mainMenu = true : this.mainMenu = false;
         if(this.$route.fullPath != "/login") {
           if(localStorage.getItem("successMessage")) {
-            this.$bvToast.toast(localStorage.getItem('successMessage'), {
+            this.$root.$bvToast.toast(localStorage.getItem('successMessage'), {
               variant: 'success',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000,
+              autoHideDelay: 5000,
             });
             localStorage.removeItem("successMessage");
           }
           if(localStorage.getItem("errorMessage")) {
-            this.$bvToast.toast(localStorage.getItem('errorMessage'), {
+            this.$root.$bvToast.toast(localStorage.getItem('errorMessage'), {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000,
+              autoHideDelay: 5000,
             });
             localStorage.removeItem("errorMessage");
           }
         } else {
           if(localStorage.getItem("successMessage")) {
-            this.$bvToast.toast(localStorage.getItem('successMessage'), {
+            this.$root.$bvToast.toast(localStorage.getItem('successMessage'), {
               variant: 'success',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000,
+              autoHideDelay: 5000,
             });
             localStorage.removeItem("successMessage");
           }
           if(localStorage.getItem("errorMessage")) {
-            this.$bvToast.toast(localStorage.getItem('errorMessage'), {
+            this.$root.$bvToast.toast(localStorage.getItem('errorMessage'), {
               variant: 'danger',
               solid: true,
               toaster: 'b-toaster-top-full',
-              autoHideDelay: 3000,
+              autoHideDelay: 5000,
               title: 'Succès'
             });
             localStorage.removeItem("errorMessage");

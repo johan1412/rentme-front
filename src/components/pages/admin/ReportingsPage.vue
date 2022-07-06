@@ -88,19 +88,19 @@ export default {
       AuthService.deleteReporting(reportingId,localStorage.getItem('token')).then(() => {
         this.$store.dispatch('numberOfProductsReported',this.$store.getters.numberOfProductsReported - 1)
         this.$store.dispatch('reportings',this.reportings.filter(report => !(report.id === reportingId)))
-        this.$bvToast.toast("Le signalement selectionné a bien été supprimé", {
+        this.$root.$bvToast.toast("Le signalement selectionné a bien été supprimé", {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
       }).catch(e => {
-        this.$bvToast.toast("Une erreur est survenue lors de la suppression du signalement", {
+        this.$root.$bvToast.toast("Une erreur est survenue lors de la suppression du signalement", {
           title: 'Oups !',
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
         console.log(e)
       }).finally(() => this.$bvModal.hide('modalDeleteReporting'))
@@ -109,19 +109,19 @@ export default {
       AuthService.deleteProduct(reportingSelectedFormProduct.product.id,localStorage.getItem('token')).then(() => {
         this.$store.dispatch('numberOfProductsReported',this.$store.getters.numberOfProductsReported - 1)
         this.$store.dispatch('reportings',this.reportings.filter(report => !(report.id === reportingSelectedFormProduct.id)))
-        this.$bvToast.toast("L'annonce selectionnée a bien été supprimée", {
+        this.$root.$bvToast.toast("L'annonce selectionnée a bien été supprimée", {
           variant: 'success',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
       }).catch(e => {
-        this.$bvToast.toast("Une erreur est survenue lors de la suppression de l'annonce", {
+        this.$root.$bvToast.toast("Une erreur est survenue lors de la suppression de l'annonce", {
           title: 'Oups !',
           variant: 'danger',
           solid: true,
           toaster: 'b-toaster-top-full',
-          autoHideDelay: 3000,
+          autoHideDelay: 5000,
         });
         console.log(e)
       })
