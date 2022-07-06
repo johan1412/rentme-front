@@ -68,7 +68,7 @@ export default {
     }
   },
    created() {
-     if(this.user !== null){
+     if(this.user !== null && this.$store.getters.messagePermission){
        this.getUnreadNb()
        setInterval(this.getUnreadNb, 2000)
      }

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import VueRouter from 'vue-router'
+import Stripe from "@/components/pages/payment/Stripe";
 import LoginPage from './components/pages/common/auth/LoginPage.vue'
 import RegisterPage from './components/pages/common/auth/RegisterPage.vue'
 import CategoryPage from './components/pages/admin/CategoryPage.vue'
@@ -81,6 +82,7 @@ const routes = [
   { path: '/conditions-generales-utilisation', component: Cgu },
   { path: '/conditions-generales-vente', component: Cgv },
   { path: '/error-404', component: Error404},
+  { path: '/stripe', component: Stripe},
   { path: '/*', component: Error404}
 ]
 

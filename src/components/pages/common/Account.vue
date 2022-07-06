@@ -13,7 +13,8 @@
         <PersonalInformations />
       </div>
       <div v-else>
-        <PersonalReservations />
+        <PersonalReservationsRenter v-if="user.roles.includes('ROLE_RENTER')"/>
+        <PersonalReservations v-else />
       </div>
     </div>
   </div>
@@ -21,13 +22,16 @@
 
 <script>
 import PersonalReservations from '../../layout/PersonalReservations.vue';
+import PersonalReservationsRenter from '../../layout/PersonalReservationsRenter.vue';
 import PersonalInformations from '../../layout/PersonalInformations.vue';
+import {mapGetters} from "vuex";
 
 export default {
   name: "Account",
   components: {
     PersonalReservations,
     PersonalInformations,
+    PersonalReservationsRenter
   },
   data: () => ({
     informationsTabActive: true,
@@ -40,6 +44,9 @@ export default {
     if(!allPermission){
       this.$router.push('/')
     }
+  },
+  computed: {
+    ...mapGetters(["user"]),
   },
   methods: {
     subMenuHandler(clicked) {
