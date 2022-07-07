@@ -124,7 +124,7 @@ export default {
         AuthService.refund({id:reservation.id},localStorage.getItem('token'))
             .then(response => {
               if(response.data.message === "Refund is failed"){
-                this.$root.$bvToast.toast('Votre remboursement a échoué', {
+                this.$root.$bvToast.toast('Votre remboursement a échoué, veuillez réessayer', {
                   title: 'Oups !',
                   variant: 'danger',
                   solid: true,
