@@ -194,7 +194,8 @@ export default {
         this.mobile = false;
       }
     }
-    AuthService.getProduct(this.$route.params.productId).then(response => {
+    AuthService.getProductValid(this.$route.params.productId).then(response => {
+      console.log(response.data)
       this.$store.dispatch('product',response.data)
       this.currentNote = 0
       if (this.user.comments.length !== 0){
@@ -249,8 +250,12 @@ export default {
       let year = dateFormated.getFullYear();
       this.publishedDate = day + ' ' + month + ' ' + year;
     }).catch((e) => {
+      console.log(e)
       if(e.response.data['hydra:description'] == 'Not Found') {
         this.$router.push('/error-404')
+      }
+      if(e.response.data['message'] == 'Access denied') {
+        this.$router.push('/error-403')
       }
     })
 
