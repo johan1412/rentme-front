@@ -17,7 +17,7 @@
             </span>
             Mes messages</router-link>
         </b-nav-item>
-        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/reportings">Signalements ({{numberOfProductsReported}})</router-link></b-nav-item>
+        <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/reportings">Signalements</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')"><router-link class="btn text-dark" to="/admin/products">Annonces en attente ({{numberOfProductsNotValid}})</router-link></b-nav-item>
         <b-nav-item v-if="user.roles.includes('ROLE_ADMIN')" @click="showActionsMenu = !showActionsMenu" class="bloc-dropdown"><div class="btn text-dark">Actions<b-icon class="dropdown-icon" icon="triangle-fill"></b-icon></div>
           <div v-show="showActionsMenu" class="dropdown-actions-list">
