@@ -2,7 +2,7 @@
 <div class="container">
     <div class='text-center' v-if="!hasStripeAccount">
       <h3 class="m-auto">Veuillez renseigner vos coordonnées bancaires en cliquant sur le lien au dessous</h3>
-      <a :href="stripeRoot" class="btn"><u> Cliquer ici </u></a>
+      <a href="https://connect.stripe.com/express/oauth/authorize?response_type=code&client_id=ca_LJw0OcJiAPSRSaM20FS3Xxu6lu9Qh8kk" class="btn"><u> Cliquer ici </u></a>
     </div>
   <div v-else>
     <h1 class="h3 mt-5">Creation d'une annonce</h1>

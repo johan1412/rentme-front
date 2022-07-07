@@ -58,7 +58,7 @@
                   <button @click="transferPayment(reservation)" class="btn btn-info">Recevoir le paiement</button>
                 </h5>
                 <h5 v-if="reservation.state === 'restored' && reservation.isTransfered">
-                  <p>le virement de {{reservation.paymentIntent === 'success' ? reservation.product.caution : reservation.price*80/100 + reservation.product.caution}}€ a été déjà transféré</p>
+                  <p>Votre virement de {{reservation.paymentIntent === 'success' ? reservation.price*80/100 : reservation.price*80/100 + reservation.product.caution}}€ a été déjà transféré</p>
                 </h5>
               </div>
             </div>
