@@ -4,7 +4,7 @@
 		<div class="row mt-5">
 			<div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12">
 				<div class="user-details">
-					<h2>{{ user.firstName }} {{ user.lastName }}</h2><h2 class="title-separator"> | </h2><h4 class="user-details-note">{{ user.note ? user.note : '-' }} / 5 <small> (0 note)</small></h4>
+					<h2>{{ user.firstName }} {{ user.lastName }}</h2>
 					<div class="user-address">Habite à <strong>{{ addressCity }} ({{ addressRegion }})</strong></div>
 					<div class="row user-products">
 						<div class="col-md-12">
