@@ -91,6 +91,15 @@ export default {
     if(this.$store.getters.user){
       this.$router.push('/')
     }
+    if(this.$route.query.message && this.$route.query.message =="success" ){
+      this.$root.$bvToast.toast("Le nouveau mot de passe a bien été enregistré ", {
+        title: 'Merci !',
+        variant: 'success',
+        solid: true,
+        toaster: 'b-toaster-top-full',
+        autoHideDelay: 5000,
+      });
+    }
   },
   computed: {
     resetPassword(){
