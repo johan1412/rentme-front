@@ -133,6 +133,22 @@ const refund = async (reservation,token) => {
   return await axios.get(url+`/refund/${reservation.id}`,{headers});
 };
 
+const transferPayment = async (reservation,token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.get(url+`/transfer/${reservation.id}`,{headers});
+};
+
+const renterCheckStripeAccount = async (token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.get(url+`/renter-check-stripe-account`,{headers});
+};
+
 
 const deleteProduct = async (id,token) => {
   const headers = {
@@ -167,6 +183,14 @@ const getReservations = async (token) => {
   return await axios.get(url+"/reservations/user", {headers});
 };
 
+const getReservationsRenter = async (token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.get(url+"/reservations-renter", {headers});
+};
+
 const updateReservation = async (data,token) => {
   const headers = {
     'Content-type': 'application/json',
@@ -198,6 +222,14 @@ const deleteReporting = async (id,token) => {
   }
   return await axios.delete(url+`/reportings/${id}`, {headers});
 };
+const createExternalStripeAccount = async (code,renterId,token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.post(url+`/create-stripe-external-account`,{code:code,renterId:renterId},{headers});
+};
+
 
 export default {
   register,
@@ -216,6 +248,7 @@ export default {
   getProductsNotValid,
   postProduct,
   getReservations,
+  getReservationsRenter,
   updateReservation,
   getCategories,
   getCategory,
@@ -226,8 +259,11 @@ export default {
   postImage,
   postReservation,
   refund,
+  transferPayment,
   getProductsValid,
   getReportings,
   deleteReporting,
-  getProductsByKeyWord
+  getProductsByKeyWord,
+  createExternalStripeAccount,
+  renterCheckStripeAccount
 };
