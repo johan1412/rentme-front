@@ -54,15 +54,15 @@
                 <button v-on:click="myMethod(reservation)" class="btn btn-info" v-if="reservation.state === 'payed'">Produit récupéré</button>
                 <button @click="modalFunction(reservation)" class="btn btn-info" v-if="reservation.state === 'retrieved'">Produit rendu</button>
                 <h5 v-if="reservation.state === 'restored' && reservation.paymentIntent === 'success'">
-                  <p>Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé, veuillez vérifier vote boite mail</p>
+                  <p>Le Remboursement de votre caution de {{reservation.product.caution}}€ a été bien envoyé, veuillez vérifier vote boite mail</p>
                 </h5>
                   <h5 v-if="reservation.state === 'restored' && reservation.paymentIntent !== 'success'">
-                  <p>Votre caution de {{reservation.product.caution}}€ ne va pas être remboursé, car vous avez dépassez la date de limite</p>
+                  <p>Votre caution de {{reservation.product.caution}}€ ne va pas être remboursée, car vous avez dépassé la date de limite</p>
                 </h5>
               </div>
               <b-modal id="modalRefund" title="Êtes-vous sûr de vouloir rendre le produit ?">
                 <div class="modal-body container m-auto">
-                  <p  class="my-4">Si le produit n'a pas été rendu à l'heure ou avant la date de limite, votre caution ne sera pas remboursé</p>
+                  <p  class="my-4">Si le produit n'est pas rendu à l'heure ou avant la date limite, votre caution ne sera pas remboursée</p>
                 </div>
                 <template #modal-footer="{ }">
                   <div class="mx-auto">
@@ -137,7 +137,7 @@ export default {
                 AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
                     .then(response => {
                       this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
-                      this.$root.$bvToast.toast('Votre remboursement a échoué et votre caution ne sera pas remboursée, car vous avez dépassé la limite de date du rendu', {
+                      this.$root.$bvToast.toast('Votre remboursement a échoué et votre caution ne sera pas remboursée, car vous avez dépassé la date limite de remise', {
                         title: 'Merci !',
                         variant: 'success',
                         solid: true,
@@ -172,7 +172,7 @@ export default {
         AuthService.updateReservation({id:reservation.id,state:reservation.state === 'payed' ? 'retrieved' : 'restored'},localStorage.getItem('token'))
             .then(response => {
               this.$store.dispatch('reservations',this.$store.getters.reservations.map(elem => elem.id === response.data.id ? response.data : elem))
-              this.$root.$bvToast.toast("Veuillez récupérer le produit à l'adresse indiqué sur l'annonce", {
+              this.$root.$bvToast.toast("Veuillez récupérer le produit à l'adresse indiquée sur l'annonce", {
                 title: 'Merci !',
                 variant: 'success',
                 solid: true,
