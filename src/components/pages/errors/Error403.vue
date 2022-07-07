@@ -4,7 +4,7 @@
       <div class="error-outer-container">
         <div class="error-inner-container">
           <span class="text-oops">Oups!</span>
-          <span class="text-error">Erreur 403 - l'accès à cette page n'est pas autorisée</span>
+          <span class="text-error">Erreur 403 - l'accès à cette page n'est pas autorisé</span>
           <div class="text-light home-button"><a href="/" >Page d'accueil</a></div>
         </div>
       </div>

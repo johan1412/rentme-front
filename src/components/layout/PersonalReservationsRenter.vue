@@ -111,7 +111,7 @@ export default {
       AuthService.transferPayment({id:reservation.id},localStorage.getItem('token'))
           .then(response => {
                 if(response.data.message === "You have already get transfered"){
-                  this.$root.$bvToast.toast('Votre virement a été déjà fait avant', {
+                  this.$root.$bvToast.toast('Votre virement a déjà été effectué auparavent', {
                     title: 'Oups !',
                     variant: 'danger',
                     solid: true,
@@ -120,7 +120,7 @@ export default {
                   })
                 }
                 if(response.data.message === "Deadline is not finished yet"){
-                  this.$root.$bvToast.toast("Veuillez réessayer après le produit sera rendu", {
+                  this.$root.$bvToast.toast("Désolé, vous devez attendre la date de fin de votre réservation pour effectuer cette action", {
                     title: 'Oups !',
                     variant: 'danger',
                     solid: true,
@@ -129,7 +129,7 @@ export default {
                   })
                 }
                 if(response.data.message === "You have not right for transfer"){
-                  this.$root.$bvToast.toast("Vous n'êtes pas authorisé pour recevoir un virement, Veuillez s'inscrire sur stripe", {
+                  this.$root.$bvToast.toast("Vous ne pouvez pas recevoir de virement pour le moment, vous devez d'abord vous inscrire sur la plateforme Stripe comme indiqué", {
                     title: 'Oups !',
                     variant: 'danger',
                     solid: true,

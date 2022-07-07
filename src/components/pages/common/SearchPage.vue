@@ -20,7 +20,7 @@
 					<b-collapse id="collapse-1">
 						<ul>
 							<li v-for="(category, index) in categories" :key="category.id">
-								<input type="checkbox" :value="category.id" :id="'category' + (index + 1)" @change="selectedAllSubCategories(category)" />
+								<input type="checkbox" class="category-check" :value="category.id" :id="'category' + (index + 1)" @change="selectedAllSubCategories(category)" />
 								{{ category.name }}
 								<ul class="">
 									<li v-for="(subCategory, index) in category.children" :key="subCategory.id">
@@ -381,11 +381,23 @@ export default {
       totalProducts: 0,
       showFilters: false,
       mobile: false,
+      subCategories: [],
     }
   },
   created() {
     AuthService.getCategories().then(response => {
       this.$store.dispatch('categories',response.data['hydra:member'].filter(category => !category?.parent))
+      this.subCategories = response.data['hydra:member'].filter(category => category?.parent)
+      let category = this.$route.query.category;
+      if(category && this.categories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
+        this.paramCategory = category.toLowerCase();
+        this.initializaFilterCategories();
+      } else if(category && this.subCategories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
+        this.paramCategory = category.toLowerCase();
+        this.selected.categories.push(category.toLowerCase());
+      } else {
+        this.paramCategory = '';
+      }
     }).catch(e => console.log(e))
     RegionService.getRegions().then(response => {
       this.regions = response.data['hydra:member']
@@ -399,11 +411,6 @@ export default {
     } else {
       this.showFilters = true;
       this.mobile = false;
-    }
-    let category = this.$route.query.category;
-      if(category && this.categories.some(c => c.name.toLowerCase() == category.toLowerCase())) {
-      this.paramCategory = category.toLowerCase();
-      this.initializaFilterCategories();
     }
     this.minPrice = this.getMinPrice();
     this.maxPrice = this.getMaxPrice();
@@ -455,6 +462,23 @@ export default {
     'selected.notes': {
       handler() {
         this.updateProducts();
+      }
+    },
+    '$route.query.category': {
+      handler(newVal) {
+        if(newVal && this.categories.some(c => c.name.toLowerCase() == newVal.toLowerCase())) {
+          this.paramCategory = newVal.toLowerCase();
+          this.initializaFilterCategories();
+          this.updateProducts();
+        } else if(newVal && this.subCategories.some(c => c.name.toLowerCase() == newVal.toLowerCase())) {
+          this.paramCategory = newVal.toLowerCase();
+          this.selected.categories.push(newVal.toLowerCase());
+          this.updateProducts();
+        } else {
+          this.paramCategory = '';
+          this.selected.categories = [];
+          this.updateProducts();
+        }
       }
     },
   },
@@ -518,6 +542,8 @@ export default {
     initializaFilterCategories() {
       let category = this.paramCategory;
       let index = this.categories.map(function(elt) { return elt.name.toLowerCase() }).indexOf(category) + 1;
+      this.selected.categories = [];
+      document.getElementsByClassName('category-checkbox').forEach((elt) => { elt.checked = false });
       document.getElementById('category' + index).checked = true;
       this.selectedAllSubCategories(category);
     },

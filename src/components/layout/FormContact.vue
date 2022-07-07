@@ -73,7 +73,7 @@ export default {
           text : this.text
         },localStorage.getItem('token'))
       }
-      this.$root.$bvToast.toast('Votre demande a été enregistré avec succès', {
+      this.$root.$bvToast.toast('Votre demande a été enregistrée avec succès', {
         title: 'Merci !',
         variant: 'success',
         solid: true,
