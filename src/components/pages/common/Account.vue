@@ -4,8 +4,8 @@
     <hr>
     <div class="sub-menu-account">
       <div class="row mx-0">
-        <div :class="informationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="subMenuHandler('info')">Mes informations</div>
         <div :class="myReservationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="subMenuHandler(' ')">Mes réservations</div>
+        <div :class="informationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="subMenuHandler('info')">Mes informations</div>
       </div>
     </div>
     <div class="sub-menu-content">
@@ -44,12 +44,12 @@ export default {
     PersonalReservationsRenter
   },
   data: () => ({
-    informationsTabActive: true,
-    reservationsTabActive: true,
-    myReservationsTabActive: false,
+    informationsTabActive: false,
+    reservationsTabActive: false,
+    myReservationsTabActive: true,
     menuReseravtionSelected: false,
-    reservationsProduitTabActive: false,
-    informationsSelected: true,
+    reservationsProduitTabActive: true,
+    informationsSelected: false,
     reservationsSelected: false,
     reservationsProduitSelected: false,
   }),
