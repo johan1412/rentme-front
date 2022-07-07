@@ -23,7 +23,7 @@
             <b-col cols="12">
               <carousel :perPage="productsPerPage">
                 <slide v-for="product in products" :key="product.id" class="p-2">
-                  <router-link :to="'/products/' + product.id" class="card-link">
+                  <router-link :to="'/products/' + product._source.id" class="card-link">
                     <b-card class="product-card">
                       <template #header>
                         <div>

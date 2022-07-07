@@ -73,6 +73,10 @@ const getProduct = async (id) => {
   return await axios.get(url+`/products/${id}`);
 };
 
+const getProductValid = async (id) => {
+  return await axios.get(url+`/products/${id}/valid`);
+};
+
 const getProductsBySubCategory = async (id) => {
   return await axios.get(url+`/products/sub-category/${id}`);
 };
@@ -255,6 +259,7 @@ export default {
   editCategory,
   deleteCategory,
   getProduct,
+  getProductValid,
   getSessionIdPayment,
   postImage,
   postReservation,
