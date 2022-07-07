@@ -344,7 +344,7 @@ export default {
           product: 'products/' + this.product.id,
           reason: this.reason,
         },localStorage.getItem('token')).then(() => {
-          this.$root.$bvToast.toast('Votre signalement a été enregistré avec succès', {
+          this.$root.$bvToast.toast('Merci, votre signalement a bien été pris en compte', {
             title: 'Merci !',
             variant: 'success',
             solid: true,

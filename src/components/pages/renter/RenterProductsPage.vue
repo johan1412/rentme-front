@@ -6,6 +6,9 @@
       <router-link v-for="product in user.products" :key="product.id" :to="'/products/' + product.id">
         <b-card class="product-card">
           <template #header>
+            <div v-if="!product.isValid" class="banner-validation">
+            <p>En attente de validation</p>
+          </div>
             <div class="bloc-image">
               <img :src="product.files.length !== 0 ? mediaRoot+product.files[0].path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
             </div>
@@ -95,7 +98,7 @@ export default {
               this.deleteProductSelected = null;
             });
       }else {
-        this.$root.$bvToast.toast('Vous ne pouvez pas supprimer ce produit, car il est rattaché aux réservations', {
+        this.$root.$bvToast.toast('Vous ne pouvez pas supprimer cette annonce car elle est liée à une ou plusieurs réservations', {
           title: 'Oups !',
           variant: 'danger',
           solid: true,
@@ -112,6 +115,26 @@ export default {
 </script>
 
 <style scoped>
+.banner-validation {
+  background-color: #FFA500;
+  color: black;
+  padding: 10px;
+  z-index: 9999;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-validation p {
+  margin: 0px;
+}
+
 .card-deck-custom-grid a {
   text-decoration: none;
   color: #000;

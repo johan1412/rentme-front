@@ -152,7 +152,7 @@ export default {
           });
         })
         .catch(() => {
-          this.$root.$bvToast.toast('Vous ne pouvez pas supprimer cette region, car elle est déjà attaché aux autres adresses', {
+          this.$root.$bvToast.toast('Vous ne pouvez pas supprimer ce département car il est lié à plusieurs adresses de clients', {
             toaster: 'b-toaster-top-full',
             variant: 'danger',
             solid: true,

@@ -116,7 +116,7 @@ export default {
       .catch((e) => {
           let message = e.response.data.message;
           if(message === "Invalid credentials."){
-            this.$root.$bvToast.toast("L'email ou le mode de passe est un invalide", {
+            this.$root.$bvToast.toast("Email ou mot de passe invalide", {
               title: 'Attention !',
               variant: 'danger',
               solid: true,
