@@ -5,7 +5,7 @@
     <div class="sub-menu-account">
       <div class="row mx-0">
         <div :class="informationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="subMenuHandler('info')">Mes informations</div>
-        <div :class="reservationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="subMenuHandler('res')">Mes réservations</div>
+        <div :class="myReservationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="subMenuHandler(' ')">Mes réservations</div>
       </div>
     </div>
     <div class="sub-menu-content">
@@ -13,7 +13,18 @@
         <PersonalInformations />
       </div>
       <div v-else>
-        <PersonalReservations />
+        <div class="sub-menu-account">
+          <div class="row mx-0">
+              <div :class="reservationsTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="reservationHandler('client')">Réservations effectuées</div>
+              <div v-show="user.roles.includes('ROLE_RENTER')" :class="reservationsProduitTabActive ? 'bg-light' : ''" class="sub-menu-item w-50" @click="reservationHandler('renter')">Réservations de mes annonces</div>
+            </div>
+          </div>
+          <div v-if="reservationsProduitSelected">
+          <PersonalReservationsRenter v-if="user.roles.includes('ROLE_RENTER')"/>
+        </div>
+        <div v-else>
+          <PersonalReservations />
+        </div>
       </div>
     </div>
   </div>
@@ -21,19 +32,26 @@
 
 <script>
 import PersonalReservations from '../../layout/PersonalReservations.vue';
+import PersonalReservationsRenter from '../../layout/PersonalReservationsRenter.vue';
 import PersonalInformations from '../../layout/PersonalInformations.vue';
+import {mapGetters} from "vuex";
 
 export default {
   name: "Account",
   components: {
     PersonalReservations,
     PersonalInformations,
+    PersonalReservationsRenter
   },
   data: () => ({
     informationsTabActive: true,
-    reservationsTabActive: false,
+    reservationsTabActive: true,
+    myReservationsTabActive: false,
+    menuReseravtionSelected: false,
+    reservationsProduitTabActive: false,
     informationsSelected: true,
     reservationsSelected: false,
+    reservationsProduitSelected: false,
   }),
   mounted() {
     const allPermission = this.$store.getters.allPermission
@@ -41,20 +59,36 @@ export default {
       this.$router.push('/')
     }
   },
+  computed: {
+    ...mapGetters(["user"]),
+  },
   methods: {
     subMenuHandler(clicked) {
       if(clicked == 'info') {
         this.informationsTabActive = true;
-        this.reservationsTabActive = false;
         this.informationsSelected = true;
         this.reservationsSelected = false;
+        this.myReservationsTabActive = false;
       } else {
+        this.myReservationsTabActive = true;
         this.informationsTabActive = false;
-        this.reservationsTabActive = true;
         this.informationsSelected = false;
         this.reservationsSelected = true;
+        this.reservationsProduitTabActive = true;
+        this.reservationsTabActive = false;
       }
-    }
+    },
+    reservationHandler(clicked) {
+      if(clicked == 'client') {
+        this.reservationsTabActive = false
+        this.reservationsProduitTabActive = true;
+        this.reservationsProduitSelected = false;
+      } else {
+        this.reservationsTabActive = true
+        this.reservationsProduitTabActive = false;
+        this.reservationsProduitSelected = true;
+      }
+    },
   }
 }
 </script>

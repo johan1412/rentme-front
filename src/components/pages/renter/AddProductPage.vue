@@ -1,23 +1,44 @@
 <template>
 <div class="container">
+    <div class='text-center' v-if="!hasStripeAccount">
+      <h3 class="m-auto">Veuillez renseigner vos coordonnées bancaires en cliquant sur le lien au dessous</h3>
+      <a href="https://connect.stripe.com/express/oauth/authorize?response_type=code&client_id=ca_LJw0OcJiAPSRSaM20FS3Xxu6lu9Qh8kk" class="btn"><u> Cliquer ici </u></a>
+    </div>
+  <div v-else>
     <h1 class="h3 mt-5">Creation d'une annonce</h1>
     <hr><br>
     <AddProductForm />
+  </div>
 </div>
 </template>
 <script>
 import AddProductForm from '../../form/AddProductForm';
+import {mapGetters} from "vuex";
+import AuthService from "@/services/AuthService";
 
 export default {
     components: { 
         AddProductForm
     },
   name: "AddProductPage",
-  mounted() {
-    const renterPermission = this.$store.getters.renterPermission
-    if(!renterPermission){
-      this.$router.push('/')
+  data: () => ({
+    hasStripeAccount: false,
+  }),
+  computed: {
+    ...mapGetters(["user"]),
+    stripeRoot(){
+      return process.env.VUE_APP_STRIPE
     }
+  },
+  mounted() {
+    const allPermission = this.$store.getters.allPermission
+    if(!allPermission){
+      this.$router.push('/login')
+    }
+    AuthService.renterCheckStripeAccount(localStorage.getItem('token')).then(response => {
+          this.hasStripeAccount = response.data
+    }
+    ).catch(e => console.log(e))
   },
 
 };
