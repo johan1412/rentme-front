@@ -242,7 +242,7 @@ export default {
       if(this.roleRenter) {
         this.user.roles.unshift(newRole);
         role = this.user.roles;
-        this.$root.$bvToast.toast('Votre nouveau role loueur a été enregistré avec succès', {
+        this.$root.$bvToast.toast('Votre demande a bien été prise en compte', {
           title: 'Merci !',
           variant: 'success',
           solid: true,
@@ -252,7 +252,7 @@ export default {
       } else {
         role = this.user.roles.filter((value) => { return value != "ROLE_RENTER" });
         if(role.length == 0) role.push("ROLE_USER");
-        this.$root.$bvToast.toast('Votre role loueur a été enlevé avec succès', {
+        this.$root.$bvToast.toast('Votre demande a bien été prise en compte', {
           title: 'Merci !',
           variant: 'success',
           solid: true,
@@ -346,7 +346,7 @@ export default {
       AuthService.updateAddress(this.user.address.id, {...this.user.address, streetName: this.user.address.streetName, city: this.user.address.city, region: 'regions/' +this.region},localStorage.getItem('token'))
           .then((response) => {
             this.$store.dispatch('user', {...this.user,address:response.data})
-            this.$root.$bvToast.toast('Votre adresse a été enregistré avec succès', {
+            this.$root.$bvToast.toast('Votre adresse a été enregistrée avec succès', {
               title: 'Merci !',
               variant: 'success',
               solid: true,
