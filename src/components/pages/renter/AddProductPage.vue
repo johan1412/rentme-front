@@ -31,9 +31,9 @@ export default {
     }
   },
   mounted() {
-    const renterPermission = this.$store.getters.renterPermission
-    if(!renterPermission){
-      this.$router.push('/')
+    const allPermission = this.$store.getters.allPermission
+    if(!allPermission){
+      this.$router.push('/login')
     }
     AuthService.renterCheckStripeAccount(localStorage.getItem('token')).then(response => {
           this.hasStripeAccount = response.data
