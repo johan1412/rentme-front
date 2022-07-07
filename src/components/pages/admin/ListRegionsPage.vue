@@ -131,6 +131,9 @@ export default {
     if(!adminPermission){
       this.$router.push('/')
     }
+    RegionService.getRegions(localStorage.getItem('token')).then(response => {
+      this.$store.dispatch('regions',response.data['hydra:member'])
+    }).catch(e => console.log(e))
     },
 	computed: {
 		...mapGetters(["regions"]),

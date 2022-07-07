@@ -18,8 +18,25 @@ export default {
       this.$router.push('/')
     }
     AuthService.createExternalStripeAccount(this.$route.query.code,this.user.id,localStorage.getItem('token'))
-        .then((response) => console.log(response))
-        .catch((e) => console.log(e))
+        .then((response) => {
+          if(response.data['message'] == 'creation stripe external account is successfully completed') {
+            this.$root.$bvToast.toast('Votre inscriptio a été effectué avec succès', {
+              title: 'Merci !',
+              variant: 'success',
+              solid: true,
+              toaster: 'b-toaster-top-full',
+              autoHideDelay: 5000
+            })
+          }
+        })
+        .catch((e) => {
+          if(e.response.data['message'] == 'Access denied') {
+            this.$router.push('/error-403')
+          }
+          if(e.response.data['hydra:description'] == 'Not Found') {
+            this.$router.push('/error-404')
+          }
+        })
 
   }
 };

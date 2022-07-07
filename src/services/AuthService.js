@@ -73,6 +73,14 @@ const getProduct = async (id) => {
   return await axios.get(url+`/products/${id}`);
 };
 
+const getProductValid = async (id,token) => {
+  const headers = {
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+token
+  }
+  return await axios.get(url+`/products/valid/${id}`,token ? {headers} : {});
+};
+
 const getProductsBySubCategory = async (id) => {
   return await axios.get(url+`/products/sub-category/${id}`);
 };
@@ -255,6 +263,7 @@ export default {
   editCategory,
   deleteCategory,
   getProduct,
+  getProductValid,
   getSessionIdPayment,
   postImage,
   postReservation,

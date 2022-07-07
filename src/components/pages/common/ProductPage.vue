@@ -194,7 +194,7 @@ export default {
         this.mobile = false;
       }
     }
-    AuthService.getProduct(this.$route.params.productId).then(response => {
+    AuthService.getProductValid(this.$route.params.productId,localStorage.getItem('token')).then(response => {
       this.$store.dispatch('product',response.data)
       this.currentNote = 0
       if (this.user.comments.length !== 0){
@@ -249,8 +249,12 @@ export default {
       let year = dateFormated.getFullYear();
       this.publishedDate = day + ' ' + month + ' ' + year;
     }).catch((e) => {
+      console.log(e)
       if(e.response.data['hydra:description'] == 'Not Found') {
         this.$router.push('/error-404')
+      }
+      if(e.response.data['message'] == 'Access denied') {
+        this.$router.push('/error-403')
       }
     })
 
@@ -283,7 +287,7 @@ export default {
           }, commentExist[0].id,localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:this.user.comments.map(comment => comment.id === commentExist[0].id ? {...comment,rating:response.data.rating} : comment)})
-            AuthService.getProduct(this.$route.params.productId).then(response => {
+            AuthService.getProductValid(this.$route.params.productId,localStorage.getItem('token')).then(response => {
               this.$store.dispatch('product',response.data)})
             this.$root.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
@@ -311,7 +315,7 @@ export default {
           },localStorage.getItem('token'))
           .then(response => {
             this.$store.dispatch('user',{...this.user,comments:[...this.user.comments,response.data]})
-            AuthService.getProduct(this.$route.params.productId).then(response => {
+            AuthService.getProductValid(this.$route.params.productId).then(response => {
               this.$store.dispatch('product',response.data)})
             this.$root.$bvToast.toast('Votre note a été enregistré avec succès', {
               title: 'Merci !',
