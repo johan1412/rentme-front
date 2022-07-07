@@ -59,12 +59,20 @@ export default {
       if(!allPermission){
         this.$router.push('/login')
       }
+      if(this.product){
       MessagesService.postMessage({
         sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
         reciever: "users/" + this.user.id,
         text : this.text,
-        productId : null
+        product : "products/"+this.product.id
       },localStorage.getItem('token'))
+      }else{
+        MessagesService.postMessage({
+          sender: "users/" + this.$store.getters.user["@id"].split("/")[2],
+          reciever: "users/" + this.user.id,
+          text : this.text
+        },localStorage.getItem('token'))
+      }
       this.$root.$bvToast.toast('Votre demande a été enregistré avec succès', {
         title: 'Merci !',
         variant: 'success',
