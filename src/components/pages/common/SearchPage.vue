@@ -267,7 +267,7 @@
 				<router-link v-for="product in products" :key="product._source.id" :to="'/products/' + product._source.id" :per-page="perPage" :current-page="currentPage">
 					<b-card v-if="deckGrid" class="product-card">
 						<template #header>
-              <div class="height:200px;width:100%;justify-content:center;align-items:center;">
+              <div style="height:200px;width:100%;justify-content:center;align-items:center;">
                 <img :src="product._source.image_path ? mediaRoot+product._source.image_path : 'https://hearhear.org/wp-content/uploads/2019/09/no-image-icon.png'" alt="image du produit">
               </div>
             </template>
